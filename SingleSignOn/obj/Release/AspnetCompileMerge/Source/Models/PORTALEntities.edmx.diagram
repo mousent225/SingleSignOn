@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="78fbfc6f28254bb6bec3f7bb002b1770" Name="Diagram1" ZoomLevel="64" ShowGrid="true" DisplayType="true">
+        <EntityTypeShape EntityType="PORTALModel.Attachment" Width="1.5" PointX="7.5" PointY="19" />
+        <EntityTypeShape EntityType="PORTALModel.CmsFormTemplate" Width="1.5" PointX="3" PointY="18.875" />
+        <EntityTypeShape EntityType="PORTALModel.CmsPostAction" Width="1.5" PointX="6" PointY="13.125" />
+        <EntityTypeShape EntityType="PORTALModel.CmsPost" Width="1.5" PointX="3" PointY="6.5" />
+        <EntityTypeShape EntityType="PORTALModel.HrDeptMaster" Width="1.5" PointX="1.5" PointY="2.125" />
+        <EntityTypeShape EntityType="PORTALModel.HrDeptMasterFull" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PORTALModel.HrEmpMaster" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="PORTALModel.SubSystem" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysAuthorization" Width="1.5" PointX="5.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysCategory" Width="1.5" PointX="3" PointY="25.625" />
+        <EntityTypeShape EntityType="PORTALModel.SysCategoryValue" Width="1.5" PointX="5.25" PointY="17.125" />
+        <EntityTypeShape EntityType="PORTALModel.SysDocument" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysLogHistory" Width="1.5" PointX="7.75" PointY="5.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysMenu" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysNotice" Width="1.5" PointX="9.75" PointY="5.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysRole" Width="1.5" PointX="0.75" PointY="19.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysRoleMapping" Width="1.5" PointX="3" PointY="30.25" />
+        <EntityTypeShape EntityType="PORTALModel.SysUser" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PORTALModel.SysUserMapping" Width="1.5" PointX="3" PointY="13.5" />
+        <AssociationConnector Association="PORTALModel.FK_ModuleId_SysCategoryValue_ID" />
+        <AssociationConnector Association="PORTALModel.FK_ApproveUid_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_CreateUid_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_DeleteUid_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_UpdateUid_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_CategoryId_ID" />
+        <AssociationConnector Association="PORTALModel.FK_CmsPostAction_HrEmpMaster" />
+        <AssociationConnector Association="PORTALModel.FK_ModuleId_ID" />
+        <AssociationConnector Association="PORTALModel.FK_CmsPosts_HrEmpMaster" />
+        <AssociationConnector Association="PORTALModel.FK_CmsPosts_HrEmpMaster1" />
+        <AssociationConnector Association="PORTALModel.FK_CmsPosts_HrEmpMaster2" />
+        <AssociationConnector Association="PORTALModel.FK_ReplyToId_PostId" />
+        <AssociationConnector Association="PORTALModel.FK_HrDeptMaster_HrDeptMaster" />
+        <AssociationConnector Association="PORTALModel.FK_HrEmpMaster_HrDeptMaster" />
+        <AssociationConnector Association="PORTALModel.FK_CreateUid_HrEmpMaster" />
+        <AssociationConnector Association="PORTALModel.FK_CreateUid_HrEmpMaster_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_DeleteUid_HrEmpMaster_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_SysCategory_DeleteUid_HrEmpMaster_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_SysCategory_UpdateUid_HrEmpMaster_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_SysUserMapping_HrEmpMaster" />
+        <AssociationConnector Association="PORTALModel.FK_UpdateUid_HrEmpMaster_EmpId" />
+        <AssociationConnector Association="PORTALModel.FK_Category_SysCategory_ID" />
+        <AssociationConnector Association="PORTALModel.FK_ParentID_ID" />
+        <AssociationConnector Association="PORTALModel.FK_SysRoleMapping_SysRole" />
+        <AssociationConnector Association="PORTALModel.FK_SysUserMapping_SysRole" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,632 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@model SingleSignOn.ViewModels.FormTemplateModel
+@{
+    ViewBag.Title = "View Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxfileupload")
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+<style type="text/css">
+    .jqx-fill-state-disabled {
+        opacity: 1;
+    }
+</style>
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%; height:100%">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div style="float:left">
+                <label class="label" style="color:#448CCB">View Detail</label>
+            </div>
+            <div class="" style="float: right">
+                @if (Model.AttachFile)
+                {
+                    <a class=Lbtn href="javascript:;">
+                        <input type="reset" value="Attachment" id="btnAttachment">
+                    </a>
+                }
+                @if (Model.Writer == User.GetClaimValue(ClaimTypes.PrimarySid))
+            {
+                if (Model.Active && Model.IsSubmit != true)
+                {
+                        <a class=Lbtn href="javascript:;" )">
+                            <input type="reset" value="Submit" id="btnSubmit">
+                        </a>
+                    }
+                    if (Model.IsApprove != true && Model.IsSubmit == true)
+                    {
+                        <a class=Lbtn href="javascript:;" )">
+                            <input type="reset" value="Recall" id="btnRecall">
+                        </a>
+                    }
+                    if (Model.IsSubmit != true)
+                    {
+                        <a class=Lbtn href="javascript:;">
+                            <input type="reset" value="Edit" id="btnEdit">
+                        </a>
+                    }
+                    <a class=Lbtn href="javascript:;">
+                        <input type="reset" value="Delete" id="btnDelete">
+                    </a>
+                }
+                @if (Model.IsSubmit == true && Model.IsApprove == null && ViewBag.Rights.Contains("Approve"))
+            {
+                    <a class=Lbtn href="javascript:;">
+                        <input type="reset" value="Approve" id="btnApprove">
+                    </a>
+                    <a class=Lbtn href="javascript:;">
+                        <input type="reset" value="Reject" id="btnReject">
+                    </a>
+                }
+                @if (ViewBag.Rights.Contains("ForceDelete"))
+            {
+                    <a class=Lbtn href="javascript:;">
+                        <input type="reset" value="Force Delete" id="btnForceDelete">
+                    </a>
+                }
+                @*<a class=Lbtn href="#">
+                        <input type=button id="btnSaveContinue" value="Save And Continue">
+                        @Html.HiddenFor(m => m.ISCONTINUE)
+                    </a>*@
+                <a class=Lbtn href="@Url.Action("Index","FormTemplate")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+        <!-- end LblockPageTitle -->
+    </div>
+
+    <div class="divContent">
+
+        @*<div class="divTitle" style="width:100%; text-align:center">
+                <label class="label" style="color:#9c142f; font-size:18px">@Model.Subject</label>
+                @Html.HiddenFor(m => m.Id, new { @id = "hdfFormId" })
+            </div>
+            <div class="divInformation" style="border-top: 1px solid #ddd;width:100%; padding:4px; border-right: 1px solid #ddd; border-left: 1px solid #ddd">
+                <div class="divCategory tb-col-2" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">Category</label>
+                </div>
+                <div class="divCategory tb-col-3" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">Writer</label>
+                </div>
+                <div class="divCategory tb-col-2" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">Create Date</label>
+                </div>
+                <div class="divCategory tb-col-2" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">Status</label>
+                </div>
+                <div class="divCategory tb-col-3" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">&emsp; Approver</label>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div class="divInformation" style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; width:100%; padding:4px; margin-bottom:5px; border-right: 1px solid #ddd; border-left: 1px solid #ddd">
+                <div class="divCategory tb-col-2" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">@Model.CategoryName</label>
+                </div>
+                <div class="divCategory tb-col-3" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">@Model.UpdateName</label>
+                </div>
+                <div class="divCategory tb-col-2" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">@string.Format(new System.Globalization.CultureInfo("en-US"), "{0:yyyy.MM.dd }", Model.UpdateDate)</label>
+                </div>
+                <div class="divCategory tb-col-2" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">@Model.Status</label>
+                </div>
+                <div class="divCategory tb-col-3" style="float:left; text-align:center; font-weight:normal">
+                    <label class="label">@Model.ApproveName</label>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div>
+                @Html.TextAreaFor(m => m.Descript, new { @class = "input", @rows = "10", @id = "txtDesc" })
+            </div>
+            <div style="margin-top:5px; text-align:left; ">
+                @if (!string.IsNullOrEmpty(@Model.Reason))
+                {
+                    <div class="divReason label" style="float:left; width:100%; font-weight:normal; ">
+                        <label class="label" style="color:red">Comment of approver: @Model.Reason</label>
+                    </div>
+                }
+
+            </div>*@
+
+        @Html.HiddenFor(m => m.Id, new { @id = "hdfFormId" })
+
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-1">
+                        @Html.LabelFor(m => m.CategoryName, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-4">
+                        <label class="label">@Model.CategoryName</label>
+                    </td>
+                    <th class="tb-col-1">
+                        @Html.LabelFor(m => m.Active, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-2" style="text-align: left">
+                        <label class="label">@Model.Status</label>
+                    </td>
+                    <td class="tb-col-4" style="text-align: left; vertical-align: top" rowspan="3">
+                        <table>
+                            <tr>
+                                <th>
+                                    <label class="label">Writer</label>
+                                </th>
+                                <td>
+                                    <label class="label">@Model.UpdateName</label>
+                                </td>
+                                <th>
+                                    <label class="label">Create Date</label>
+                                </th>
+                                <td>
+                                    <label class="label">@string.Format(new System.Globalization.CultureInfo("en-US"), "{0:yyyy.MM.dd }", Model.UpdateDate)</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="input-require tb-col-1">
+                        @Html.LabelFor(m => m.Subject, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-6" colspan="4">
+                        <label class="label">@Model.Subject</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="">
+                        @Html.LabelFor(m => m.Descript, new { @class = "label" })
+                    </th>
+                    <td colspan="4">
+                        @Html.TextAreaFor(m => m.Descript, new { @class = "input", @rows = "10", @id = "txtDesc" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+<!-- Modal //------------------------------------------------------------------------------------->
+<div id="mdApprove" class="modal fade" tabindex="-1" data-width="480" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4>
+            <label>Approve</label>
+        </h4>
+    </div>
+    <div class="modal-body" style="height:70px">
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-2" id="thmdApprove">
+                        <label class="label">Comment</label>
+                    </th>
+                    <td colspan="10">
+                        <textarea id="txtComment" rows="9"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class=Lbtn href="javascript:;">
+            <input type="button" value="Confirm" id="btnConfirm" />
+        </a>
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+
+<!-- Modal //------------------------------------------------------------------------------------->
+<div id="mdAttachfile" class="modal fade" tabindex="-1" data-width="480" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4>
+            <label>File Attachment</label>
+        </h4>
+    </div>
+    <div class="modal-body" style="height:400px">
+        <div id="gridAttachment">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class=Lbtn href="javascript:;">
+            <input type="button" value="Download All" id="btnDownloadAll" />
+        </a>
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+
+<script>
+
+    var dataAttachment = [];
+    var columnsAttachment = [];
+    var formTemplateModel = {
+        id: $("#hdfFormId").val(),
+        Subject: "",
+        Descript: "",
+        Category: "",
+        AttachFile: false,
+        Active: false,
+        FileName: "",
+        FilePath: "",
+        CategoryName: ""
+    };
+
+    $(window).resize(function () {
+        //SetHeight($("#jqxWidget-portal"), $('footer').position().top - 100);
+        $('#txtDesc').ckeditor({
+            height: ('footer').position().top - 241,
+            language: "en",
+            readOnly: true
+        });
+    });
+
+    $(document).ready(function () {
+
+        //$('#txtComment').jqxTextArea({ placeHolder: 'Enter a comment', height: 90, width: 500, minLength: 1 });
+
+        //SetHeight($("#jqxWidget-portal"), $('footer').position().top - 100);
+
+        var fileDownLoad = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : "";
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+
+        columnsAttachment = [{ text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                            { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: fileDownLoad, renderer: colHeaderLeft },
+                            { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft }, ];
+        checkAuthor();
+
+        //$("#txtDesc").jqxTextArea({ placeHolder: 'Enter Description', height: $("#jqxWidget-portal").height() - 127, width: "100%", minLength: 1, maxLength: 4000, disabled: true });
+        $('#txtDesc').ckeditor({
+            height: $('footer').position().top - 241,
+            language: "en",
+            readOnly: true
+        });
+        //ẩn tool bar
+        setTimeout(function () {
+            $("#cke_1_top").hide();
+            $("#cke_1_contents").css({ height: $("#cke_1_contents").height() + 45 });
+        }, 700);
+
+        //$('#txtContent').ckeditor().config.toolbarStartupExpanded = false;
+
+    });
+
+    $("#btnEdit").on("click", function () {
+        window.location.href = "/FormTemplate/Edit/" + $("#hdfFormId").val();
+    });
+    var isApprove = false;
+    $("#btnApprove").on("click", function () {
+        $("#thmdApprove").removeClass("input-require");
+        isApprove = true;
+        $("#mdApprove").modal("show");
+        return;
+    });
+    $("#btnReject").on("click", function () {
+        $("#thmdApprove").addClass("input-require");
+        isApprove = false;
+        $("#mdApprove").modal("show");
+        return;
+    });
+
+    $("#btnSubmit").on("click", function () {
+        fnSubmit(true);
+    });
+
+    $("#btnRecall").on("click", function () {
+        fnSubmit(false);
+    });
+
+    $("#btnConfirm").on("click", function () {
+        fnApprove();
+    });
+
+    $("#btnDelete").on("click", function () {
+        fnDeleteFormtemplate();
+    });
+
+    $("#btnForceDelete").on("click", function () {
+        fnForceDeleteFormtemplate();
+    });
+
+    $("#btnAttachment").on("click", function () {
+        showModalAttachment($("#hdfFormId").val());
+    });
+
+    $("#btnDownloadAll").on("click", function () {
+        var rows = $("#gridAttachment").jqxGrid("getrows");
+        console.log(rows);
+        var files = [];
+        rows.forEach(function (row) {
+            files.push(row.FilePath);
+        })
+
+        var api = "/FormTemplate/GetZipFile";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ files: files }),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data !== "")
+                {
+                    window.location.href = "/FormTemplate/DownloadFile?fileName=" + data;
+                }
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    });
+
+    function getDataApprove() {
+        if (!isApprove) {
+            if ($("#txtComment").val() == "") {
+                showNotification("Hyosung Portal", "Please enter your comment!", "gray error");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function fnUpdateCate() {
+        var api = "/FormTemplate/Edit";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(formTemplateModel),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", "Update success", "gray success");
+                setTimeout(function () {
+                    window.location = "/FormTemplate/Index";
+                }, 1000);
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    function deleteFile(model) {
+        var result = confirm('Do you really want to delete that row?');
+        if (result) {
+            var api = "/FormTemplate/DeleteFile";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete file success", "gray success");
+                        var filePath = JSON.parse(model).FilePath;
+                        dataAttachment.forEach(function (item) {
+                            if (item.FilePath === filePath) {
+                                dataAttachment.splice(dataAttachment.indexOf(item), 1);
+                            }
+                        });
+                        fnAttachment(dataAttachment);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    function fnGetDataAttachment(masterId) {
+        var api = "/FormTemplate/GetAttachment";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ attachment: masterId, moduleId: '720DFEB8-A8FC-4ADB-BC81-33A9BAF633A0' }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                //var result = JSON.parse(data);
+                console.log(data);
+                data.forEach(function (item) {
+                    var attach = { AttachId: item.AttachId, FileName: item.FileName, FilePath: item.FilePath, MasterId: item.MasterId, ModuleId: item.ModuleId };
+                    dataAttachment.push(attach);
+                });
+                fnAttachment(dataAttachment);
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    function showModalAttachment(masterId) {
+        var attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : "";
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' }
+            ],
+            url: '/FormTemplate/GetAttachment',
+            data: {
+                attachment: masterId,
+                moduleId: '720DFEB8-A8FC-4ADB-BC81-33A9BAF633A0'
+            }
+        };
+
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+        $("#gridAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "99%",
+            source: dataAdapter,
+            pageable: false,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderLeft },
+                { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft }
+            ]
+        });
+
+        $("#gridAttachment").on('bindingcomplete', function (event) {
+            $("#mdAttachfile").modal("show");
+        });
+    }
+
+    function checkAuthor() {
+        var creater = $("#hdfCreater").val();
+        var empId = $("#hdfEmpId").val();
+    }
+
+    function fnRefresh() {
+        window.location.href = "/FormTemplate/Edit/" + $("#hdfFormId").val();
+    }
+
+    function fnSubmit(status) {
+        var api = "/FormTemplate/Submit";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ id: $("#hdfFormId").val(), status: status }),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", (status ? "Submit success" : "Recall success"), "gray success");
+
+                setTimeout(function () {
+                    if (status)
+                        window.location = "/FormTemplate/Index";
+                    else
+                        window.location.href = "/FormTemplate/Edit/" + $("#hdfFormId").val();
+                }, 1000);
+
+
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    function fnApprove() {
+        var result = confirm('Do you really want to ' + (isApprove ? 'approve' : 'reject') + ' this data?');
+        if (result) {
+            if (!getDataApprove()) return false;
+            var api = "/FormTemplate/Approve";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify({ id: $("#hdfFormId").val(), isApprove: isApprove, reason: $("#txtComment").val() }),
+                contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                async: false,
+                success: function (data) {
+                    showNotification("Hyosung Portal", "Approved success", "gray success");
+                    setTimeout(function () {
+                        window.location = "/FormTemplate/Index";
+                    }, 1000);
+                },
+                error: function (result) {
+                    alert('Oh no: ' + result.responseText);
+                    return false;
+                }
+            });
+        }
+    }
+
+    function fnDeleteFormtemplate() {
+        var result = confirm('Do you really want to delete this data?');
+        if (result) {
+            var api = "/FormTemplate/Delete";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify({ id: $("#hdfFormId").val() }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete success", "gray success");
+                        setTimeout(function () {
+                            window.location = "/FormTemplate/Index";
+                        }, 1000);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    function fnForceDeleteFormtemplate() {
+        var result = confirm('Do you really want to delete this data?');
+        if (result) {
+            var api = "/FormTemplate/Delete";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify({ id: $("#hdfFormId").val() }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete success", "gray success");
+                        setTimeout(function () {
+                            window.location = "/FormTemplate/Index";
+                        }, 1000);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+</script>

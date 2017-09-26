@@ -1,0 +1,215 @@
+﻿@using SingleSignOn.ViewModels
+@model SingleSignOn.ViewModels.CategoryModel
+@{
+    ViewBag.Title = "Category Management";
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+
+
+<div class="divWrapper" style="padding: 0 10px">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <h1>Category</h1>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+
+    <div id=LblockMainBody>
+        <!-- Search Condition //------------------------------------------------------------------------->
+        <div id=LblockSearch>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class=LtextRight>Subject</th>
+                        <td>
+                            @*<input name=cust_name class=Ltext id=cust_name style="WIDTH: 100%" onchange="$('#p_customer_code').val('');" type=text size=5 maxlength=20 jquery1452828581338="5">*@
+                            <input type="text" id="txtSubject" class="Ltext" style="WIDTH: 100%" />
+                        </td>
+                        <td class="tools">
+                            <a class="Lbtn" href="javascript:;"> <input onclick="fnRefreshGrid();" type="button" value="Search"></a>
+                            <a class="Lbtn" href="#"> <input onclick="fnShowPopupInsert()" type="button" value="New"></a>
+                            <a class="Lbtn" href="#"> <input onclick="fnEditFormTemplate();" type="button" value="Edit"></a>
+                            <a class="Lbtn" href="javascript:;"> <input onclick="fnDeleteFormTemplate()" type="button" value="Delete"></a>
+                            @*<a class="Lbtn" href="javascript:;" id="print"> <input onclick="" type="button" value="Print"></a>*@
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <!-- List //------------------------------------------------------------------------------------->
+        <div class="">
+            <div id="CategoryGrid"></div>
+        </div>
+        <!-- Modal //------------------------------------------------------------------------------------->
+        <div id="mdNewCategory" class="modal fade" tabindex="-1" data-width="480" style="display: none;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>
+                    <label>Insert New Category</label>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("InsertCate", "Category", FormMethod.Post))
+                {
+                    <div class="tb-table" style="float: right">
+                        <table>
+                            <tr>
+                                <th class="input-require tb-col-2">
+                                    @Html.LabelFor(m => m.Name, new { @class = "label input-require" })
+                                </th>
+                                <td class="tb-col-10">
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "input" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>@Html.LabelFor(m => m.Remark, new { @class = "label" })</th>
+                                <td>@Html.TextAreaFor(m => m.Remark, new { @class = "input", @row = 4 })</td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <a class="Lbtn" href="javascript:;"> <input onclick="fnInsertCate(false)" type="button" value="Save"></a>
+                <a class="Lbtn" href="javascript:;"> <input onclick="fnInsertCate(true)" type="button" value="Save And Continue"></a>
+                <a class="Lbtn" href="javascript:;"> <input data-dismiss="modal" type="button" value="Cancel"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        fnSetDataSource();
+    });
+
+    var CateModel = {
+        ID: "", Name: "", Remark: ""
+    }
+    var CategoryGrid = $("#CategoryGrid");
+    var rowIndex, source, deleteColumn, colRight, masterId = "";
+    function fnSetDataSource() {        
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'ID', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'ModifyUID', type: 'string' },
+                { name: 'ModifyUser', type: 'string' },
+                { name: 'ModifyDate', type: 'date'}
+            ],
+            url: '/Category/GetListCategory',
+            data: {
+                name: $("#txtSubject").val()
+            }
+        };
+        $("#CategoryGrid").jqxGrid(
+        {
+            width: "100%",
+            height: 420,
+            source: new $.jqx.dataAdapter(source),
+            sortable: true,
+            pageable: true,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'Name', dataField: 'Name', renderer: colHeaderLeft },
+                { text: 'Modify User', dataField: 'ModifyUser', width: 100, renderer: colHeaderCenter, cellsalign: 'center' },
+                { text: 'Modify Date', dataField: 'ModifyDate', cellsalign: 'center', cellsformat: 'yyyy.MM.dd', width: 90, renderer: colHeaderCenter }
+            ]
+        });
+    }
+
+    function fnShowPopupInsert() {
+        $("#Name").val("");
+        $("#Remark").val("");
+        $("#mdNewCategory").modal("show");
+    }
+
+    function getData() {
+        CateModel.Name = $("#Name").val();
+        CateModel.Remark = $("#Remark").val();
+        if (CateModel.Name === "") {
+            $("#Name").focus();
+            showNotification("Hyosung Portal", "Please enter in field: Name", "gray error");
+            return false;
+        }
+        return true;
+    }
+
+    function fnRefreshGrid() {
+        fnSetDataSource();
+    }
+
+    function fnInsertCate(isContinue) {
+        if (!getData()) return;
+        var api = "../Category/InsertCate";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(CateModel),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.result === "Exist") {
+                    showNotification("Hyosung Portal", "The Category Name already exists", "gray error");
+                }
+                else if (data.result !== "ERROR") {
+                    showNotification("Hyosung Portal", "Insert new Category success", "gray success");
+                    fnSetDataSource();
+                    if (!isContinue) $("#mdNewCategory").modal("hide");
+                }
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    $('#CategoryGrid').on('rowclick', function (event) {
+        var args = event.args;
+        masterId = args.row.bounddata.ID;
+    });
+
+    function fnEditFormTemplate() {
+        if (masterId === "") {
+            showNotification("Hyosung Portal", "Please select row to edit", "gray error");
+            return false;
+        }
+        window.location.href = "/Category/EditCate/" + masterId;
+        return true;
+    }
+    function fnDeleteFormTemplate() {
+        if (masterId === "") {
+            showNotification("Hyosung Portal", "Please select row to delete", "gray error");
+            return false;
+        }
+        var result = confirm('Do you really want to delete this row?');
+        if (result) {
+            var api = "../Category/DeleteCate/" + masterId;
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete row success", "gray success");
+                        $("#CategoryGrid").jqxGrid('updatebounddata');
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+</script>

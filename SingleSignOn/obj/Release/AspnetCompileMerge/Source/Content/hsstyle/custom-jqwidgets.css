@@ -1,0 +1,28 @@
+﻿.jqx-grid-header {
+    height: 22px !important;
+}
+
+.jqx-grid-pager {
+    height: 28px !important;
+}
+
+.jqx-widget .jqx-widget-content {
+    font-size: 12px !important;
+}
+/*.jqx-grid-pager-input {
+    height: 17px !important;
+}
+.jqx-button {
+    height: 17px !important;
+}*/
+
+a {
+    cursor:pointer;
+}
+
+.jqx-grid-cell {
+    color:#343434 !important;
+}
+.jqx-grid-cell-alt {
+    background-color:#EDEDED;
+}

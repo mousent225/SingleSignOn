@@ -1,0 +1,504 @@
+﻿@model IEnumerable<SingleSignOn.ViewModels.LogHistoryModel>
+@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+    ViewBag.Title = "Home Page";
+}
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxsplitter")
+@Scripts.Render("~/bundles/jqxdatetimeinput")
+
+<style type="text/css">
+    #main_container {
+        background: #fff url("../Content/img/bg_main_left.gif") repeat-y scroll 0 0;
+        float: left;
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    #main_content a:link {
+        color: #4f4f4f;
+        font-weight: normal;
+        text-decoration: none;
+    }
+
+    .situation {
+        background: rgba(0, 0, 0, 0) url("../Content/img/info_bg01.gif") repeat-x scroll 0 0;
+        clear: both;
+        height: 35px;
+        margin: 0 auto;
+        overflow: hidden;
+        width: 100%;
+    }
+
+        .situation DL {
+            overflow: hidden;
+            position: relative;
+            width: 91%;
+            margin: 0;
+        }
+
+            .situation DL DT {
+                background: rgba(0, 0, 0, 0) url("../Content/img/name_bg01.png") repeat-x scroll 0 0;
+                color: #fff;
+                height: 23px;
+                margin: 0 10px 0 0;
+                padding: 10px 0 0;
+                text-align: center;
+                width: 210px;
+            }
+
+            .situation DL DT {
+                float: left;
+                font-size: 11px;
+            }
+
+            .situation DL DD {
+                color: #666;
+                padding: 10px 20px 0 0;
+            }
+
+                .situation DL DD A {
+                    color: #666;
+                    text-decoration: none;
+                }
+
+    .snb {
+        float: left;
+        margin-right: 11px;
+        padding-top: 7px;
+        width: 209px;
+    }
+
+    .main_left_menu {
+        margin: 0 auto;
+        width: 150px;
+        margin-left: -3px;
+    }
+
+    .schedule {
+        float: left;
+        padding-left: 10px;
+        padding-top: 7px;
+        width: 329px;
+    }
+
+    #m_layer {
+        border: 1px none;
+        position: relative;
+        width: 100%;
+    }
+
+    #main_content {
+        float: left;
+        padding-top: 0;
+        position: relative;
+        width: 99%;
+    }
+
+
+        #main_content table {
+            border: 0 none;
+            border-spacing: 0;
+            margin-top: 7px;
+            width: 100%;
+        }
+
+            #main_content table th {
+                -moz-border-bottom-colors: none;
+                -moz-border-left-colors: none;
+                -moz-border-right-colors: none;
+                -moz-border-top-colors: none;
+                border-color: -moz-use-text-color -moz-use-text-color #d0d0d0;
+                border-image: none;
+                border-style: none none solid;
+                border-width: 0 0 1px;
+                height: 26px;
+                text-align: center;
+                padding: 0;
+            }
+
+    .h_notice {
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+        .h_notice table th {
+            background-color: #eeeeee;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .h_notice table td {
+            height: 28px;
+            padding: 0px 5px;
+            text-align: center;
+        }
+
+    .title_f {
+        text-align: left !important;
+    }
+
+    .i_notice {
+        text-align: left !important;
+    }
+
+    .LblockTab {
+        background: rgba(0, 0, 0, 0) url("../Content/img/tab_bg.gif") repeat-x scroll left bottom;
+        height: 26px;
+        margin: 10px 0;
+    }
+
+    .tabs-menu li {
+        float: left;
+        height: 25px;
+        line-height: 26px;
+    }
+
+        .tabs-menu li.Lcurrent {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            border-right: 1px solid #7c7c7c;
+            position: relative;
+            z-index: 5;
+        }
+
+    .LblockTab li.Lcurrent {
+        background-position: left -31px;
+    }
+
+    .tabs-menu li a {
+        color: #fff !important;
+        padding: 10px;
+        text-decoration: none !important;
+    }
+
+    .tabs-menu .Lcurrent a {
+        color: #2e7da3 !important;
+        font-weight: bold !important;
+    }
+
+    #approvalcount {
+        color: red;
+    }
+
+    .schedule {
+        float: left;
+        padding-left: 10px;
+        padding-top: 7px;
+        width: 120%;
+        padding-top: 40px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        SetHeight($("#jqxWidget-portal"), $("body").height() - 176);
+
+        //$("#jqxCalendar").jqxCalendar({ width: "100%", height: 220 });
+
+        var rss = (function ($) {
+            var createWidgets = function () {
+
+                $('#mainSplitter').jqxSplitter({ theme: "jqx-portal-custom", width: '99%', height: "99%", panels: [{ size: 200, min: 100 }, { min: 200, size: 400 }] });
+
+                $("#feedExpander").jqxExpander({
+                    theme: "jqx-portal-custom", toggleMode: 'none', showArrow: false, width: "100%", height: "100%",
+                    initContent: function () {
+                        //$('#jqxTree').jqxTree({ height: '100%', width: '100%' });
+                    }
+                });
+
+                $("#feedListExpander").jqxExpander({
+                    theme: "jqx-portal-custom", toggleMode: 'none', showArrow: false, width: "100%", height: "100%", initContent: function () {
+                        //$('#feedListContainer').jqxListBox({  source: ['1'], width: '100%', height: '100%' });
+                    }
+                });
+            };
+            var addEventListeners = function () {
+
+            };
+            return {
+                init: function () {
+                    createWidgets();
+                    addEventListeners();
+                    //getFeed('sciencedaily');
+                }
+            }
+        }(jQuery));
+        rss.init();
+    });
+</script>
+
+
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%">
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+    <div id="mainSplitter">
+        <div>
+            <div style="border: none;" id="feedExpander">
+                @*<div class="jqx-hideborder">
+                    <div class="situation" style="MARGIN-LEFT: -2px; margin-top: -4px; width: 100%;">
+                        <dl>
+                            <dt>Welcome <strong>@User.GetClaimValue(ClaimTypes.Name)</strong></dt>
+                        </dl>
+                    </div>
+                </div>*@
+                @*<div class="jqx-hideborder jqx-hidescrollbars">
+                    <div class="main_left_menu">
+                        <div class="schedule">
+                            <div id='jqxCalendar'>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+                <div class="jqx-hideborder">
+                    Department
+                </div>
+                <div class="jqx-hideborder jqx-hidescrollbars">
+                    <div class="jqx-hideborder" id='jqxUserPlant'>
+                    </div>
+                    <input type="hidden" id="hdfUserPlantDeptId" value="0" />
+                </div>
+            </div>
+        </div>
+        <div>
+            <div id="contentSplitter">
+                <div class="feed-item-list-container" id="feedUpperPanel" style="padding:10px">
+                    <div class="jqx-hideborder" id="feedListExpander">
+                        <div class="jqx-hideborder" id="feedHeader">
+                        </div>
+                        <div class="jqx-hideborder jqx-hidescrollbars">
+                            <div id=LblockSearch>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th class="LtextRight" style="width:27px">Name</th>
+                                            <td>
+                                                <input type="text" id="txtSubject" class="Ltext input" style="WIDTH: 100%" />
+                                            </td>
+                                            <th class="LtextRight" style="width:35px">From Date</th>
+                                            <td style="width:228px">
+                                                <input type="text" id="dateFrom" class="Ltext" style="width: 70px">
+                                                <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                                                ~
+                                                <input type="text" id="dateTo" class="Ltext" style="width: 70px">
+                                                <span><img id="iconDateTo" src="/Content/img/icon_cal.gif" border="0"></span>
+                                            </td>
+                                              <td class="tools" style="width:66px">
+                                                <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Search"></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                                    <div id="gridLogHistory"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+     </div>
+    </div>
+<script type="text/javascript">
+    var displayColumn = [];
+    $(document).ready(function () {
+
+        jqxUserPlantTree();
+
+        dateFrom = new dhtmlXCalendarObject({ input: "dateFrom", button: "iconDateFrom" });
+        dateFrom.setDateFormat("%Y.%m.%d");
+
+        dateTo = new dhtmlXCalendarObject({ input: "dateTo", button: "iconDateTo" });
+        dateTo.setDateFormat("%Y.%m.%d");
+
+        $("#txtSubject").jqxInput({ placeHolder: "Enter the title", height: 21, width: "97%", minLength: 1, maxLength: 500 });
+
+        fnGridLogHistory($("#txtSubject").val(), $("#dateFrom").val(), $("#dateTo").val());
+
+    });
+    function fnGridLogHistory(subject, dateFrom, dateTo) {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'UserId', type: 'int' },
+                { name: 'Name', type: 'string' },
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'StringIpAddress', type: 'string' },
+                { name: 'LogTime', type: 'date' },
+            ],
+            url: '/LogHistory/GetAll',
+            data: {
+                subject: subject,
+                deptId: ($("#hdfUserPlantDeptId").val() === "0" ? 185 : $("#hdfUserPlantDeptId").val()),
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            },
+        };
+        dataAdapter = new $.jqx.dataAdapter(source);
+
+        // create Tree Grid
+        $("#gridLogHistory").jqxGrid(
+        {
+            width: "100%",
+            height: "85%",
+            source: dataAdapter,
+            rendergridrows: function () {
+                console.log(dataAdapter.records);
+                return dataAdapter.records;
+            },
+            enabletooltips: true,
+            showHeader: true,
+            rowsheight: 22,
+            virtualmode: false,
+            altrows: true,
+            pageable: true,
+            pagesize: 20,
+            pagesizeoptions: ['20', '50', '100','200'],
+            columns: [
+                { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+                { text: 'User ID', filterable: false, dataField: 'UserId', width: 150, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Name', filtertype: 'input', dataField: 'Name', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Organization Name', filtertype: 'input', dataField: 'OrganizeName', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Plant Name', filtertype: 'input', dataField: 'PlantName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Dept Name', filtertype: 'input', dataField: 'DeptName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'IP Address', filtertype: 'input', dataField: 'StringIpAddress', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Log Time', filterable: false, dataField: 'LogTime', cellsalign: 'left', cellsformat: 'yyyy-MM-dd HH:mm:ss', renderer: colHeaderLeft, editable: false },
+                //{ text: 'Create Date', filterable: false, dataField: 'UpdateDate', width: 90, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter, editable: false }
+            ],
+            columnsresize: true,
+        });
+    }
+
+    $("#btnSearch").on("click", function () {
+        fnGridLogHistory($("#txtSubject").val(), $("#dateFrom").val(), $("#dateTo").val())
+    });
+
+    function fnRefreshGrid() {
+        fnSetUserDataSource();
+    }
+
+    function jqxUserPlantTree() {
+        var api = 'http://' + hostAddress + '//User/GetListTreeView';
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ deptId: 0 }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    id: 'id',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                //console.log(records);
+                $('#jqxUserPlant').jqxTree({ source: records, width: '100%', height: '100%' });
+                var items = $('#jqxUserPlant').jqxTree('getItems');
+                $('#jqxUserPlant').jqxTree('selectItem', items[0]);
+
+                $('#jqxUserPlant').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxUserPlant').jqxTree('getItem', args.element);
+                    $("#hdfUserPlantDeptId").val(item.id);
+                    fnSetUserDataSource();
+                });
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    var rowIndex, source, deleteColumn, colRight, masterId = "";
+    function fnSetUserDataSource() {
+
+       // console.log($("#hdfUserPlantDeptId").val());
+
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'UserId', type: 'int' },
+                { name: 'Name', type: 'string' },
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'StringIpAddress', type: 'string' },
+                { name: 'LogTime', type: 'date' },
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/LogHistory/GetByDeptId',
+            cache: true,
+            data: {
+                selectType: $("#jqxUserSearchType").val() === 0 ? 1 : $("#jqxUserSearchType").val(),
+                deptId: ($("#hdfUserPlantDeptId").val() === "0" ? 185 : $("#hdfUserPlantDeptId").val()),
+                userId: $("#txtUserSearchEmpid").val(),
+                userName: $("#txtUserSearchEmpid").val(),
+                status: ""//$("#cbStatus").val() === "00000000-0000-0000-0000-000000000000" ? "" : $("#cbStatus").val()
+            },
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+
+        $("#gridLogHistory").jqxGrid(
+        {
+            width: "100%",
+            height: 420,
+            source: dataAdapter,
+            rendergridrows: function () {
+                //console.log(dataAdapter.records);
+                return dataAdapter.records;
+            },
+            //virtualmode: false,
+            //pageable: false,
+            sortable: true,
+            selectionmode: 'checkbox',
+            //pagesize: 20,
+            columnsresize: true,
+            //pagesizeoptions: ['30', '50', '80', '100'],
+            columns: [
+                { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+                { text: 'User ID', filterable: false, dataField: 'UserId', width: 150, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Name', filtertype: 'input', dataField: 'Name', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Organization Name', filtertype: 'input', dataField: 'OrganizeName', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Plant Name', filtertype: 'input', dataField: 'PlantName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Dept Name', filtertype: 'input', dataField: 'DeptName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'IP Address', filtertype: 'input', dataField: 'StringIpAddress', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Log Time', filterable: false, dataField: 'LogTime', cellsalign: 'left', cellsformat: 'yyyy-MM-dd HH:mm:ss', renderer: colHeaderLeft, editable: false },
+            ]
+        });
+    }
+
+    //$('#jqxUserPlant').on('select', function (event) {
+    //    var item = $('#jqxUserPlant').jqxTree('getItem', event.args.element);
+    //    deptId = item.id;
+    //    console.log(deptId);
+    //});
+</script>

@@ -1,0 +1,131 @@
+﻿
+@model SingleSignOn.ViewModels.AuthorizationMenuModel
+@using System.Security.Claims
+@{
+    ViewBag.Title = "Index";
+}
+@using (Html.BeginForm("Create", "AuthorizationMenu", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.MenuID, new { id = "hdStrMenuId" })
+    @Html.HiddenFor(m => m.Owner, new { id = "hdOwner" })
+    @Html.HiddenFor(m => m.MasterMenu, new { id = "hdMasterMenu" })
+    <div id=left_wrap class="left-system">
+        <h1>Master menu</h1>
+        <div><select id="MaserMenu" name="MaserMenu" class="select" onchange="onchange_mastermenu()"></select> </div>
+    </div>
+    <div class="main-system">
+        <div class="wrap-table">
+            <div class="button-setting" style="border-bottom: 1px solid #D8D8D8; padding-bottom:10px">
+                <h1>Setup</h1>
+                <button type="submit" class="btn"> <i class="fa fa-floppy-o"></i> Save </button>
+            </div>
+            <div class="popup content-popup">
+                <div id="treeview" style="max-height:380px"></div>
+            </div>
+        </div>
+    </div>
+}
+<div id="result"></div>
+
+<script>
+    $(document).ready(function () {
+        $("#hdOwner").val("@ViewBag.Owner");
+        bindMasterMenu();
+    });
+
+    function bindMasterMenu() {
+        var category = "CA255AEC-032E-4AB2-9CD4-D6BCB2EE00E0";
+        var mmenu = $("#MaserMenu");
+        var api = "http://" + hostAddress + "/Menu/GetListValues/" + category;
+        $.getJSON(api, function (data) {
+            mmenu.empty();
+            if (data.length > 0) {
+                mmenu.append(new Option("Select Master Menu", ""));
+                $.each(data, function (index, item) {
+                    mmenu.append(new Option(item.Name, item.ID));
+                });
+                var flag = $('#flag').val();
+                if (flag == 'U') {
+                    var select = $('#hdKey').val();
+                    mmenu.val(select);
+                }
+            }
+        });
+    }
+
+    function CreateMenuTree() {
+        var durl;
+        var model;
+        if ($("#MaserMenu").val() != "")
+            model = { id: $("#MaserMenu").val(), user: "@ViewBag.Owner" };
+        else
+            model = { id: null, user: null };
+        $.ajax({
+            url: "../GetMenuTreeViewAuthorization",
+            async: false,
+            type: "GET",
+            data: model,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                //thay Checked --> checked vi kendotreeview
+                var newData = JSON.stringify(data);
+                newData = newData.replace(/Checked/g, "checked");
+                $("#hdStrMenuId").val(data[0]["StrMenu"]);
+                //bind treeview
+                var dataSource = new kendo.data.HierarchicalDataSource({
+                    data: JSON.parse(newData)
+                });
+                $("#treeview").kendoTreeView({
+                    checkboxes: {
+                        checkChildren: true
+                    },
+                    check: onCheck,
+                    dataSource: dataSource
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function onchange_mastermenu() {
+        $("#treeview").empty();
+        var mastermenu = $("#MaserMenu").val();
+
+        CreateMenuTree();
+        $("#hdMasterMenu").val(mastermenu);
+    }
+
+    // function that gathers IDs of checked nodes
+    function checkedNodeIds(nodes, checkedNodes) {
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].checked) {
+                checkedNodes.push(nodes[i].id);
+            }
+            if (nodes[i].hasChildren) {
+                checkedNodeIds(nodes[i].children.view(), checkedNodes);
+            }
+        }
+    }
+
+    // show checked node IDs on datasource change
+    function onCheck() {
+        var checkedNodes = [],
+            treeView = $("#treeview").data("kendoTreeView"),
+            message, strmenuid;
+
+        checkedNodeIds(treeView.dataSource.view(), checkedNodes);
+
+        if (checkedNodes.length > 0) {
+            message = "IDs of checked nodes: " + checkedNodes.join(",");
+            strmenuid = checkedNodes.join(",")
+        } else {
+            message = "No nodes checked.";
+            strmenuid = "";
+        }
+        //$("#result").html(message);
+        $("#hdStrMenuId").val(strmenuid);
+    }
+</script>

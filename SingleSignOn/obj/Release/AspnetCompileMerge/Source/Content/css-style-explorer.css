@@ -1,0 +1,13 @@
+﻿@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .k-select .k-i-calendar {
+        margin-top: 7px !important;
+    }
+
+    #datepicker {
+        width: 98% !important;
+    }
+
+    .k-select .k-i-arrow-s {
+        margin-top: 4px;
+    }
+}

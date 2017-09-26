@@ -1,0 +1,70 @@
+﻿
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+<input type="hidden" id="hdfApplicationMasterName" value="@ViewBag.ApplicationMasterName" />
+<div class="tb-table" style="float: right">
+    <table>
+        <tr>
+            <th class="tb-col-1">
+                @Html.Label("Detail", new { @class = "label", @style = "color: red;" })
+            </th>
+            <th class="input-require tb-col-2">
+                @Html.Label("System", new { @class = "label" })
+                <input type="hidden" id="hdfSystemId" value="0" />
+            </th>
+            <td class="tb-col-2">
+                <div id="cbSystem"></div>
+            </td>
+            <th class="input-require tb-col-2">
+                @Html.Label("Seriousness", new { @class = "label" })
+                <input type="hidden" id="hdfSeriousId" value="0" />
+            </th>
+            <td class="tb-col-5">
+                <div id="cbSerious"></div>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="6">
+                @Html.Label("Explanation", new { @class = "label"})
+            </th>
+        </tr>
+        <tr>
+            <td colspan="6">
+                @Html.TextArea("txtExplanation", new { @style = "height: 100px" })
+
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+
+<script type="text/javascript">
+
+    var dataItEquipment = [];
+    var repeatIndex = 0;
+    var dataItEquipmentEntities = {};
+    var txtExplanation;
+    var txtSolution;
+    $(document).ready(function () {
+        //set height modal
+        $("#mdApprovalLine").height($('footer').position().top - 29);
+        
+        fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbSystem"), $("#hdfSystemId"), 'f13323ec-ead6-42b0-89bc-eac0589983fc', "100%");
+        fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbSerious"), $("#hdfSeriousId"), '6efeae92-60da-4c99-8455-73885f00d936', "100%");        
+        
+        txtExplanation = CKEDITOR.replace('txtExplanation');
+    });
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+  
+    function fnGetDataApplicationDetail() {
+        var dataInformationSystem = {};
+        dataInformationSystem.System = $("#hdfSystemId").val();
+        dataInformationSystem.Seriousness = $("#hdfSeriousId").val();
+        dataInformationSystem.Explanation = txtExplanation.getData();
+        console.log(dataInformationSystem);
+        return dataInformationSystem;
+    }
+
+</script>

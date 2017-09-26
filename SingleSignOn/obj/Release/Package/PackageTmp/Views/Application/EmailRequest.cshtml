@@ -1,0 +1,227 @@
+﻿
+<input type="hidden" id="hdfApplicationMasterName" value="@ViewBag.ApplicationMasterName" />
+<div class="tb-table" style="float: right">
+    <table>
+        <tr>
+            <th class="tb-col-1">
+                @Html.Label("Detail", new { @class = "label", @style = "color: red;" })
+            </th>
+            
+            <th class="input-require tb-col-1">
+                @Html.Label("Request", new { @class = "label" })
+                <input type="hidden" id="hdfRequestId" value="0" />
+            </th>
+            <td class="tb-col-8">
+                <div class="col-11" style="padding-right:3px; padding-left:0">
+                    <div id="cbRequest" style="float:left"></div>
+                </div>
+                <div class="col-1">
+                    <a class=Lbtn href="javascript:;" id="btnApplyRequest" style="float:right" name="btnGroupEmailRequest">
+                        <i class="fa fa-check" title="Apply request type" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                </div>
+            </td>
+            <td class="tb-col-3">
+                <div style="float:right">
+                    <a class=Lbtn href="javascript:;" id="btnPerson" name="btnGroupEmailRequest">
+                        <i class="fa fa-user" title="Person" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                    <a class=Lbtn href="javascript:;" id="btnGroup" name="btnGroupEmailRequest">
+                        <i class="fa fa-group" title="Group" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                    @*<a class=Lbtn href="javascript:;" id="btnSameRole" name="btnGroupEmailRequest">
+                        <i class="fa fa-copy" title="Employee Same Role" style="color:#343434; padding-top:5px"></i>
+                    </a>*@
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <div id="gridEmailRequest">
+                </div>
+
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+<script type="text/javascript">
+
+    var dataEmailRequest = [];
+    var repeatIndex = 0;
+    var dataEmailRequestEntities = {};
+    $(document).ready(function () {
+        fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbRequest"), $("#hdfRequestId"), '7f306c5f-2bf7-4ba7-a0f3-c7c5d3ef8156', "100%");
+        fnEmailRequest();
+
+        //set height modal
+        $("#mdApprovalLine").height($('footer').position().top - 29);
+        fnResize();
+    });
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    function fnEmailRequest() {
+
+        var deleteColumnHeader = function (value) {
+            return '<div style="text-align: center; position:absolute; left: 6px; z-index:999; font-weight:bold"><a href="javascript:;" onclick="fnDeleteRow(&#39;&#39;);"><i class="fa fa-trash" style="color:red"></i></a></div>';
+            //return "<a href='javascript:;' onclick='fnDeleteRow(&#39;&#39;);'><i class='fa fa-trash' style='padding-left:8px; color:red'></i></a>";
+        }
+
+        var deleteColumn = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return "<a href='javascript:;' onclick='fnDeleteRow(&#39;" + row + "&#39;);'><i class='fa fa-trash' style='padding:6px 0 0 11px; color:red'></i></a>";
+        }
+        
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'MasterId', type: 'int' },
+                { name: 'Name', type: 'string' },
+                { name: 'DeptId', type: 'int' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'Request', type: 'string' },
+                { name: 'RequestName', type: 'string' },
+                { name: 'Reason', type: 'string' },
+                { name: 'TimesPerMonth', type: 'int' }
+            ],
+            localdata: dataEmailRequest
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridEmailRequest").jqxGrid(
+            {
+                width: "100%",
+                source: dataAdapter,
+                selectionmode: 'multiplerowsextended',
+                columnsresize: true,
+                editable:true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex, editable: false },
+                    { text: 'EmpId', dataField: 'EmpId', width: 100, renderer: colHeaderLeft, editable: false },
+                    { text: 'Name', dataField: 'Name', width: 200, renderer: colHeaderLeft, editable: false },
+                    { text: 'Department', dataField: 'DeptName', width: 350, renderer: colHeaderLeft, editable: false },
+                    { text: 'Request', dataField: 'RequestName', width: 150, renderer: colHeaderLeft, editable: false },
+                    {
+                        text: 'Times/month', dataField: 'TimesPerMonth',cellsalign:"right" , columntype: 'numberinput', renderer: colHeaderRight, width: 100, editable: true,
+                        validation: function (cell, value) {
+                            if (value < 0) {
+                                return { result: false, message: "Quantity should be in > 0" };
+                            }
+                            return true;
+                        },
+                        createeditor: function (row, cellvalue, editor) {
+                            editor.jqxNumberInput({ decimalDigits: 0, digits: 3 });
+                        }
+                    },
+                    { text: 'Reason', dataField: 'Reason', renderer: colHeaderLeft, editable: true },
+                    { text: '', dataField: 'Delete', width: 30, renderer: deleteColumnHeader, cellsrenderer: deleteColumn, editable: false }
+                ]
+            });
+        $("#gridEmailRequest").on('cellendedit', function (event) {
+            // event arguments.
+            var args = event.args;
+            // column data field.
+            var dataField = event.args.datafield;
+            // row's bound index.
+            var rowBoundIndex = event.args.rowindex;
+            // cell value
+            var value = args.value;
+            // cell old value.
+            var oldvalue = args.oldvalue;
+            // row's data.
+            var rowData = args.row;
+            switch (dataField) {
+                case "TimesPerMonth":
+                    dataEmailRequest[rowBoundIndex].TimesPerMonth = value;
+                    break;
+                case "Reason":
+                    dataEmailRequest[rowBoundIndex].Reason = value;
+                    break;
+                default:
+            }            
+            //console.log(dataEmailRequest);
+        });
+    }
+
+    function fnDeleteRow(index) {
+        if (index === "") {
+            if (confirmDeleteAll()) {
+                dataEmailRequest = [];
+                fnEmailRequest();
+            }
+        } else {
+            if (confirmDelete()) {
+                dataEmailRequest.splice(index, 1);
+                fnEmailRequest();
+            }
+        }
+    }
+
+    function fnAddToGridDetail(data) {
+        $.each(data, function (index, item) {
+            if (item !== undefined) {                
+                var dataItem = { EmpId: item.LoginID, Name: item.Name, DeptId: item.DeptId, DeptName: item.DeptFullName, Request: "", RequestName: "", Reason: "", TimesPerMonth: 0 };
+                //if (dataEmailRequest.map(function (d) { return d["EmpId"] }).indexOf(dataItem.EmpId) === -1)
+                 dataEmailRequest.push(dataItem);
+            }
+        })
+        fnEmailRequest();
+    }
+
+    function fnResize() {
+        $("#gridEmailRequest").jqxGrid({ height: $("#divApplicationDetail").height() - 42 });
+    }
+    
+    function fnGetDataApplicationDetail() {
+        return dataEmailRequest;
+    }
+    $("#btnPerson").on("click", function () {
+        var empId = $("#hdfUserId").val();
+        $.ajax({
+            type: "POST",
+            url: "/User/User_Read",
+            data: JSON.stringify({
+                filterscount: 0, groupscount: 0, pagenum: 0, pagesize: 20, recordstartindex: 0, recordendindex: 20,
+                selectType: 1, deptCode: 0, userId: empId, userName: empId, status: ""
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                var resultData = result.Rows;
+                var dataItem = { EmpId: resultData[0].LoginID, Name: resultData[0].Name, DeptId: resultData[0].DeptId, DeptName: resultData[0].DeptFullName, Request: "", RequestName: "", Reason: "", TimesPerMonth: 0 };
+                dataEmailRequest.push(dataItem);
+                fnEmailRequest();
+            },
+            error: function () {
+                return [];
+            }
+        });
+    })
+
+    $("#btnGroup").on("click", function () {
+        var empId = "_checkbox";
+        var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+        $("#mdEmployeeInfor").modal("show");
+        $.get(link.replace('empId', empId), function (data) {
+            $("#mdEmployeeInfor .popup").html(data);
+        });
+    })
+    
+    $("#btnApplyRequest").on("click", function () {
+        var getselectedrowindexes = $('#gridEmailRequest').jqxGrid('getselectedrowindexes');
+        if (getselectedrowindexes.length === 0) {
+            showNotification("Hyosung Portal", "Please select row first", "gray warning");
+            return;
+        }
+        var module = $("#cbRequest").jqxComboBox("getSelectedItem");
+        for (var i = 0; i < getselectedrowindexes.length; i++) {
+            dataEmailRequest[getselectedrowindexes[i]].Request = module.value;
+            dataEmailRequest[getselectedrowindexes[i]].RequestName = module.label;
+        }
+        console.log(dataEmailRequest);
+        fnEmailRequest();
+    })
+
+</script>

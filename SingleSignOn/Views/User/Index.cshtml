@@ -1,0 +1,257 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@Scripts.Render("~/bundles/jqxsplitter")
+
+<script type="text/javascript">
+    //$(window).resize(function () {
+    //});
+    var dateFrom, dateTo;
+    $(document).ready(function () {
+        $("#jqxUserSearchType").jqxComboBox({ source: sourceSearch, selectedIndex: 0, width: '100', height: '21px', displayMember: 'name', valueMember: 'value' });
+        jqxUserPlantTree();
+        fnSetUserDataSource();
+
+        $("#txtUserSearchEmpid").jqxInput({ placeHolder: "Enter the employee id or name", height: 21, width: "97%", minLength: 1 });
+        $('#jqxTree').on('select', function (event) {
+            var item = $('#jqxTree').jqxTree('getItem', event.args.element);
+            categoryId = item.id;
+            //fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, $("#dateFrom").val(), $("#dateTo").val())
+        });
+    });
+</script>
+
+@section PanelLeft{
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+    <div class="jqx-hideborder text-intro">
+        Organization
+    </div>
+    <div class="jqx-hideborder jqx-hidescrollbars">
+        <div class="jqx-hideborder" id='jqxUserPlant'>
+        </div>
+        <input type="hidden" id="hdfUserPlantDeptId" value="0" />
+    </div>
+}
+
+
+<div id='jqxWidget-portal' style="margin: 10px; height:96%; width:100%">
+    <div id=LblockSearch>
+        <table>
+            <tbody>
+                <tr>
+                    <th style="width:35px">
+                        <label class="label">Search Type</label>
+                    </th>
+                    <td style="width:90px">
+                        <div id='jqxUserSearchType'>
+                        </div>
+                    </td>
+                    <td colspan="5">
+                        <input type="text" id="txtUserSearchEmpid" />
+                    </td>
+                    <td class="tools" style="width:200px">
+                        <a class="Lbtn" href="javascript:;"> <input id="btnUserSearch" type="button" value="Search"></a>
+                        <a class="Lbtn" href="javascript:;"> <input type="button" id="btnUserResetPass" value="Reset Password"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="gridUser"></div>
+</div>
+
+<script>
+    var sourceUserSearch = [{ value: 0, name: "All" }, { value: 1, name: "EmpId" }, { value: 2, name: "Name" }];
+
+    function fnRefreshGrid() {
+        fnSetUserDataSource();
+    }
+
+    function jqxUserPlantTree() {
+        var api = 'http://' + hostAddress + '//User/GetListTreeView';
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ deptId: 0 }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    id: 'id',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#jqxUserPlant').jqxTree({ source: records, width: '100%', height: $('footer').position().top - 204 });
+                var items = $('#jqxUserPlant').jqxTree('getItems');
+                $('#jqxUserPlant').jqxTree('selectItem', items[0]);
+
+                $('#jqxUserPlant').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxUserPlant').jqxTree('getItem', args.element);
+
+                    $("#hdfUserPlantDeptId").val(item.id);
+                    fnSetUserDataSource();
+                });
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    var rowIndex, source, deleteColumn, colRight, masterId = "";
+    function fnSetUserDataSource() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'SectionName', type: 'string' },
+                { name: 'ID', type: 'string' },
+                { name: 'LoginID', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'Email', type: 'string' },
+                { name: 'StatusName', type: 'string' }
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/User/User_Read',
+            cache: true,
+            data: {
+                selectType: $("#jqxUserSearchType").val() === 0 ? 1 : $("#jqxUserSearchType").val(),
+                deptCode: ($("#hdfUserPlantDeptId").val() === "0" ? 185 : $("#hdfUserPlantDeptId").val()),
+                userId: $("#txtUserSearchEmpid").val(),
+                userName: $("#txtUserSearchEmpid").val(),
+                status: ""//$("#cbStatus").val() === "00000000-0000-0000-0000-000000000000" ? "" : $("#cbStatus").val()
+            },
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridUser").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - 194,
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            pageable: true,
+            sortable: true,
+            selectionmode: 'checkbox',
+            pagesize: 20,
+            columnsresize: true,
+            pagesizeoptions: ['20', '50', '80', '100'],
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                { text: 'User ID', dataField: 'LoginID', width: 120 },
+                { text: 'Name', dataField: 'Name' },
+                { text: 'Email', dataField: 'Email', width: 150 },
+                { text: 'Status', dataField: 'StatusName', width: 120, cellsalign: 'center', renderer: colHeaderCenter },
+                { text: 'Organization', filterable: false, dataField: 'OrganizeName', width: 150, sortable: false, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Plant', dataField: 'PlantName', width: 130, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Department', dataField: 'DeptName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Section', dataField: 'SectionName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false }
+            ]
+        });
+    }
+
+    function fnSetUserDataSourceDropdown() {
+        var source =
+            {
+                datatype: "json",
+                datafields: [
+                    { name: 'ID', type: 'string' },
+                    { name: 'Name', type: 'string' }
+                ],
+                async: false,
+                //id: 'EmployeeID',
+                url: '/User/User_Read',
+                data: {
+                    category: '4C238FFC-EFB5-459B-B1E1-1670DFF78925',
+                    isFilter: true
+                }// category for user status
+            };
+
+        $("#cbStatus").jqxComboBox(
+        {
+            source: new $.jqx.dataAdapter(source),
+            width: 200,
+            height: 25,
+            selectedIndex: 0,
+            displayMember: 'Name',
+            valueMember: 'ID'
+        });
+    }
+
+    $('#gridUser').on('rowclick', function (event) {
+        var args = event.args;
+        masterId = args.row.bounddata.ID;
+    });
+
+    $("#txtUserSearchEmpid").keyup(function (e) {
+        if (e.keyCode == 13) {
+            fnSetUserDataSource();
+        }
+    });
+
+    $("#btnUserSearch").on("click", function () {
+        fnSetUserDataSource();
+    })
+    $("#btnUserResetPass").on("click", function () {
+        var result = confirm('Do you really want to reset that password?');
+        if (result) {
+            var loginId = '';
+            var selectedRows = $("#gridUser").jqxGrid('getselectedrowindexes');
+            $.each(selectedRows, function (index, item) {
+                var id = $("#gridUser").jqxGrid('getcellvalue', item, 'LoginID');
+                loginId = (loginId === '' ? id : loginId + ';' + id);
+            });
+            if (loginId === "")
+                return;
+            var api = "/User/ResetPassword";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify({ loginId: loginId }),
+                contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                async: false,
+                success: function (data) {
+                    showNotification("Hyosung Portal", "Update success", "gray success");
+                    fnSetUserDataSource();
+                },
+                error: function (result) {
+                    alert('Oh no: ' + result.responseText);
+                    return false;
+                }
+            });
+        }
+    }
+)
+</script>

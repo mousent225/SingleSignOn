@@ -1,0 +1,254 @@
+﻿@model IEnumerable<SingleSignOn.ViewModels.LogHistoryModel>
+@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+    ViewBag.Title = "Home Page";
+}
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxsplitter")
+@Scripts.Render("~/bundles/jqxdatetimeinput")
+
+
+@section PanelLeft{
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+    <div class="jqx-hideborder text-intro">
+        Organization
+    </div>
+    <div class="jqx-hideborder" id='jqxUserPlant'>
+    </div>
+    <input type="hidden" id="hdfUserPlantDeptId" value="0" />
+}
+
+<div id='jqxWidget-portal' style="margin: 10px;height:96%; width:100%">
+    <div id=LblockSearch>
+        <table>
+            <tbody>
+                <tr>
+                    <th class="LtextRight" style="width:27px">Search</th>
+                    <td>
+                        <input type="text" id="txtSubject" class="Ltext input" style="width: 100%" />
+                    </td>
+                    <th class="LtextRight" style="width:35px">Date</th>
+                    <td style="width:228px">
+                        <input type="text" id="dateFrom" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                        ~
+                        <input type="text" id="dateTo" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateTo" src="/Content/img/icon_cal.gif" border="0"></span>
+                    </td>
+                    <td class="tools" style="width:66px">
+                        <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Search"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="gridLogHistory"></div>
+</div>
+<script type="text/javascript">
+    var displayColumn = [];
+    $(document).ready(function () {
+
+        jqxUserPlantTree();
+
+        dateFrom = new dhtmlXCalendarObject({ input: "dateFrom", button: "iconDateFrom" });
+        dateFrom.setDateFormat("%Y.%m.%d");
+
+        dateTo = new dhtmlXCalendarObject({ input: "dateTo", button: "iconDateTo" });
+        dateTo.setDateFormat("%Y.%m.%d");
+
+        $("#txtSubject").jqxInput({ placeHolder: "Enter the title", height: 21, width: "99%", minLength: 1, maxLength: 500 });
+
+        fnSetUserDataSource($("#txtSubject").val(), $("#dateFrom").val(), $("#dateTo").val());
+
+    });
+    //function fnGridLogHistory() {
+
+    //    var subject = $("#txtSubject").val();
+    //    console.log(subject);
+    //    var source = {
+    //        datatype: "json",
+    //        datafields: [
+    //            { name: 'UserId', type: 'int' },
+    //            { name: 'Name', type: 'string' },
+    //            { name: 'OrganizeName', type: 'string' },
+    //            { name: 'PlantName', type: 'string' },
+    //            { name: 'DeptName', type: 'string' },
+    //            { name: 'StringIpAddress', type: 'string' },
+    //            { name: 'LogTime', type: 'date' },
+    //        ],
+
+    //        beforeprocessing: function (data) {
+    //            if (data != null) {
+    //                source.totalrecords = data.TotalRows;
+    //            }
+    //        },
+
+    //        url: '/LogHistory/GetAll',
+    //        data: {
+    //            subject: subject,
+    //            deptId: ($("#hdfUserPlantDeptId").val() === "0" ? 185 : $("#hdfUserPlantDeptId").val()),
+    //            dateFrom: dateFrom,
+    //            dateTo: dateTo
+    //        },
+    //    };
+    //    dataAdapter = new $.jqx.dataAdapter(source);
+
+    //    $("#gridLogHistory").jqxGrid(
+    //    {
+    //        width: "100%",
+    //        height: "90%",
+    //        source: dataAdapter,
+    //        rendergridrows: function () {
+    //            return dataAdapter.records;
+    //        },
+    //        enabletooltips: true,
+    //        showHeader: true,
+    //        rowsheight: 22,
+    //        virtualmode: true,
+    //        sortable: true,
+    //        altrows: true,
+    //        pageable: true,
+    //        pagesize: 20,
+    //        pagesizeoptions: ['20', '50', '100', '200'],
+    //        columns: [
+    //            { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+    //            { text: 'User ID', filterable: false, dataField: 'UserId', width: 150, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+    //            { text: 'Name', filtertype: 'input', dataField: 'Name', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+    //            { text: 'Organization Name', filtertype: 'input', dataField: 'OrganizeName', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+    //            { text: 'Plant Name', filtertype: 'input', dataField: 'PlantName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+    //            { text: 'Dept Name', filtertype: 'input', dataField: 'DeptName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+    //            { text: 'IP Address', filtertype: 'input', dataField: 'StringIpAddress', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+    //            { text: 'Log Time', filterable: false, dataField: 'LogTime', cellsalign: 'left', cellsformat: 'yyyy-MM-dd HH:mm:ss', renderer: colHeaderLeft, editable: false },
+    //            //{ text: 'Create Date', filterable: false, dataField: 'UpdateDate', width: 90, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter, editable: false }
+    //        ],
+    //        columnsresize: true,
+    //    });
+    //}
+
+    $("#btnSearch").on("click", function () {
+        //fnGridLogHistory($("#txtSubject").val(), $("#dateFrom").val(), $("#dateTo").val())
+        fnSetUserDataSource($("#txtSubject").val(), $("#dateFrom").val(), $("#dateTo").val());
+    });
+
+    //function fnRefreshGrid() {
+    //    fnSetUserDataSource();
+    //}
+
+    function jqxUserPlantTree() {
+        var api = 'http://' + hostAddress + '//User/GetListTreeView';
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ deptId: 0 }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    id: 'id',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                //console.log(records);
+                $('#jqxUserPlant').jqxTree({ source: records, width: '100%', height: $('footer').position().top - 200 });
+                var items = $('#jqxUserPlant').jqxTree('getItems');
+                $('#jqxUserPlant').jqxTree('selectItem', items[0]);
+
+                $('#jqxUserPlant').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxUserPlant').jqxTree('getItem', args.element);
+                    $("#hdfUserPlantDeptId").val(item.id);
+                    fnSetUserDataSource($("#txtSubject").val(), $("#dateFrom").val(), $("#dateTo").val());
+                });
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    var rowIndex, source, deleteColumn, colRight, masterId = "";
+
+    function fnSetUserDataSource(subject, dateFrom, dateTo) {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'UserId', type: 'int' },
+                { name: 'Name', type: 'string' },
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'StringIpAddress', type: 'string' },
+                { name: 'PcBrowser', type: 'string' },
+                { name: 'LogTime', type: 'date' },
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/LogHistory/GetAll',
+            cache: false,
+            data: {
+                subject: subject,
+                deptId: ($("#hdfUserPlantDeptId").val() === "0" ? 185 : $("#hdfUserPlantDeptId").val()),
+                userId: $("#txtUserSearchEmpid").val(),
+                userName: $("#txtUserSearchEmpid").val(),
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            },
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+
+        $("#gridLogHistory").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - 200,
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            enabletooltips: true,
+            showHeader: true,
+            rowsheight: 22,
+            virtualmode: true,
+            sortable: true,
+            altrows: true,
+            pageable: true,
+            pagesize: 30,
+            pagesizeoptions: ['20', '50', '100', '200'],
+            columns: [
+                { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+                { text: 'User ID', filterable: false, dataField: 'UserId', width: 150, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Name', filtertype: 'input', dataField: 'Name', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Organization Name', filtertype: 'input', dataField: 'OrganizeName', width: 200, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Plant Name', filtertype: 'input', dataField: 'PlantName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Dept Name', filtertype: 'input', dataField: 'DeptName', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'IP Address', filtertype: 'input', dataField: 'StringIpAddress', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Pc Browser', filtertype: 'input', dataField: 'PcBrowser', cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Log Time', filterable: false, dataField: 'LogTime', cellsalign: 'left', cellsformat: 'yyyy-MM-dd HH:mm:ss', renderer: colHeaderLeft, editable: false },
+            ]
+        });
+    }
+
+</script>

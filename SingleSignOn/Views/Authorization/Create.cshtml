@@ -1,0 +1,29 @@
+﻿@model SingleSignOn.ViewModels.AuthorizationModel
+@{
+    ViewBag.Title = "Create Authorization";
+}
+<style>
+    #grid {
+        height: 100%;
+    }
+</style>
+<input type="hidden" id="hdOwner" value="@ViewBag.Owner" />
+<input type="hidden" id="hdModifyUID" value="@ViewBag.CreateUser" />
+<div class="wrap-table">
+    @*<a href="#" class="btn btn-sm btn-primary" onclick="postData();"><i class="fa fa-plus-circle"></i> Save Authorization</a>*@
+    @*<a href="@Url.Action("Index","User")" class="btn btn-sm btn-default">List</a>*@
+
+    <div class="button-setting">
+        <button type="button" class="btn" onclick="postData();"> <i class="fa fa-floppy-o"></i> Save </button>
+    </div>
+    <div style="margin-top:40px">
+        <div id="grid"></div>
+    </div>
+</div>
+
+<script src="~/Scripts/Module/authorization.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        definitionGrid();
+    });
+</script>

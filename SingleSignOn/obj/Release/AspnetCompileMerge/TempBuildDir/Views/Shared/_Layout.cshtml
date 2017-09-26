@@ -1,0 +1,1024 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+<style type="text/css">
+    .text-intro {
+        padding-bottom: 10px;
+        color: #08c;
+    }
+
+    #container {
+        background: rgba(0, 0, 0, 0) url("../Content/img/bg_left.gif") repeat-y scroll 0 0;
+        float: left;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .myinfo {
+        background: #a8b3c6 none repeat scroll 0 0;
+        font-size: 11px;
+        height: 20px;
+        padding: 6px 0 0 3px;
+    }
+
+    #navigation {
+        margin: 0px;
+        padding: 0px;
+        text-indent: 0px;
+        background-color:;
+        width: 209px;
+    }
+
+        #navigation a.head {
+            cursor: pointer;
+            border-top: 1px dotted #CCCCCC;
+            background: #DCE9EE;
+            color: #454545;
+            display: block;
+            font-weight: bold;
+            margin: 0px;
+            padding: 8px 0 0 4px;
+            text-indent: 14px;
+            text-decoration: none;
+            height: 24px;
+        }
+
+        #navigation a.head2 {
+            cursor: pointer;
+            border-top: 1px dotted #CCCCCC;
+            background: #DCE9EE;
+            color: #343434;
+            display: block;
+            font-weight: bold;
+            margin: 0px;
+            padding: 8px 0 0 4px;
+            text-indent: 14px;
+            text-decoration: none;
+            height: 24px;
+            font-size: 12px;
+        }
+
+            #navigation a.head2:hover {
+                color: #263c8f;
+            }
+
+        #navigation a.head:hover {
+            color: #263c8f;
+        }
+
+        #navigation a.selected {
+            background-image: url(../Content/img/expanded.gif);
+        }
+
+        #navigation a.current {
+            background-color: #b4cbdd;
+            background: url(../Content/img/collapsed.gif) no-repeat scroll left 6px;
+            font-weight: bold;
+            color: #C74D7C;
+        }
+
+        #navigation ul {
+            border-width: 0px;
+            margin: 0px;
+            padding: 0 0 0 25px;
+            text-indent: 0px;
+            font-size: 12px;
+        }
+
+        #navigation li {
+            list-style: none outside none;
+            display: inline;
+            padding-top: 6px;
+        }
+
+            #navigation li li a {
+                color: #343434;
+                display: block;
+                text-indent: 5px;
+                text-decoration: none;
+                height: 18px;
+                padding: 3px 0 0 8px;
+                border-bottom: 0px solid #ccc;
+            }
+
+                #navigation li li a:hover {
+                    background: url(../Content/img/ico_bullet01.gif) no-repeat left 6px;
+                    color: #263c8f;
+                }
+
+    #div_img_toggle_btn {
+        margin-left: 192px;
+        padding-bottom: 0;
+        padding-right: 0;
+        padding-top: 2px;
+        position: absolute;
+    }
+
+    #line_map {
+        color: #464646;
+        height: 22px;
+        padding: 6px 10px 0;
+        background-color: #dce9ee;
+    }
+
+    #tbContact {
+        border-spacing: 0;
+    }
+
+        #tbContact tr {
+            border: 1px solid #D8D8D8;
+        }
+
+        #tbContact td {
+            font-size: 13px;
+            border-left: 1px solid #D8D8D8;
+        }
+
+    .situation {
+        background: rgba(0, 0, 0, 0) url("../Content/img/info_bg01.gif") repeat-x scroll 0 0;
+        clear: both;
+        height: 35px;
+        margin: 0 auto;
+        overflow: hidden;
+        width: 100%;
+    }
+
+        .situation DL {
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+        }
+
+            .situation DL DT {
+                background: rgba(0, 0, 0, 0) url("../Content/img/name_bg01.png") repeat-x scroll 0 0;
+                color: #fff;
+                height: 23px;
+                margin: 0 10px 0 0;
+                padding: 10px 0 0;
+                text-align: center;
+                width: 210px;
+            }
+
+            .situation DL DT {
+                float: left;
+                font-size: 11px;
+            }
+
+            .situation DL DD {
+                color: #666;
+                padding: 10px 20px 0 0;
+            }
+
+                .situation DL DD A {
+                    color: #666;
+                    text-decoration: none;
+                }
+
+    .panelSplit {
+        height: 100%;
+        width: 5px;
+        left: 200px;
+        border: 1px solid transparent;
+        border-top-width: 0px;
+        border-bottom-width: 0px;
+        background: #d9d9d9;
+        border-color: #b3b3b3;
+    }
+
+    .panelButton {
+        width: 5px;
+        height: 45px;
+        position: relative;
+        top: 50%;
+        left: 0px;
+        margin-top: -23px;
+        margin-left: 0px;
+        background-color: #428bca;
+        cursor: pointer;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/hsstyle/custom-jqwidgets.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="~/Content/img/favicon.png" />
+    <title>Hyosung Portal - @ViewBag.Title</title>
+
+
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/custom-style.css")
+    @Styles.Render("~/Content/hsstyle/page_style.css")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/freeow")
+
+    @Scripts.Render("~/bundles/jqwidgets")
+
+    @Styles.Render("~/Content/kendo/css")
+</head>
+<body style="overflow:hidden">
+    <!-- Freeown-Alert -->
+    <div id="freeow-tr" class="freeow freeow-top-right"></div>
+    <!-- Notification -->
+    <div id="errorPlace" style="display: none;">
+        @if (TempData["notiMsg"] != null)
+        {
+            <p id="notiMsg">@TempData["notiMsg"]</p>
+            <p id="notiTitle">@TempData["notiTitle"]</p>
+            <p id="notiStyle">@TempData["notiStyle"]</p>
+        }
+        else
+        {
+            <p id="notiMsg"></p>
+            <p id="notiTitle"></p>
+            <p id="notiStyle"></p>
+        }
+    </div>
+    <!--Header-->
+    <header>
+        <div class="container">
+            <!-- header -->
+            <div class="header">
+                <h1 class="top_logo"> <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/lg_pis_logo.png" alt="Hyosung VietNam Portal" style="position:absolute; z-index:1" /></a> </h1>
+
+                @*<div class="logo"><a href="javascript:;"><img src="~/Content/img/lg_pis_logo.png" /></a></div>*@
+                <!-- util start -->
+                <div class="util">
+                    <ul>
+                        <li>
+                            <fieldset style="border: none; margin-top: -12px">
+                                <p style="margin-top: 6px;">
+                                    <label for="lang"><strong>Language</strong></label>
+                                    <select id="top_lang" onchange="" style="vertical-align: middle; margin-bottom: 2px;">
+                                        <option value="EN" selected>English</option>
+                                        <option value="VN">Vietnammese</option>
+                                    </select>
+                                </p>
+                            </fieldset>
+                        </li>
+                        <li><a href="javascript:;" onclick="showMailGroup();" class="todo">Mail Group</a></li>
+                        <li><a href="javascript:;" onclick="showContact();" class="todo">Contact</a></li>
+                        <li><a href="javascript:;" onclick="showModalInfor();" class="todo" id="ulti">Profile</a></li>
+                        <li><a href="@Url.Action("Logout", "Anonymous")"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="nav">
+        <div class="container">
+            <div id="main" role="main">
+
+                @if (User.GetClaimValue(ClaimTypes.Sid) == null)
+                {
+                    Response.Redirect("~/Anonymous/Login");
+                }
+                else
+                {
+                    @Html.Action("NavigationBar", "Home")
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+    <section>
+        <div id="container" style="background-image: none">
+            <div class="content-main" id="contents">
+                <div class="link">
+                    <div>
+                        @Html.MvcSiteMap().SiteMapPath()
+                    </div>
+                </div>
+                <div class="content-main-body">
+                    @*<div class="panelLeft" style="width:200px; height:100%; float:left">
+                        <div class="situation" style="width: 100%;">
+                            <dl>
+                                <dt>Welcome <strong>@User.GetClaimValue(ClaimTypes.Name)</strong></dt>
+                            </dl>
+                        </div>
+                        <div style="margin:5px; overflow:auto">
+                            @RenderSection("PanelLeft", false)
+                        </div>
+                    </div>*@
+                    @*<div class="panelSplit" style="float:left;height:100%">
+                        <div class="panelButton" onclick="fnHidePanel()"></div>
+                    </div>
+                    <div class="panelRight" style="float:left;height:100%">*@
+                        @RenderBody()
+               @*  </div> *@    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="link-footer">
+                <a target="_blank" href="http://222.255.206.1:2050/"><img src="~/Content/img/hyosung-footer.png" /></a> <a>|</a> <a target="_blank" href="http://www.hyosung.com/en/index.do">Global Excellence</a>
+            </div>
+            <div class="copyright">copyright &copy; 2017 Hyosung VietNam. All Right Reserved.</div>
+            <input type="hidden" id="hdfMaxFileSize" value="@System.Configuration.ConfigurationManager.AppSettings["maxRequestLength"]" />
+        </div>
+    </footer>
+
+
+    <div id="mdShowInfor" class="modal fade" tabindex="-1" data-width="50%" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>
+                <label>My Information</label>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <div class="tb-table" style="float: right; margin-bottom:5px">
+                <table>
+                    <tr>
+                        <th class="tb-col-3">
+                            <label class="label">Department</label>
+                        </th>
+                        <td class="tb-col-9">
+                            <label class="label">@User.GetClaimValue("DeptName")</label>
+                        </td>
+                    <tr>
+                        <th class="tb-col-3">
+                            <label class="label">Name</label>
+                        </th>
+                        <td class="tb-col-9">
+                            <label class="label">@User.GetClaimValue(ClaimTypes.Name)</label>
+                        </td>
+                    <tr>
+                        <th class="tb-col-3">
+                            <label class="label">Employee ID</label>
+                        </th>
+                        <td class="tb-col-9">
+                            <label class="label" id="lblEmpid">@User.GetClaimValue(ClaimTypes.Sid)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="tb-col-3">
+                            <label class="label">Email</label>
+                        </th>
+                        <td class="tb-col-9">
+                            <label class="label">@User.GetClaimValue(ClaimTypes.Email)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="tb-col-3">
+                            <label class="label">Role</label>
+                        </th>
+                        <td class="tb-col-9">
+                            <label class="label">@User.GetClaimValue(ClaimTypes.Role)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="input-require">
+                            <label class="label">Old Password</label>
+                        </th>
+                        <td>
+                            <input type="password" id="PasswordOld" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="input-require">
+                            <label class="label">New Password</label>
+                        </th>
+                        <td>
+                            <input type="password" id="PasswordNew" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="input-require">
+                            <label class="label">Confirm Password</label>
+                        </th>
+                        <td>
+                            <input type="password" id="PasswordConfirm" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="Lbtn" href="javascript:;"> <input onclick="_doOnChangePassword()" type="button" value="Confirm"></a>
+            <a class="Lbtn" href="javascript:;"> <input data-dismiss="modal" type="button" value="Cancel"></a>
+        </div>
+    </div>
+
+    <div id="mdShowContact" class="modal fade" tabindex="-1" data-width="80%" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>
+                <label>Contact List</label>
+            </h4>
+        </div>
+        <div class="modal-body">
+
+            <table id="tbContact" width="100%" border="1" style="margin-bottom:5px">
+                <tr style="background-color:#D9E1F2; font-weight:bold">
+                    <td width="4%" style="text-align: center; ">No</td>
+                    <td width="16%">System</td>
+                    <td width="23%">PIC Name</td>
+                    <td width="29%">Email</td>
+                    <td width="12%" style="text-align: center">Ext</td>
+                    <td width="16%" style="text-align: center; border-right:1px solid #D8D8D8 ">Tel</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">1</td>
+                    <td>Portal</td>
+                    <td rowspan="5">Nguyễn Nhân Nghĩa</td>
+                    <td rowspan="5">nghia55160524@hyosung.com</td>
+                    <td rowspan="5" style="text-align: center">781-1272</td>
+                    <td rowspan="5" style="text-align: center; border-right:1px solid #D8D8D8 ">0903 063 189</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">2</td>
+                    <td>TCSS</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">3</td>
+                    <td>Meal</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">4</td>
+                    <td>Homepage</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">5</td>
+                    <td>Wet Drawing Chart</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" style="text-align: center">6</td>
+                    <td rowspan="4">SAP</td>
+                    <td>Nguyễn Đức An</td>
+                    <td>nguyenan@hyosung.com</td>
+                    <td style="text-align: center">781-1270</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">0913 829 223</td>
+                </tr>
+                <tr>
+                    <td>Đỗ Thị Hồng Chăm</td>
+                    <td>cham@hyosung.com</td>
+                    <td style="text-align: center">781-1251</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">01277 287 677</td>
+                </tr>
+                <tr>
+                    <td>Võ Công Danh</td>
+                    <td>vocongdanh@hyosung.com</td>
+                    <td style="text-align: center">781-1311</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">0937 366 393</td>
+                </tr>
+                <tr>
+                    <td>Nguyễn Quốc Chí</td>
+                    <td>chi55151426@hyosung.com</td>
+                    <td style="text-align: center">781-1475</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">01205 428 215</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center">7</td>
+                    <td rowspan="2">WMS</td>
+                    <td>Võ Công Danh</td>
+                    <td>vocongdanh@hyosung.com</td>
+                    <td style="text-align: center">781-1311</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">0937 366 393</td>
+                </tr>
+                <tr>
+                    <td>Nguyễn Quốc Chí</td>
+                    <td>chi55151426@hyosung.com</td>
+                    <td style="text-align: center">781-1475</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">01205 428 215</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">8</td>
+                    <td>GBIS</td>
+                    <td>Võ Công Danh</td>
+                    <td>vocongdanh@hyosung.com</td>
+                    <td style="text-align: center">781-1311</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">0937 366 393</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">9</td>
+                    <td>HR</td>
+                    <td>Đỗ Thị Hồng Chăm</td>
+                    <td>cham@hyosung.com</td>
+                    <td style="text-align: center">781-1251</td>
+                    <td style="text-align: center; border-right:1px solid #D8D8D8 ">01277 287 677</td>
+                </tr>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <a class="Lbtn" href="javascript:;"> <input data-dismiss="modal" type="button" value="Cancel"></a>
+        </div>
+    </div>
+
+    <div id="mdMailGroup" class="modal fade" tabindex="-1" data-width="95%" style="display: none; height:90%">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>
+                <label>Mail Group</label>
+            </h4>
+        </div>
+        <div class="modal-body">
+
+            <div id="mailGroupSplitter">
+                <div>
+                    <div id="mdDivLeft" style="padding: 0 10px 0; float:left; width:16%">
+                        <div class="jqx-hideborder" id='jqxPlant'>
+                        </div>
+                        <input type="hidden" id="hdfMailGroupDeptId" value="0" />
+                    </div>
+
+                    <div id="mdDivRight" style="padding: 0 0 10px; float:right; width:82%; height:100%">
+                        <div id='jqxTabs'>
+                            <ul>
+                                <li>Mail Group</li>
+                                <li>Mail List</li>
+                            </ul>
+                            <div id="divMailGroup">
+                                <div class="divSearch">
+                                    <div id=LblockSearch>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th style="width:35px">
+                                                        <label class="label">Department Name</label>
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="txtSearchDeptName" />
+                                                    </td>
+                                                    <td class="tools" style="width:266px">
+                                                        <a class="Lbtn" href="javascript:;"> <input id="btnSearchMailGroup" type="button" value="Search"></a>
+                                                        <a class="Lbtn" href="javascript:;"> <input id="btnCopyMailGroup" type="button" value="Copy"></a>
+                                                        <a class="Lbtn" href="javascript:;"> <input id="btnMailGroupExcel" type="button" value="Export To Excel"></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <div id="gridMailGroup"></div>
+                            </div>
+                            <div id="divListMail">
+                                <div class="divSearch">
+                                    <div id=LblockSearch>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th style="width:35px">
+                                                        <label class="label">Search Type</label>
+                                                    </th>
+                                                    <td style="width:90px">
+                                                        <div id='jqxSearchType'>
+                                                        </div>
+                                                    </td>
+                                                    <td colspan="5">
+                                                        <input type="text" id="txtSearchEmpid" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><label class="label">Sex</label></th>
+                                                    <td>
+                                                        <div id='jqxSearchSex'>
+                                                        </div>
+                                                    </td>
+                                                    <th style="width:27px"><label class="label">Nation</label></th>
+                                                    <td style="width:90px">
+                                                        <div id='jqxSearchNation'>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:98px">
+                                                        <label class="label" for="cbSearchHasEmail">Has Email</label>
+                                                        <input type="checkbox" id="cbSearchHasEmail" checked />
+                                                    </td>
+                                                    <td class="tools">
+                                                        <a class="Lbtn" href="javascript:;"> <input id="btnSearchMailList" type="button" value="Search"></a>
+                                                        <a class="Lbtn" href="javascript:;"> <input id="btnCopyMailList" type="button" value="Copy"></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <div class="divContent">
+                                    <div id="gridListMail"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="Lbtn" href="javascript:;"> <input data-dismiss="modal" type="button" value="Close"></a>
+        </div>
+    </div>
+
+</body>
+</html>
+
+@Scripts.Render("~/bundles/common-js")
+@Scripts.Render("~/bundles/js")
+@Scripts.Render("~/bundles/jqwidgets")
+@Scripts.Render("~/bundles/jqxPasswordInput")
+@Scripts.Render("~/bundles/jqxtabs")
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxtree")
+@Scripts.Render("~/bundles/jqwidgetsCombobox")
+
+@Scripts.Render("~/bundles/kendo")
+
+@RenderSection("scripts", required: false)
+<script type="text/javascript">
+
+    var UserModel = {
+        LoginID: "",
+        Password: "",
+        PasswordOld: "",
+        PasswordNew: "",
+        PasswordRepeat: ""
+    }
+    var sourceSearch = [{ value: 0, name: "All" }, { value: 1, name: "EmpId" }, { value: 2, name: "Name" }];
+    var sourceSex = [{ value: "", name: "All" }, { value: "M", name: "Male" }, { value: "F", name: "Female" }];
+    var sourceNation = [{ value: "", name: "All" }, { value: "01", name: "Viet Nam" }, { value: "02", name: "Korea" }];
+
+    var firstLoad = true;
+
+    $(window).resize(function () {
+        SetHeight($(".content-main-body"), $('footer').position().top - 140);
+        $(".panelRight").width($(".content-main").width() - $(".panelLeft").width() - $(".panelSplit").width() - 41);
+    });
+
+    function fnHidePanel() {
+        if ($(".panelLeft").is(":visible")) {
+            $(".panelLeft").hide();
+            $(".panelRight").width(screen.width - $(".panelSplit").width() - 19);
+        }
+        else {
+            $(".panelLeft").show();
+            $(".panelRight").width(screen.width - $(".panelLeft").width() - $(".panelSplit").width() - 41);
+        }
+
+    }
+
+    $(document).ready(function () {
+
+        SetHeight($(".content-main-body"), $('footer').position().top - 124);
+        $(".panelRight").width(screen.width - $(".panelLeft").width() - $(".panelSplit").width() - 41);
+
+        DisplayNotification();
+        var inputPasword = {
+            height: 21,
+            width: "100%",
+            showStrength: true,
+            passwordStrength: function (password, characters, defaultStrength) {
+                var length = password.length;
+                var letters = characters.letters;
+                var numbers = characters.numbers;
+                var specialKeys = characters.specialKeys;
+                var strengthCoefficient = letters + numbers + 2 * specialKeys + letters * numbers * specialKeys;
+                var strengthValue;
+                if (length < 4) {
+                    strengthValue = "Too short";
+                } else if (strengthCoefficient < 10) {
+                    strengthValue = "Weak";
+                } else if (strengthCoefficient < 20) {
+                    strengthValue = "Fair";
+                } else if (strengthCoefficient < 30) {
+                    strengthValue = "Good";
+                } else {
+                    strengthValue = "Strong";
+                };
+                return strengthValue;
+            }
+        };
+        $("#PasswordOld").jqxPasswordInput({
+            width: '100%',
+            height: '21px',
+            showStrength: false
+        });
+        $("#PasswordNew").jqxPasswordInput(inputPasword);
+        $("#PasswordConfirm").jqxPasswordInput(inputPasword);
+
+        //set height modal
+
+        $(".p_ul").hide();
+        $("#ulti").click(function () {
+            if ($(".p_ul").css('display') == 'none')
+                $(".p_ul").slideToggle();
+            else if ($(".p_ul").css('display') == 'block')
+                $(".p_ul").slideToggle();
+        });
+        var index = $.jqx.cookie.cookie("jqxTabs_jqxWidget");
+        if (undefined == index) index = 0;
+
+        var fnMailGroupTabsClick = function (tab) {
+            switch (tab) {
+                case 0:
+                    fnMailGroup().sourceMailGroup.data = {
+                        deptId: $("#hdfMailGroupDeptId").val()
+                    };
+                    fnMailGroup().dataAdapter.dataBind();
+                    $("#gridMailGroup").jqxGrid("updatebounddata");
+                    break;
+                case 1:
+                    fnListMail().dataAdapter.dataBind();
+                    $("#gridListMail").jqxGrid("updatebounddata");
+                    break;
+            }
+        }
+
+        $('#jqxTabs').jqxTabs({ selectedItem: index, width: '99%', height: "80%", position: 'top', keyboardNavigation: false });//, initTabContent: fnMailGroupTabsClick
+        // on to the select event.
+        $("#jqxTabs").on('selected', function (event) {
+            // save the index in cookie.
+            $.jqx.cookie.cookie("jqxTabs_jqxWidget", event.args.item);
+        });
+
+        $('#jqxTabs').on('tabclick', function (event) {
+            var tabclicked = event.args.item;
+            fnMailGroupTabsClick(tabclicked);
+        });
+
+    });
+
+    function showMailGroup() {
+        if (firstLoad) {
+            fnPlantTree();
+            firstLoad = false;
+            $("#jqxSearchType").jqxComboBox({ source: sourceSearch, selectedIndex: 0, width: '100', height: '21px', displayMember: 'name', valueMember: 'value' });
+            $("#jqxSearchSex").jqxComboBox({ source: sourceSex, selectedIndex: 0, width: '100', height: '21px', displayMember: 'name', valueMember: 'value' });
+            $("#jqxSearchNation").jqxComboBox({ source: sourceNation, selectedIndex: 0, width: '100', height: '21px', displayMember: 'name', valueMember: 'value' });
+
+            $("#txtSearchEmpid").jqxInput({ height: 21, width: "99%", minLength: 1 });
+            $("#txtSearchDeptName").jqxInput({ height: 21, width: "99%", minLength: 1, maxLength: 200 });
+
+            if ($("#divListMail").is(':visible')) {
+                fnListMail();
+            } else {
+                fnMailGroup();
+            }
+
+        }
+        $("#mdMailGroup").modal("show");
+        $('#mdDivLeft').css({ 'max-height': $("#mdMailGroup").height() - 80, 'height': $("#mdMailGroup").height() - 80, 'overflow-x': 'hidden', 'overflow-y': 'auto' });
+        $('#mdDivRight').css({ 'max-height': $("#mdMailGroup").height() - 80, 'height': $("#mdMailGroup").height() - 80, 'overflow-x': 'hidden', 'overflow-y': 'auto' });
+    }
+
+    function showContact() {
+        $("#mdShowContact").modal("show");
+    }
+    function showModalInfor() {
+        $("#mdShowInfor").modal("show");
+    }
+
+    function getDataChangePass() {
+        UserModel.LoginID = $("#lblEmpid").html();
+        UserModel.Password = $("#PasswordNew").val();
+        UserModel.PasswordOld = $("#PasswordOld").val();
+        if (!fnCheckEmpty($("#PasswordOld"), "Please enter the old password"))
+            return false;
+
+        UserModel.PasswordNew = $("#PasswordNew").val();
+        if (!fnCheckEmpty($("#PasswordNew"), "Please enter the new password"))
+            return false;
+        UserModel.PasswordRepeat = $("#PasswordConfirm").val();
+        if (!fnCheckEmpty($("#PasswordConfirm"), "Please enter the new password again"))
+            return false;
+
+        if (UserModel.PasswordNew !== UserModel.PasswordRepeat) {
+            $("#PasswordRepeat").focus();
+            showNotification("Hyosung Portal", "The password entered does not match", "gray error");
+            return false;
+        }
+        return true;
+    }
+
+    function _doOnChangePassword() {
+        if (!getDataChangePass())
+            return false;
+        $.ajax({
+            url: "http://" + hostAddress + "/Anonymous/UpdatePass",
+            async: false,
+            type: "POST",
+            data: JSON.stringify(UserModel),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.result === "OK") {
+                    showNotification("Hyosung Portal", "Update password success!", "gray success");
+                    $("#modalChangePass").modal("hide");
+                    $("#txtPassword").val("");
+                } else {
+                    showNotification("Hyosung Portal", data.mess, "gray error");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function fnPlantTree() {
+        var api = 'http://' + hostAddress + '//User/GetListTreeView';
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ deptId: 0 }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    id: 'id',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#jqxPlant').jqxTree({ source: records, width: '100%', height: '100%' });
+                var items = $('#jqxPlant').jqxTree('getItems');
+                $('#jqxPlant').jqxTree('selectItem', items[0]);
+                $('#jqxPlant').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxPlant').jqxTree('getItem', args.element);
+
+                    $("#hdfMailGroupDeptId").val(item.id);
+                    //fnMailGroup(item.id);
+                    if ($("#divListMail").is(':visible')) {
+                        fnListMail().dataAdapter.dataBind();
+                        $("#gridListMail").jqxGrid("updatebounddata");
+                    } else {
+                        fnMailGroup().sourceMailGroup.data = {
+                            deptId: $("#hdfMailGroupDeptId").val()
+                        };
+                        fnMailGroup().dataAdapter.dataBind();
+                        $("#gridMailGroup").jqxGrid("updatebounddata");
+                    }
+                });
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+    var countNumber = 0;
+    function fnMailGroup() {
+        var sourceMailGroup = {
+            datatype: "json",
+            datafields: [
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'SectionName', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'MailGroup', type: 'string' },
+                { name: 'KoName', type: 'string' }
+            ],
+            url: 'http://' + hostAddress + '/User/GetListMailGroup',
+            data: {
+                deptId: ($("#hdfMailGroupDeptId").val() === "0" ? 185 : $("#hdfMailGroupDeptId").val()),
+                deptName: $("#txtSearchDeptName").val()
+            }
+        };
+        dataAdapter = new $.jqx.dataAdapter(sourceMailGroup, {
+            autoBind: false,
+            downloadComplete: function (data, status, xhr) { console.log(status) },
+            beforeLoadComplete: function (records) { console.log(1) },
+            loadComplete: function (data) { console.log(data) },
+            loadError: function (xhr, status, error) { console.log(error) }
+        });
+        // create Tree Grid
+        $("#gridMailGroup").jqxGrid(
+        {
+            width: "98%",
+            height: "80%",
+            source: dataAdapter,
+            pageable: false,
+            sortable: true,
+            enabletooltips: true,
+            selectionmode: 'checkbox',
+            columns: [
+                { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'Organization', filterable: false, dataField: 'OrganizeName', width: 150, sortable: false, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Plant', dataField: 'PlantName', width: 130, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Department', dataField: 'DeptName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Section', dataField: 'SectionName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Mail Group Address', dataField: 'MailGroup', width: 150, cellsalign: "left", renderer: colHeaderLeft },
+                { text: 'Group Name Korean', dataField: 'KoName', width: 130, cellsalign: "left", renderer: colHeaderLeft },
+                { text: 'Group Name English', filterable: false, width: 150, dataField: 'Name', sortable: false, cellsalign: "left", renderer: colHeaderLeft }
+
+            ],
+            columnsresize: true,
+        });
+        $("#gridMailGroup").on("bindingcomplete", function (event) {
+            console.log("bindingcomplete");
+        });
+    }
+
+    function fnListMail(searchType, empId, empName, sex, nation, deptId, hasEmail) {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'SectionName', type: 'string' },
+                { name: 'EmpId', type: 'string' },
+                { name: 'EmpName', type: 'string' },
+                { name: 'Email', type: 'string' }
+            ],
+            url: 'http://' + hostAddress + '/User/GetListMail',
+            data: {
+                searchType: $("#jqxSearchType").val(),
+                empId: $("#txtSearchEmpid").val(),
+                empName: $("#txtSearchEmpid").val(),
+                sex: $("#jqxSearchSex").val(),
+                nation: $("#jqxSearchNation").val(),
+                deptId: $("#hdfMailGroupDeptId").val() === "0" ? 0 : $("#hdfMailGroupDeptId").val(),
+                hasEmail: $("#cbSearchHasEmail").prop("checked")
+            }
+            //string subject, string category, string userId, int id
+        };
+        dataAdapter = new $.jqx.dataAdapter(source);
+        // create Tree Grid
+        $("#gridListMail").jqxGrid(
+        {
+            width: "99%",
+            height: "80%",
+            source: dataAdapter,
+            enabletooltips: true,
+            editable: true,
+            selectionmode: "checkbox",
+            columns: [
+                { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+                { text: 'Organization', filterable: false, dataField: 'OrganizeName', width: 150, sortable: false, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Plant', dataField: 'PlantName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Department', dataField: 'DeptName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Section', dataField: 'SectionName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Employee ID', dataField: 'EmpId', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Name', dataField: 'EmpName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Email', dataField: 'Email', width: 200, cellsalign: "left", renderer: colHeaderLeft, editable: false }
+            ],
+            columnsresize: true,
+        });
+    }
+
+    $("#btnSearchMailList").on("click", function () {
+        fnListMail($("#jqxSearchType").val(), $("#txtSearchEmpid").val(), $("#txtSearchEmpid").val(), $("#jqxSearchSex").val(), $("#jqxSearchNation").val(), $("#hdfMailGroupDeptId").val(), $("#cbSearchHasEmail").prop("checked"));
+    });
+
+    $("#btnCopyMailList").on("click", function () {
+        var selectedRows = $("#gridListMail").jqxGrid('getselectedrowindexes');
+        //console.log(selectedRows);
+
+        var listEmail = '';
+        $.each(selectedRows, function (index, item) {
+            var email = $("#gridListMail").jqxGrid('getcellvalue', item, 'Email');
+            listEmail = (listEmail === '' ? email : listEmail + ';' + email);
+        });
+        copyTextToClipboard(listEmail);
+        showNotification("Hyosung Portal", "Copied to clipboard", "gray success");
+    });
+
+    $("#btnSearchMailGroup").on("click", function () {
+        fnMailGroup();
+    });
+
+    $("#btnCopyMailGroup").on("click", function () {
+        var selectedRows = $("#gridMailGroup").jqxGrid('getselectedrowindexes');
+        //console.log(selectedRows);
+
+        var listEmail = '';
+        $.each(selectedRows, function (index, item) {
+            var email = $("#gridMailGroup").jqxGrid('getcellvalue', item, 'MailGroup');
+            listEmail = (listEmail === '' ? email : listEmail + ';' + email);
+        });
+        copyTextToClipboard(listEmail);
+        showNotification("Hyosung Portal", "Copied to clipboard", "gray success");
+    });
+    $("#btnMailGroupExcel").on("click", function () {
+        var date = new Date();
+        $("#gridMailGroup").jqxGrid('exportdata', 'xls', 'MailGroup' + date.getDate() + (date.getMonth() + 1) + date.getFullYear());
+    });
+    $("#txtSearchEmpid").keyup(function (e) {
+        if (e.keyCode == 13) {
+            fnListMail();
+        }
+    });
+
+</script>

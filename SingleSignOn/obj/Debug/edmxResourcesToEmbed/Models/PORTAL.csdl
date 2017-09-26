@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PORTALModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="HR_Emp_Master">
+    <Key>
+      <PropertyRef Name="EmpId" />
+    </Key>
+    <Property Name="EmpId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Code" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LocalName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Kname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Ename" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <Property Name="DeptCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Img" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="WorkGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Temp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="FactoryId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="SYS_Authorization">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Action" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Controller" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IsAllowed" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="CreateUID" Type="Guid" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUID" Type="Guid" />
+    <Property Name="Owner" Type="Guid" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SYS_Category">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Remark" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="CreateUID" Type="Guid" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUID" Type="Guid" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="DeleteDate" Type="DateTime" Precision="3" />
+    <Property Name="DeleteUID" Type="Guid" />
+  </EntityType>
+  <EntityType Name="SYS_CategoryValue">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Dictionary" Type="Guid" />
+    <Property Name="Sequence" Type="Byte" />
+    <Property Name="Actived" Type="Boolean" Nullable="false" />
+    <Property Name="Category" Type="Guid" Nullable="false" />
+    <Property Name="ParentID" Type="Guid" />
+    <Property Name="Remark" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="CreateUID" Type="Guid" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUID" Type="Guid" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="DeleteDate" Type="DateTime" Precision="3" />
+    <Property Name="DeleteUID" Type="Guid" />
+    <Property Name="SubCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="SYS_Document">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Path" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ParentID" Type="Guid" />
+    <Property Name="Sequence" Type="Byte" Nullable="false" />
+    <Property Name="DocNo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Actived" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="CreateUID" Type="Guid" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUID" Type="Guid" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="DeleteDate" Type="DateTime" Precision="3" />
+    <Property Name="DeleteUID" Type="Guid" />
+    <Property Name="Authorized" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="SYS_User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="LoginID" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="IMG" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Actived" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="CreateUID" Type="Guid" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUID" Type="Guid" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="DeleteUID" Type="Guid" />
+    <Property Name="DeleteDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="T_MAPPING_EMPLOYEE_SUBSYSTEM">
+    <Key>
+      <PropertyRef Name="SYS_ID" />
+      <PropertyRef Name="EMPLOYEE_ID" />
+    </Key>
+    <Property Name="SYS_ID" Type="Int32" Nullable="false" />
+    <Property Name="EMPLOYEE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="T_SYS_SUBSYSTEM" Relationship="Self.FK_T_MAPPING_EMPLOYEE_SUBSYSTEM_T_SYS_SUBSYSTEM" FromRole="T_MAPPING_EMPLOYEE_SUBSYSTEM" ToRole="T_SYS_SUBSYSTEM" />
+  </EntityType>
+  <EntityType Name="T_MAPPING_PERMISSION">
+    <Key>
+      <PropertyRef Name="EMPLOYEE_ID" />
+      <PropertyRef Name="FUNCTION_ID" />
+    </Key>
+    <Property Name="EMPLOYEE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FUNCTION_ID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="T_SYS_FUNCTION" Relationship="Self.FK_T_MAPPING_PERMISSION_T_SYS_FUNCTION" FromRole="T_MAPPING_PERMISSION" ToRole="T_SYS_FUNCTION" />
+  </EntityType>
+  <EntityType Name="T_SYS_EMPLOYEE">
+    <Key>
+      <PropertyRef Name="EMPID" />
+    </Key>
+    <Property Name="EMPID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EMPLOYEE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EMPLOYEE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EMPLOYEE_FNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PASSWORD" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="NATION" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="NATION_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="LEFT_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="JOIN_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SEX" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="CORPERATION_CODE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CORPERATION_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PLANT_CODE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="PLANT_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="DEPT_CODE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="DEPT_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SECTION_CODE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="SECTION_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="LOCATION_CODE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="LOCATION_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="EMAIL" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="POSITION_CODE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="POSITION_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="WORKING_STATUS" Type="Byte" />
+    <Property Name="JOB_TITLE_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="JOB_TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TEL" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="IMAGE" Type="Binary" MaxLength="500" FixedLength="true" />
+    <Property Name="ROLE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="isFIRST" Type="Boolean" />
+    <NavigationProperty Name="T_SYS_ROLE" Relationship="Self.FK_T_SYS_EMPLOYEE_T_SYS_ROLE" FromRole="T_SYS_EMPLOYEE" ToRole="T_SYS_ROLE" />
+  </EntityType>
+  <EntityType Name="T_SYS_FUNCTION">
+    <Key>
+      <PropertyRef Name="FUCTION_ID" />
+    </Key>
+    <Property Name="FUCTION_ID" Type="Int32" Nullable="false" />
+    <Property Name="FUNCTION_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="F_URL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="F_PARENT_ID" Type="Int32" />
+    <Property Name="F_ORDER" Type="Int32" />
+    <Property Name="F_STATUS" Type="Int32" />
+    <Property Name="CREATE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="UPDATE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="DELETE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="DELETE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="F_isDELETE" Type="Boolean" />
+    <NavigationProperty Name="T_MAPPING_PERMISSION" Relationship="Self.FK_T_MAPPING_PERMISSION_T_SYS_FUNCTION" FromRole="T_SYS_FUNCTION" ToRole="T_MAPPING_PERMISSION" />
+    <NavigationProperty Name="T_SYS_ROLE" Relationship="Self.T_MAPPING_ROLE_FUNCTION" FromRole="T_SYS_FUNCTION" ToRole="T_SYS_ROLE" />
+  </EntityType>
+  <EntityType Name="T_SYS_ROLE">
+    <Key>
+      <PropertyRef Name="ROLE_ID" />
+    </Key>
+    <Property Name="ROLE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ROLE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="DESCRIPTION" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="STATUS" Type="Int32" />
+    <Property Name="CREATE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="CREATE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="UPDATE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="DELETE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="DELETE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="ROLE_isDELETE" Type="Boolean" />
+    <NavigationProperty Name="T_SYS_EMPLOYEE" Relationship="Self.FK_T_SYS_EMPLOYEE_T_SYS_ROLE" FromRole="T_SYS_ROLE" ToRole="T_SYS_EMPLOYEE" />
+    <NavigationProperty Name="T_SYS_FUNCTION" Relationship="Self.T_MAPPING_ROLE_FUNCTION" FromRole="T_SYS_ROLE" ToRole="T_SYS_FUNCTION" />
+  </EntityType>
+  <EntityType Name="T_SYS_SUBSYSTEM">
+    <Key>
+      <PropertyRef Name="SYS_ID" />
+    </Key>
+    <Property Name="SYS_ID" Type="Int32" Nullable="false" />
+    <Property Name="SYS_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SYS_URL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="SYS_STATUS" Type="Boolean" />
+    <Property Name="CREATE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="UPDATE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="DELETE_USER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="DELETE_DATE" Type="DateTime" Precision="0" />
+    <Property Name="SYS_isDELETE" Type="Boolean" />
+    <NavigationProperty Name="T_MAPPING_EMPLOYEE_SUBSYSTEM" Relationship="Self.FK_T_MAPPING_EMPLOYEE_SUBSYSTEM_T_SYS_SUBSYSTEM" FromRole="T_SYS_SUBSYSTEM" ToRole="T_MAPPING_EMPLOYEE_SUBSYSTEM" />
+  </EntityType>
+  <Association Name="FK_T_MAPPING_EMPLOYEE_SUBSYSTEM_T_SYS_SUBSYSTEM">
+    <End Role="T_SYS_SUBSYSTEM" Type="Self.T_SYS_SUBSYSTEM" Multiplicity="1" />
+    <End Role="T_MAPPING_EMPLOYEE_SUBSYSTEM" Type="Self.T_MAPPING_EMPLOYEE_SUBSYSTEM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="T_SYS_SUBSYSTEM">
+        <PropertyRef Name="SYS_ID" />
+      </Principal>
+      <Dependent Role="T_MAPPING_EMPLOYEE_SUBSYSTEM">
+        <PropertyRef Name="SYS_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_T_MAPPING_PERMISSION_T_SYS_FUNCTION">
+    <End Role="T_SYS_FUNCTION" Type="Self.T_SYS_FUNCTION" Multiplicity="1" />
+    <End Role="T_MAPPING_PERMISSION" Type="Self.T_MAPPING_PERMISSION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="T_SYS_FUNCTION">
+        <PropertyRef Name="FUCTION_ID" />
+      </Principal>
+      <Dependent Role="T_MAPPING_PERMISSION">
+        <PropertyRef Name="FUNCTION_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_T_SYS_EMPLOYEE_T_SYS_ROLE">
+    <End Role="T_SYS_ROLE" Type="Self.T_SYS_ROLE" Multiplicity="0..1" />
+    <End Role="T_SYS_EMPLOYEE" Type="Self.T_SYS_EMPLOYEE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="T_SYS_ROLE">
+        <PropertyRef Name="ROLE_ID" />
+      </Principal>
+      <Dependent Role="T_SYS_EMPLOYEE">
+        <PropertyRef Name="ROLE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="T_MAPPING_ROLE_FUNCTION">
+    <End Role="T_SYS_FUNCTION" Type="Self.T_SYS_FUNCTION" Multiplicity="*" />
+    <End Role="T_SYS_ROLE" Type="Self.T_SYS_ROLE" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="PORTALEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="HR_Emp_Master" EntityType="Self.HR_Emp_Master" />
+    <EntitySet Name="SYS_Authorization" EntityType="Self.SYS_Authorization" />
+    <EntitySet Name="SYS_Category" EntityType="Self.SYS_Category" />
+    <EntitySet Name="SYS_CategoryValue" EntityType="Self.SYS_CategoryValue" />
+    <EntitySet Name="SYS_Document" EntityType="Self.SYS_Document" />
+    <EntitySet Name="SYS_User" EntityType="Self.SYS_User" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="T_MAPPING_EMPLOYEE_SUBSYSTEM" EntityType="Self.T_MAPPING_EMPLOYEE_SUBSYSTEM" />
+    <EntitySet Name="T_MAPPING_PERMISSION" EntityType="Self.T_MAPPING_PERMISSION" />
+    <EntitySet Name="T_SYS_EMPLOYEE" EntityType="Self.T_SYS_EMPLOYEE" />
+    <EntitySet Name="T_SYS_FUNCTION" EntityType="Self.T_SYS_FUNCTION" />
+    <EntitySet Name="T_SYS_ROLE" EntityType="Self.T_SYS_ROLE" />
+    <EntitySet Name="T_SYS_SUBSYSTEM" EntityType="Self.T_SYS_SUBSYSTEM" />
+    <AssociationSet Name="FK_T_MAPPING_EMPLOYEE_SUBSYSTEM_T_SYS_SUBSYSTEM" Association="Self.FK_T_MAPPING_EMPLOYEE_SUBSYSTEM_T_SYS_SUBSYSTEM">
+      <End Role="T_SYS_SUBSYSTEM" EntitySet="T_SYS_SUBSYSTEM" />
+      <End Role="T_MAPPING_EMPLOYEE_SUBSYSTEM" EntitySet="T_MAPPING_EMPLOYEE_SUBSYSTEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_T_MAPPING_PERMISSION_T_SYS_FUNCTION" Association="Self.FK_T_MAPPING_PERMISSION_T_SYS_FUNCTION">
+      <End Role="T_SYS_FUNCTION" EntitySet="T_SYS_FUNCTION" />
+      <End Role="T_MAPPING_PERMISSION" EntitySet="T_MAPPING_PERMISSION" />
+    </AssociationSet>
+    <AssociationSet Name="FK_T_SYS_EMPLOYEE_T_SYS_ROLE" Association="Self.FK_T_SYS_EMPLOYEE_T_SYS_ROLE">
+      <End Role="T_SYS_ROLE" EntitySet="T_SYS_ROLE" />
+      <End Role="T_SYS_EMPLOYEE" EntitySet="T_SYS_EMPLOYEE" />
+    </AssociationSet>
+    <AssociationSet Name="T_MAPPING_ROLE_FUNCTION" Association="Self.T_MAPPING_ROLE_FUNCTION">
+      <End Role="T_SYS_FUNCTION" EntitySet="T_SYS_FUNCTION" />
+      <End Role="T_SYS_ROLE" EntitySet="T_SYS_ROLE" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(PORTALModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(PORTALModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_SYSTEM_INTERFACE_EMPLOYEE" />
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>

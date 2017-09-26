@@ -1,0 +1,292 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@model SingleSignOn.ViewModels.NoticesModel
+@{
+    ViewBag.Title = "Insert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxfileupload")
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+
+
+<div id='jqxWidget-portal' class="row">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div class="col-3" style="padding-top:5px">
+                <label class="label" style="color:#448CCB">Insert Notice</label>
+            </div>
+            <div class="col-9" style="text-align:right">
+                <a class=Lbtn href="@Url.Action("Insert","Notices")">
+                    <input type="reset" value="Reset">
+                </a>
+                <a class=Lbtn href="javascript:;">
+                    <input type="button" value=Save id="btnSave">
+                </a>
+
+                <a class=Lbtn href="@Url.Action("Index","Notices")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+    <div style="clear: both"></div>
+    <div id="divMainContent" class="divContent">
+            <table class="tb-table" >
+                <tr>
+                    <th class="input-require tb-col-1">
+                        @Html.LabelFor(m => m.Subject, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-5">
+                        @Html.ValidationMessageFor(m => m.Subject)
+                        @Html.TextBoxFor(m => m.Subject, new { @class = "input", @id = "txtSubject" })
+                    </td>
+                    <th class="tb-col-1">
+                        @Html.LabelFor(m => m.Active, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-1" style="text-align: left">
+                        @Html.CheckBoxFor(m => m.Active, new { @class = "input", @style = "width: 30px" })
+                    </td>
+                    <td class="tb-col-4" style="text-align: left; vertical-align: top" rowspan="2">
+                        <table>
+                            <tr>
+                                <th>
+                                    <label class="label">Writer</label>
+                                </th>
+                                <td>
+                                    <label class="label">@User.GetClaimValue(ClaimTypes.Name)</label>
+                                </td>
+                                <th>
+                                    <label class="label">Create Date</label>
+                                </th>
+                                <td>
+                                    <label class="label">@String.Format("{0:yyyy.MM.dd}", DateTime.Now)</label>
+                                </td>
+                            </tr>
+                        </table>
+                        <label class="label">A filename contain any of the following characters will be replace with blank: &#92; &#47; &#58; &#42; &#63; &quot; &lt; &gt; &#124;</label>
+                        <div id="jqxFileUpload">
+                        </div>
+                        <div id="gridAttachment" style="float: right">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="">
+                        @Html.LabelFor(m => m.Descript, new { @class = "label" })
+                    </th>
+                    <td colspan="3">
+                        @Html.ValidationMessageFor(m => m.Descript)
+                        @Html.TextAreaFor(m => m.Descript, new { @class = "input", @rows = "10", @id = "txtDesc" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+</div>
+
+
+<script>
+    var dataAttachment = [];
+
+    var NoticesModel = {
+        Subject: "",
+        Descript: "",
+        AttachFile: false,
+        Active: false,
+        FileName: "",
+        FilePath: ""
+    };
+
+    $(window).resize(function () {
+        SetHeight($("#divMainContent"), $('footer').position().top - 155);
+    });
+    var txtDesc;
+    $(document).ready(function () {
+
+        SetHeight($("#divMainContent"), $('footer').position().top - 155);
+
+        $("#txtSubject").jqxInput({ placeHolder: "Enter Title", height: 25, width: "100%", minLength: 1, maxLength: 200 });
+
+        txtDesc = CKEDITOR.replace('txtDesc');
+
+        txtDesc.on("instanceReady", function () {
+            setTimeout(function () {
+                $(".cke_inner").height($("#divMainContent").height() - 46);
+                $(".cke_contents").height($("#divMainContent").height() - 117);
+                $("#cke_txtDesc").parent().height($("#cke_txtDesc").height() + 8);
+            }, 1000);
+        });
+        $('#jqxFileUpload').jqxFileUpload({
+            autoUpload: true,
+            width: '100%',
+            accept: ".gif,.jpg,jpeg,.png,.bmp,.doc,.docx,.xlsx,.xls,.pdf,.ppt,.pptx",
+            uploadUrl: "@Url.Content("~/Notices/UploadFile")",
+            fileInputName: 'fileToUpload',
+            localization: {
+                browseButton: 'Select File ...'
+            }
+        });
+        $('#jqxFileUpload').on('select', function (event) {
+            var SIZE_ALLOW = $("#hdfMaxFileSize");
+            var args = event.args;
+            var fileName = args.file;
+            var fileSize = args.size;
+            if (fileSize > SIZE_ALLOW) {
+                showNotification("Hyosung Portal", "Check again: No support file size over: " + SIZE_ALLOW, "gray error");
+                $('#jqxFileUpload').jqxFileUpload('cancelFile', 0);
+            }
+        });
+
+        $('#jqxFileUpload').on('uploadEnd', function (event) {
+            var args = event.args;
+            var fileName = args.file;
+            var serverResponce = args.response;
+            if (args.response.indexOf("Check again") !== -1) {
+                showNotification("Hyosung Portal", args.response, "gray error");
+                return;
+            }
+            result = JSON.parse(serverResponce);
+            //console.log(result);
+            var item = { FileName: result[0].FileName, FilePath: result[0].FilePath };
+            dataAttachment.push(item);
+            fnAttachment(dataAttachment);
+        });
+
+    });
+
+    function fnAttachment(dataSource) {
+        var attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            //<a href='../Data/Notices/QUYTRINHQUANLYNHANVIEN/1. DONDENGHITUYENDUNG (worker-đã chỉnh sửa 20 07 2014).doc'><img src='../Content/img/icon-paperclip.gif'></a>
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : ""; //onclick = 'showModalAttachment(&#39;" + rowData.ID + "&#39;);'
+        }
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' }
+            ],
+            localdata: dataSource
+        };
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+
+        $("#gridAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "77%",
+            source: dataAdapter,
+            pageable: true,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderLeft },
+                { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft },
+                { text: 'Delete', dataField: 'Delete', width: 43, cellsrenderer: deleteColumn, renderer: colHeaderCenter }
+            ]
+        });
+    }
+
+    function deleteFile(model) {
+        var result = confirm('Do you really want to delete that row?');
+        if (result) {
+            var api = "../Notices/DeleteFile";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete file success", "gray success");
+                        var filePath = JSON.parse(model).FilePath;
+                        dataAttachment.forEach(function (item) {
+                            if (item.FilePath === filePath) {
+                                dataAttachment.splice(dataAttachment.indexOf(item), 1);
+                            }
+                        });
+                        fnAttachment(dataAttachment);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    $("#btnSave").on("click", function () {
+        if (!getData()) return;
+        fnInsertCate();
+        return;
+    });
+
+    function getData() {
+        var subject = $("#txtSubject");
+        if (subject.val() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Title", "gray error");
+            subject.focus();
+            return false;
+        }
+
+        var descript = txtDesc.getData();
+        if (removeTags(descript).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Descript", "gray error");
+            descript.focus();
+            return false;
+        }
+
+        NoticesModel.Subject = subject.val();
+        NoticesModel.Descript = txtDesc.getData();
+        NoticesModel.Active = $("#Active").prop("checked");
+
+        NoticesModel.FileName = "";
+        NoticesModel.FilePath = "";
+
+        if (dataAttachment.length >= 1) {
+            dataAttachment.forEach(function (item) {
+                NoticesModel.FileName = (NoticesModel.FileName === "" ? item.FileName : (NoticesModel.FileName + "|" + item.FileName));
+                NoticesModel.FilePath = (NoticesModel.FilePath === "" ? item.FilePath : (NoticesModel.FilePath + "|" + item.FilePath));
+            })
+        }
+
+        return true;
+    }
+
+    function fnInsertCate() {
+        var api = "../Notices/Insert";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(NoticesModel),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", "Insert success", "gray success");
+                setTimeout(function () {
+                    window.location = "../Notices/Index";
+                }, 1000);
+
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+
+</script>
+
+

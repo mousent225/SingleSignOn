@@ -1,0 +1,161 @@
+﻿@model SingleSignOn.ViewModels.UserModel
+<style>
+    .field-validation-valid {
+        color: red;
+    }
+</style>
+<div class="modal-white-bg row">
+    @*@using (Html.BeginForm("EditProfile", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "formEditProfile" }))
+        {*@
+    <form enctype="multipart/form-data" id="formEditProfile">
+        @Html.ValidationSummary(true)
+        @Html.ValidationMessage("UpdateError", new { id = "vSummary" })
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.LoginID)
+        @Html.HiddenFor(model => model.Actived)
+        <input type="hidden" id="flag" value="U" />
+        <div class="row">
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <div class="row">
+                        <br />
+                        <img id="avata" class="col-md-12" src="@Model.IMG" alt="avata" width="120" height="120" style="padding-left: 0px !important; padding-right: 0px !important">
+                    </div>
+                    <div class="row">
+                        <input type="file" name="file" value="" accept='image/*' onchange="showAvata(this);" />
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name, "", new { id = "vName" })
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.ValidationMessageFor(model => model.Email)
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Mobile)
+                            @Html.ValidationMessageFor(model => model.Mobile, "", new { id = "vMobile" })
+                            @Html.TextBoxFor(model => model.Mobile, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="row" id="divChangePass">
+                        <div class="col-md-6" style="margin-top:10px;">
+                            <input type="checkbox" id="chChangePass" onclick="onclick_changepass()" /> Change pass
+                        </div>
+                    </div>
+                    <div class="row" id="divNewPass" style="display:none">
+                        <div class="col-md-4" id="divOldPass">
+                            @Html.LabelFor(model => model.PasswordOld)
+                            @Html.ValidationMessageFor(model => model.PasswordOld, "", new { id = "vPassOld" })
+                            @Html.PasswordFor(model => model.PasswordOld, new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="col-md-4" id="divNewPass">
+                            @Html.LabelFor(model => model.PasswordNew)
+                            @Html.ValidationMessageFor(model => model.PasswordNew, "", new { id = "vPassNew" })
+                            @Html.PasswordFor(model => model.PasswordNew, new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="col-md-4" id="divNewRePass">
+                            @Html.LabelFor(model => model.PasswordRepeat)
+                            @Html.ValidationMessageFor(model => model.PasswordRepeat, "", new { id = "vPassRepeat" })
+                            @Html.PasswordFor(model => model.PasswordRepeat, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <input type="button" class="btn btn-send btn-sm" value="Submit" onclick="return post_editprofile();" />
+            </div>
+        </div>
+    </form>
+    @*}*@
+</div>
+<script src="~/Scripts/Module/user.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    function onclick_changepass() {
+        var check = $("#chChangePass").prop("checked");
+        if (check)
+            $("#divNewPass").show();
+        else {
+            $("#divNewPass").hide();
+            $("#PasswordOld").val("");
+            $("#PasswordNew").val("");
+            $("#PasswordRepeat").val("");
+        }
+
+    }
+
+    function post_editprofile() {
+        if (checkdata()) {
+            var dataFile = new window.FormData($('#formEditProfile')[0]);
+            $.ajax({
+                url: "../EditProfile",
+                async: "",
+                type: "POST",
+                data: dataFile,
+                //dataType: "json",
+                //contentType: "application/json; charset=utf-8",
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    console.log(data);
+                    if (data == "OK") {
+                        showNotification("Hyosung Meal System", "Procese successful", "gray success");
+                        $("#modalProfile").modal("hide");
+                    } else if (data == "Err") {
+                        showNotification("Hyosung Meal System", "Insert category fail! Please check data or contact admin!", "gray error");
+                    }
+                    else {
+                        showNotification("Hyosung Meal System", data, "gray error");
+                        $("#vSummary").text(data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
+    }
+
+    function checkdata() {
+        var check = $("#chChangePass").prop("checked");
+        if (check) {
+            var oldPass = $("#PasswordOld").val();
+            var newPass = $("#PasswordNew").val();
+            var rePass = $("#PasswordRepeat").val();
+            if (oldPass == "") {
+                $("#vPassOld").text("Required!");
+                return false;
+            }
+            if (newPass == "") {
+                $("#vPassNew").text("Required!");
+                return false;
+            }
+            if (rePass == "") {
+                $("#vPassRepeat").text("Required!");
+                return false;
+            }
+            if (rePass != newPass) {
+                $("#vSummary").text("Repeat password is not correct");
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+
+
+

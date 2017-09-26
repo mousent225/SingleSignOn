@@ -1,0 +1,131 @@
+﻿@model SingleSignOn.ViewModels.UserModel
+@{
+    ViewBag.Title = "Edit User";
+}
+<div class="main-2">
+    @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.ValidationMessage("InsertError")
+        <input type="hidden" id="flag" value="U" />
+        @*<div class="row">
+                <div class="row form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <div class="row">
+                            <br />
+                            <img id="avata" class="col-md-12" src="@Model.IMG" alt="avata" width="120" height="120">
+                        </div>
+                        <div class="row">
+                            <input type="file" name="file" value="" accept='image/*' onchange="showAvata(this);" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.LoginID)
+                                @Html.ValidationMessageFor(model => model.LoginID)
+                                @Html.TextBoxFor(model => model.LoginID, new { @class = "form-control input-sm", @readonly = true })
+                            </div>
+                            <div class="col-md-6" style="margin-top:25px">
+                                @Html.CheckBoxFor(model => model.Actived)
+                                @Html.LabelFor(model => model.Actived)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.Email)
+                                @Html.ValidationMessageFor(model => model.Email)
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.Mobile)
+                                @Html.ValidationMessageFor(model => model.Mobile)
+                                @Html.TextBoxFor(model => model.Mobile, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <input type="submit" class="btn btn-send btn-sm" value="Submit" />&nbsp;
+                    <a href="@Url.Action("Index","User")" class="btn btn-sm btn-default">List</a>
+                </div>
+            </div>*@
+        <div class="wrap-table">
+        <div class="button-setting">
+          <!--<h1>Setup</h1>-->
+          <button type="submit" class="btn"> <i class="fa fa-floppy-o"></i> Save </button>
+          @*<button type="button" class="btn"> <i class="fa fa-plus"></i> Add </button>
+          <button type="button" class="btn"> <i class="fa fa-angle-double-left"></i> Previous List </button>*@
+        </div>
+        <div class="popup content-popup">
+          <table cellspacing="0" cellpadding="0">
+            <colgroup>
+            <col width="20%">
+            <col width="60%">
+            <col width="20%">
+            </colgroup>
+            <tbody>
+              <tr> 
+              	<td></td>
+                <td><img id="avata" class="" src="@Model.IMG" alt="avata" width="120" height="120"></td> 
+                <td></td>
+              </tr>   
+              <tr> 
+              	<td></td>
+                <td style="text-align:left"><input type="file" name="file" value="" accept='image/*' onchange="showAvata(this);" /></td> 
+                <td></td>
+              </tr> 
+              <tr>
+                <th><u>*</u>Login ID @Html.ValidationMessageFor(model => model.LoginID)</th>
+                <td>
+                    @Html.TextBoxFor(model => model.LoginID, new { @class = "", @readonly = true })</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th></th>
+                <td>
+                    @Html.CheckBoxFor(model => model.Actived)
+                    @Html.LabelFor(model => model.Actived)</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th>Name</th>
+                <td>@Html.TextBoxFor(model => model.Name, new { @class = "" })</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th>Email @Html.ValidationMessageFor(model => model.Email)</th>
+                <td>
+                    @Html.TextBoxFor(model => model.Email, new { @class = "" })</td>
+                <td></td>
+              </tr>
+              @*<tr>
+                <th>Mobile</th>
+                <td><input name="" type="text" /></td>
+                <td></td>
+              </tr>*@
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+</div>
+<script src="~/Scripts/Module/user.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+</script>
+
+
+

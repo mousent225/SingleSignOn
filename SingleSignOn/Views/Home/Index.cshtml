@@ -1,0 +1,376 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutWebMaster.cshtml";
+    ViewBag.Title = "Home Page";
+}
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxsplitter")
+@Scripts.Render("~/bundles/jqxdatetimeinput")
+
+<style type="text/css">
+    #main_container {
+        background: #fff url("../Content/img/bg_main_left.gif") repeat-y scroll 0 0;
+        float: left;
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    #main_content a:link {
+        color: #4f4f4f;
+        font-weight: normal;
+        text-decoration: none;
+    }
+
+    .situation {
+        background: rgba(0, 0, 0, 0) url("../Content/img/info_bg01.gif") repeat-x scroll 0 0;
+        clear: both;
+        height: 35px;
+        margin: 0 auto;
+        overflow: hidden;
+        width: 100%;
+    }
+
+        .situation DL {
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+        }
+
+            .situation DL DT {
+                background: rgba(0, 0, 0, 0) url("../Content/img/name_bg01.png") repeat-x scroll 0 0;
+                color: #fff;
+                height: 35px;
+                text-align: center;
+                width: 183px;
+                padding-top:10px;
+            }
+
+            .situation DL DT {
+                float: left;
+                font-size: 11px;
+            }
+
+            .situation DL DD {
+                color: #666;
+                padding: 10px 20px 0 0;
+            }
+
+                .situation DL DD A {
+                    color: #666;
+                    text-decoration: none;
+                }
+
+    .snb {
+        float: left;
+        margin-right: 11px;
+        padding-top: 7px;
+        width: 209px;
+    }
+
+    .main_left_menu {
+        margin: 0 auto;
+        width: 150px;
+        margin-left: -3px;
+    }
+
+    .schedule {
+        float: left;
+        padding-left: 10px;
+        padding-top: 7px;
+        width: 329px;
+    }
+
+    #m_layer {
+        border: 1px none;
+        position: relative;
+        width: 100%;
+    }
+    .title_f {
+        text-align: left !important;
+    }
+
+    .i_notice {
+        text-align: left !important;
+    }
+
+    .LblockTab {
+        background: rgba(0, 0, 0, 0) url("../Content/img/tab_bg.gif") repeat-x scroll left bottom;
+        height: 26px;
+        margin: 10px 0;
+    }
+
+    .tabs-menu li {
+        float: left;
+        height: 25px;
+        line-height: 26px;
+    }
+
+        .tabs-menu li.Lcurrent {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            border-right: 1px solid #7c7c7c;
+            position: relative;
+            z-index: 5;
+        }
+
+    .LblockTab li.Lcurrent {
+        background-position: left -31px;
+    }
+
+    .tabs-menu li a {
+        color: #fff !important;
+        padding: 10px;
+        text-decoration: none !important;
+    }
+
+    .tabs-menu .Lcurrent a {
+        color: #2e7da3 !important;
+        font-weight: bold !important;
+    }
+
+    #approvalcount {
+        color: red;
+    }
+
+    .schedule {
+        float: left;
+        padding-left: 10px;
+        padding-top: 7px;
+        width: 120%;
+        padding-top: 40px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(window).resize(function () {
+        $("#gridNoticesMaster").jqxGrid({ height: $('footer').position().top - 350 });
+    });
+    $(document).ready(function () {
+        
+        $("#jqxCalendar").jqxCalendar({ width: "100%", height: 220 });
+
+    });
+</script>
+
+@section PanelLeft{
+    <div class="jqx-hideborder">
+        <div class="situation" style="width: 100%;">
+            <dl>
+                <dt>Welcome <strong>@User.GetClaimValue(ClaimTypes.Name)</strong></dt>
+            </dl>
+        </div>
+    </div>
+    <div class="jqx-hideborder jqx-hidescrollbars">
+        <div class="main_left_menu">
+
+            <div class="schedule">
+                <div id='jqxCalendar'>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div id='jqxWidget-portal' style="height:100%; width:100%">
+    <div class="row" style="width:100%; background-color: #E4EDF9;">
+        <div style="float:left">
+            <a href="@Url.Action("Index", "Notices")">
+                <img alt="HYOSUNG VietNam Notice" src="~/Content/img/notice_board.png" style="border: 0"> Hyosung Notice
+            </a>
+        </div>
+        <div style="float:right">
+            <a href="@Url.Action("Index", "Notices")">
+                <img alt="HYOSUNG VietNam Notice" src="~/Content/img/btn_more.gif" style="border: 0; padding-top:6px">
+            </a>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+    <div class="row" id="main_content">
+        <div class="h_notice">
+
+            <div id="gridNoticesMaster"></div>
+        </div>
+    </div>
+</div>
+<!-- Modal //------------------------------------------------------------------------------------->
+<div id="mdMasterAttachfile" class="modal fade" tabindex="-1" data-width="60%" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4>
+            <label>File Attachment</label>
+        </h4>
+    </div>
+    <div class="modal-body" style="height:400px">
+        <div id="gridMasterAttachment">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class=Lbtn href="javascript:;">
+            <input type="button" value="Download All" id="btnDownloadAllMaster" />
+        </a>
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        fnGridNoticesMaster();
+
+        $('.tab > div:eq(0)').show();
+        $(".tabs-menu a").click(function (event) {
+            event.preventDefault();
+            $(this).parent().addClass("Lcurrent");
+            $(this).parent().siblings().removeClass("Lcurrent");
+            var tab = $(this).attr("href");
+            $(".tab-content").not(tab).css("display", "none");
+            $(tab).fadeIn();
+        });
+
+        $(".p_ul").hide();
+        $("#ulti").click(function () {
+            if ($(".p_ul").css('display') == 'none')
+                $(".p_ul").slideToggle();
+            else if ($(".p_ul").css('display') == 'block')
+                $(".p_ul").slideToggle();
+        });
+
+    });
+
+    var rowSubjectMaster = function (row, column, value, defaultHtml, columnSettings, rowData) {
+        return '<div style="margin-left:5px; margin-right:5px">' +
+            '<div style="text-align: left; margin-top: 5px;"><a href="#" onclick="showDetail(&#39;' + rowData.Id + '&#39;)" style="color:#343434">' + value + '</a></div>' + 
+        '</div>';
+    }
+
+    var attachFileMaster = function (row, column, value, defaultHtml, columnSettings, rowData) {
+        return value ? "<a href='#' onclick='showModalMasterAttachment(&#39;" + rowData.Id + "&#39;);'style='padding:10px' >" + "<i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+            : "";
+    }
+
+    function fnGridNoticesMaster() {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Id', type: 'int' },
+                { name: 'Subject', type: 'string' },
+                { name: 'UpdateName', type: 'string' },
+                { name: 'UpdateDate', type: 'date' },
+                { name: 'Descript', type: 'string' },
+                { name: 'Active', type: 'bool' },
+                { name: 'AttachFile', type: 'bool' }
+            ],
+            url: '/Notices/GetTop10',
+            data: "",
+        };
+        dataAdapter = new $.jqx.dataAdapter(source);
+        // create Tree Grid
+        $("#gridNoticesMaster").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - $('#gridNoticesMaster').position().top - 20,
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            ready: function () {
+                $('#gridNoticesMaster').jqxGrid('autoresizecolumns');
+            },
+            enabletooltips: true,
+            showHeader: true,
+            rowsheight: 22,
+            altrows: true,
+            columns: [
+                { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+                { text: 'File', filterable: false, dataField: 'AttachFile', width: 30, sortable: false, cellsrenderer: attachFileMaster, renderer: colHeaderCenter, editable: false },
+                { text: 'Title', filtertype: 'input', dataField: 'Subject', cellsrenderer: rowSubjectMaster, renderer: colHeaderLeft, editable: false },
+                { text: 'Author', filterable: false, dataField: 'UpdateName', width: 160, cellsalign: 'left', renderer: colHeaderLeft, editable: false },
+                { text: 'Create Date', filterable: false, dataField: 'UpdateDate', width: 90, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter, editable: false }
+            ],
+            columnsresize: true,
+        });
+    }
+    function showDetail(id) {
+        window.location.href = "/Notices/ViewDetail/" + id;
+        return true;
+    }
+
+    $("#btnDownloadAllMaster").on("click", function () {
+        var rows = $("#gridMasterAttachment").jqxGrid("getrows");
+        //console.log(rows);
+        var files = [];
+        rows.forEach(function (row) {
+            files.push(row.FilePath);
+        })
+
+        var api = "/Notices/GetZipFile";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ files: files }),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data !== "") {
+                    window.location.href = "/Notices/DownloadFile?fileName=" + data;
+                }
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    });
+
+    function showModalMasterAttachment(masterId) {
+        var attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : "";
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' }
+            ],
+            url: '/Notices/GetAttachment',
+            data: {
+                attachment: masterId,
+                moduleId: '01e35e18-c660-4e7a-b1f8-f71c1c667f10'
+            }
+        };
+
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+        $("#gridMasterAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "99%",
+            source: dataAdapter,
+            pageable: false,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderLeft },
+                { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft }
+            ]
+        });
+
+        $("#gridMasterAttachment").on('bindingcomplete', function (event) {
+            $("#mdMasterAttachfile").modal("show");
+        });
+    }
+</script>

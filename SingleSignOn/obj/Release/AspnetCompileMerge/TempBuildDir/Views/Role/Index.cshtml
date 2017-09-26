@@ -1,0 +1,479 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<style type="text/css">
+    .col-md-3 {
+        width: 30%;
+        height: 100%;
+        float: left;
+        margin-left: 10px;
+    }
+
+    .col-md-2 {
+        width: 26%;
+        height: 100%;
+        float: left;
+        margin-left: 10px;
+    }
+
+    .col-md-4 {
+        width: 40%;
+        height: 100%;
+        float: left;
+        margin-left: 10px;
+    }
+</style>
+
+<div id='jqxWidget-portal' style="margin: 10px;width:99%; height:96%">
+
+    <!-- Search Condition //------------------------------------------------------------------------->
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div class="" style="float: left">
+                <label class="label" style="color:#448CCB">Role Management</label>
+            </div>
+            <div class="" style="float: right">
+                <div id="cbSystem" style="float:left; margin-right:5px"></div>
+                <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Role Config"></a>
+                <a class="Lbtn" href="javascript:;"> <input onclick="fnRefreshData()" type="button" value="Refresh"></a>
+                <a class="Lbtn" href="#"> <input onclick="fnSaveData()" type="button" value="Save"></a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+    <!-- Content //------------------------------------------------------------------------->
+    <div id="divContent">
+        <div class="col-md-2">
+            <div id="RoleGrid"></div>
+        </div>
+        <div class="col-md-4">
+            <div id="ControllerGrid"></div>
+        </div>
+        <div class="col-md-3" id="ActionContent">
+            <div id="ActionGrid"></div>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+    <!-- Modal //------------------------------------------------------------------------------------->
+
+</div>
+
+<script>
+
+    $(window).resize(function () {
+        //SetHeight($("#jqxWidget-portal"), $("body").height() - 112 - 48);
+        $("#divContent").css({ height: $('footer').position().top - 185 });
+    });
+
+    $(document).ready(function () {
+        //SetHeight($("#divContent"), $("body").height() - 262);
+        $("#divContent").css({ height: $('footer').position().top - 185 });
+        fnSetDataSource();
+        fnSetDataSourceController();
+        fnSetDataSourceAction();
+        fnSetDataDropDown();
+    });
+
+    function fnRefreshGrid() {
+        fnSetDataSource();
+    }
+
+    var rowIndex, source, deleteColumn, colRight
+        //para of role mapping
+        , roleId = "", controllerId = "";
+
+    var columnCheckBox = null;
+    var updatingCheckState = false;
+
+    var updatePageState = function (pagenum) {
+        var datainfo = $("#ActionGrid").jqxGrid('getdatainformation');
+        var pagenum = datainfo.paginginformation.pagenum;
+        var pagesize = datainfo.paginginformation.pagesize;
+        var startrow = pagenum * pagesize;
+        // select the rows on the page.
+        $("#ActionGrid").jqxGrid('beginupdate');
+        var checkedItemsCount = 0;
+        for (var i = startrow; i < startrow + pagesize; i++) {
+            var boundindex = $("#ActionGrid").jqxGrid('getrowboundindex', i);
+            var value = $("#ActionGrid").jqxGrid('getcellvalue', boundindex, 'IsAllow');
+            if (value) checkedItemsCount++;
+            if (value) {
+                $("#ActionGrid").jqxGrid('selectrow', boundindex);
+                $('#ActionGrid').jqxGrid({ selectedrowindexes: boundindex });
+            } else {
+                $("#ActionGrid").jqxGrid('unselectrow', boundindex);
+                $('#ActionGrid').jqxGrid({ selectedrowindexes: boundindex });
+            }
+        }
+
+        $("#ActionGrid").jqxGrid('endupdate');
+        if (checkedItemsCount == pagesize) {
+            columnCheckBox.jqxCheckBox({
+                checked: true
+            });
+        } else if (checkedItemsCount == 0) {
+            columnCheckBox.jqxCheckBox({
+                checked: false
+            });
+        } else {
+            columnCheckBox.jqxCheckBox({
+                checked: null
+            });
+        }
+    }
+
+    // update the selection after sort.
+    $("#ActionGrid").on('sort', function (event) {
+        updatePageState();
+    });
+
+    // update the selection after page change.
+    $("#ActionGrid").on('pagechanged', function (event) {
+        updatePageState();
+    });
+
+    // select or unselect rows when a checkbox is checked or unchecked.
+    $("#ActionGrid").on('cellvaluechanged', function (event) {
+        if (event.args.value) {
+            $("#ActionGrid").jqxGrid('selectrow', event.args.rowindex);
+        } else {
+            $("#ActionGrid").jqxGrid('unselectrow', event.args.rowindex);
+        }
+
+        // update the state of the column's checkbox. When all checkboxes on the displayed page are checked, we need to check column's checkbox. We uncheck it,
+        // when there are no checked checkboxes on the page and set it to intederminate state when there is at least one checkbox checked on the page.
+
+        //kiểm tra xem có cột checkbox ko
+        if (columnCheckBox) {
+            var datainfo = $("#ActionGrid").jqxGrid('getdatainformation');
+            var rowscount = datainfo.rowscount;
+            var pagesize = datainfo.paginginformation.pagesize;
+            var pagenum = datainfo.paginginformation.pagenum;
+            var selectedRows = $("#ActionGrid").jqxGrid('getselectedrowindexes');
+            var state = false;
+            var count = 0;
+            $.each(selectedRows, function () {
+                if (pagenum * pagesize <= this && this < pagenum * pagesize + pagesize) {
+                    count++;
+                }
+            });
+            if (count != 0) state = null;
+            if (count == rowscount) state = true;
+            if (count == 0) state = false;
+
+            updatingCheckState = true;
+            $(columnCheckBox).jqxCheckBox({
+                checked: state
+            });
+
+            updatingCheckState = false;
+        }
+    });
+
+    var colCheckbox = {
+        text: '',
+        menu: false,
+        sortable: false,
+        datafield: 'IsAllow',
+        columntype: 'checkbox',
+        editable: true,
+        width: 30,
+        renderer: function (value) {
+            return '<div style="text-align: center; margin-left: 5px; margin-top: 5px;"></div>';
+        },
+        rendered: function (element) {
+            var checkbox = $(element).last();
+            $(checkbox).jqxCheckBox({
+                width: 16,
+                height: 16,
+                animationShowDelay: 0,
+                animationHideDelay: 0
+            });
+            columnCheckBox = $(checkbox);
+            $(checkbox).on('change', function (event) {
+                var checked = event.args.checked;
+                var pageinfo = $("#ActionGrid").jqxGrid('getpaginginformation');
+                var pagenum = pageinfo.pagenum;
+                var pagesize = pageinfo.pagesize;
+                if (checked == null || updatingCheckState) return;
+                $("#ActionGrid").jqxGrid('beginupdate');
+
+                // select all rows when the column's checkbox is checked.
+                if (checked) {
+                    $("#ActionGrid").jqxGrid('selectallrows');
+                }
+                    // unselect all rows when the column's checkbox is checked.
+                else if (checked == false) {
+                    $("#ActionGrid").jqxGrid('clearselection');
+                }
+                // update cells values.
+                var startrow = pagenum * pagesize;
+                for (var i = startrow; i < startrow + pagesize; i++) {
+                    // The bound index represents the row's unique index.
+                    // Ex: If you have rows A, B and C with bound indexes 0, 1 and 2, afer sorting, the Grid will display C, B, A i.e the C's bound index will be 2, but its visible index will be 0.
+                    // The code below gets the bound index of the displayed row and updates the value of the row's available column.
+                    var boundindex = $("#ActionGrid").jqxGrid('getrowboundindex', i);
+                    $("#ActionGrid").jqxGrid('setcellvalue', boundindex, 'IsAllow', event.args.checked);
+                    //alert(i);
+                }
+
+                $("#ActionGrid").jqxGrid('endupdate');
+
+                var selectedRows = $("#ActionGrid").jqxGrid('getselectedrowindexes');
+                console.log(selectedRows);
+            });
+            return true;
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------Begin Get data source
+    function fnSetDataSourceController() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'ControllerId', type: 'string' },
+                { name: 'ControllerName', type: 'string' }
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/Authorization/GetController',
+            cache: true,
+            data: {
+            }
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#ControllerGrid").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - 175,
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            pageable: true,
+            sortable: true,
+            pagesize: 30,
+            pagesizeoptions: ['30', '50', '80', '100'],
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                { text: 'Controller ID', dataField: 'ControllerId', width: 120, renderer: colHeaderLeft },
+                { text: 'Controller Name', dataField: 'ControllerName', renderer: colHeaderLeft }
+            ]
+        });
+    }
+
+    function fnSetDataSource() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'RoleId', type: 'string' },
+                { name: 'RoleName', type: 'string' }
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/Role/GetList',
+            cache: true,
+            data: {
+            }
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#RoleGrid").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - 175,
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            pageable: true,
+            sortable: true,
+            pagesize: 30,
+            pagesizeoptions: ['30', '50', '80', '100'],
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                { text: 'Role ID', dataField: 'RoleId', width: 60, renderer: colHeaderCenter, cellsalign: "center" },
+                { text: 'Role Name', dataField: 'RoleName', renderer: colHeaderLeft }
+            ]
+        });
+    }
+
+    function fnSetDataSourceAction() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'IsAllow', type: 'bool' },
+                { name: 'ActionId', type: 'string' },
+                { name: 'ActionName', type: 'string' }
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/Role/GetListAction',
+            cache: true,
+            data: {
+                roleId: roleId,
+                controlId: controllerId
+            }
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#ActionGrid").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - 175,
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            selectionmode: 'none',//nhớ set cái thuộc tính này khi có cột checkbox
+            pageable: true,
+            sortable: true,
+            editable: true,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, editable: false, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                colCheckbox,
+                { text: 'Action Name', editable: false, dataField: 'ActionName', renderer: colHeaderLeft }
+            ]
+        });
+
+    }
+
+    $("#ActionGrid").on("bindingcomplete", function (event) {
+        $("#ActionGrid").jqxGrid('clearselection');
+        var listSelected = [];
+        var rows = $('#ActionGrid').jqxGrid('getrows');
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].IsAllow) {
+                $('#ActionGrid').jqxGrid({ selectedrowindex: i });
+                listSelected.push(i);
+            }
+        }
+        $('#ActionGrid').jqxGrid({ selectedrowindex: listSelected });
+    });
+
+    function fnSetDataDropDown() {
+        var source =
+            {
+                datatype: "json",
+                datafields: [
+                    { name: 'ID', type: 'string' },
+                    { name: 'Name', type: 'string' }
+                ],
+                async: false,
+                url: '/Category/GetListValueViaCate',
+                data: {
+                    category: '68D51D7C-6957-42C0-A432-9372B3F4FF66',
+                    isFilter: false
+                }
+            };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#cbSystem").jqxComboBox(
+        {
+            selectedIndex: 0,
+            source: dataAdapter,
+            width: 160,
+            height: 21,
+            displayMember: 'Name',
+            valueMember: 'ID'
+        });
+
+        $('#cbSystem').on('select', function (event) {
+            var args = event.args;
+            if (args != undefined) {
+                var item = event.args.item;
+                if (item != null) {
+                    $("#hdfKindId").val(item.value);
+                }
+            }
+        });
+    }
+    //------------------------------------------------------------------------------------------------End get data source
+    $('#RoleGrid').on('rowclick', function (event) {
+        var args = event.args;
+        roleId = args.row.bounddata.RoleId;
+        $("#CategoryGrid").replaceWith('<div id="CategoryGrid"></div>');
+        setTimeout(function () { fnSetDataSourceAction(); }, 500);
+    });
+
+    $('#ControllerGrid').on('rowclick', function (event) {
+        var args = event.args;
+        controllerId = args.row.bounddata.ControllerId;
+        $("#CategoryGrid").replaceWith('<div id="CategoryGrid"></div>');
+        setTimeout(function () { fnSetDataSourceAction(); }, 500);
+    });
+    var myCalendar;
+    function doOnLoad() {
+        myCalendar = new dhtmlXCalendarObject({ input: "calendar_input", button: "calendar_icon" });
+        myCalendar.setDateFormat("%Y.%m.%d");
+    }
+    //------------------------------------------------------------------------------------------------Save data
+    function fnGetData() {
+        var RoleModel = {
+            RoleId: roleId,
+            ControllerId: controllerId,
+            ActionId: '',
+            ActionName: ''
+        };
+
+        var selectedRows = $("#ActionGrid").jqxGrid('getselectedrowindexes');
+        console.log(selectedRows);
+        var actionIds = '';
+        $.each(selectedRows, function (index, item) {
+            var isAllow = $("#ActionGrid").jqxGrid('getcellvalue', item, 'IsAllow');
+            if (isAllow) {
+                var actionId = $("#ActionGrid").jqxGrid('getcellvalue', item, 'ActionId');
+                var actionName = $("#ActionGrid").jqxGrid('getcellvalue', item, 'ActionName');
+                actionIds = (actionIds === '' ? actionId + '_' + actionName : (actionIds + ';' + actionId + '_' + actionName));
+            }
+        });
+        RoleModel.ActionId = actionIds;
+        console.log(RoleModel);
+        return RoleModel;
+    }
+
+    function fnRefreshData() {
+        fnSetDataSourceAction();
+    }
+
+    function fnSaveData() {
+        var model = fnGetData()
+        //if (model.ActionId === "")
+        //    return;
+        var api = "../Role/InsertRole";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                //console.log(data);
+                if (data.result == "OK")
+                    showNotification("Hyosung Portal", "Save success", "gray success");
+            },
+            error: function () {
+                return false;
+            }
+        });
+
+    }
+
+</script>

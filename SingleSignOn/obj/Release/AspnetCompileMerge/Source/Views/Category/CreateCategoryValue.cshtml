@@ -1,0 +1,166 @@
+﻿@model SingleSignOn.ViewModels.CategoryValueModel
+@{
+    ViewBag.Title = "Insert Category Value";
+}
+
+<div class="tb-table" style="overflow: hidden">
+    <table>
+        <tr>
+            <th class="input-require tb-col-2">
+                @Html.LabelFor(m => m.Name, new { @class = "label" })
+            </th>
+            <td class="tb-col-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "input", @id = "CategoryValueName" })@*, @onblur = "CheckExistName()"*@
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.LabelFor(m => m.ParentName, new { @class = "label" })
+            </th>
+            <td>
+                <div id="treeviewDrop" style="background-color: #fff; z-index: 999"></div>
+                <input id="dropdown" style="display: none; background-color: #fff" />
+                @Html.HiddenFor(m => m.Category)
+                @Html.HiddenFor(m => m.ID, new { @id = "CategoryValueID", @value = "null" })
+                <input type="hidden" id="hdParentID" />
+            </td>
+        </tr>
+
+        <tr>
+            <th class="tb-col-2">
+                @Html.LabelFor(m => m.SubCode, new { @class = "label" })
+            </th>
+            <td>
+                @Html.TextBoxFor(m => m.SubCode, new { @class = "input" })
+            </td>
+        </tr>
+        <tr>
+            <th>@Html.LabelFor(m => m.Sequence, new { @class = "label" })</th>
+            <td>
+                @Html.TextBoxFor(m => m.Sequence, new { @class = "input", type = "number", min = 0, max = 99 })
+            </td>
+        </tr>
+        <tr>
+            <th><label class="label">Remark</label></th>
+            <td>
+                @Html.TextAreaFor(m => m.RemarkValue, new { @class = "input", @rows = 3 })
+            </td>
+        </tr>
+        <tr>
+            <th class="input-require"><label class="label">Status</label></th>
+            <td>
+                <select id="slStatus" class="input">
+                    <option value="true">Enable</option>
+                    <option value="false">Disable</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+    .content-popup table td span {
+        padding: 0 !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        CreateMenuTreeForDrop();
+        CreateDropdown();
+    });
+    $("#modalCategoryValue").on('hidden.bs.modal', function (e) {
+        //alert(1);
+        $("#modalCategoryValue .modal-body").html("");
+    });
+    function CreateMenuTreeForDrop() {
+        var data = new kendo.data.HierarchicalDataSource({
+            transport: {
+                read: {
+                    url: "../GetListViaParent?id=" + $("#Category").val(),
+                    contentType: "application/json"
+                }
+            },
+            schema: {
+                model: {
+                    id: "Id",
+                    children: "Children",
+                    hasChildren: "HasChildren"
+                }
+            }
+        });
+        function treeviewDropSelect(e) {
+            var data = this.dataItem(e.node);
+            if (data.id === $("#CategoryValueID").val()) {
+                showNotification("Hyosung Protal", "Can not select itself", "gray success");
+                $(".k-dropdown-wrap .k-input").text("");
+                $("#hdParentID").val("");
+            }
+            $("#hdParentID").val(data.id);
+        }
+        $("#treeviewDrop").kendoTreeView({
+            Name: "MenuTreeDrop",
+            dataSource: data,
+            loadOnDemand: true,
+            dataTextField: "Name",
+            select: treeviewDropSelect
+        });
+
+    }
+
+    function CreateDropdown() {
+        var dropdown = $("#dropdown").kendoDropDownList({
+            dataSource: [{ text: "", value: "" }],
+            dataTextField: "text",
+            dataValueField: "value",
+            open: function (e) {
+                // If the treeview is not visible, then make it visible.
+                if (!$treeviewRootElem.hasClass("k-custom-visible")) {
+                    $treeviewRootElem.slideToggle('fast', function () {
+                        dropdown.close();
+                        $treeviewRootElem.addClass("k-custom-visible");
+                    });
+                }
+            }
+        }).data("kendoDropDownList");
+        var $dropdownRootElem = $(dropdown.element).closest("span.k-dropdown");
+
+        var treeview = $("#treeviewDrop").kendoTreeView({
+            select: function (e) {
+                // When a node is selected, display the text for the node in the dropdown and hide the treeview.
+                $dropdownRootElem.find("span.k-input").text($(e.node).children("div").text());
+                $treeviewRootElem.slideToggle('fast', function () {
+                    $treeviewRootElem.removeClass("k-custom-visible");
+                });
+            }
+        }).data("kendoTreeView");
+        var $treeviewRootElem = $(treeview.element).closest("div.k-treeview");
+
+        // Hide the treeview.
+        $treeviewRootElem
+            .width($dropdownRootElem.width())
+            .css({ "border": "1px solid grey", "display": "none", "position": "absolute" });
+
+        // Position the treeview so that it is below the dropdown.
+        $treeviewRootElem
+            .css({ "top": $dropdownRootElem.position().top + $dropdownRootElem.height(), "left": $dropdownRootElem.position().left });
+
+        $(document).click(function (e) {
+            // Ignore clicks on the treetriew.
+            if ($(e.target).closest("div.k-treeview").length == 0) {
+                // If visible, then close the treeview.
+                if ($treeviewRootElem.hasClass("k-custom-visible")) {
+                    $treeviewRootElem.slideToggle('fast', function () {
+                        $treeviewRootElem.removeClass("k-custom-visible");
+                    });
+                }
+            }
+        });
+    }
+
+
+    function setValueTreeView(text, value) {
+        $(".k-dropdown-wrap .k-input").text(text);
+        $("#hdParentID").val(value);
+    }
+</script>

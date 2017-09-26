@@ -1,0 +1,513 @@
+﻿@model SingleSignOn.ViewModels.PostsModel
+@{
+    ViewBag.Title = "Insert FAQ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqwidgetsCombobox")
+@Scripts.Render("~/bundles/jqxTree")
+@*@Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/adapters/jquery")*@
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div class="" style="float: left">
+                <label class="label" style="color:#448CCB">Insert FAQ</label>
+            </div>
+
+            <div class="" style="float: right">
+                <a class=Lbtn href="@Url.Action("Insert","Faq")">
+                    <input type="reset" value="Reset">
+                </a>
+                <a class=Lbtn href="javascript:;">
+                    <input type="button" value=Save id="btnSave">
+                </a>
+                @*<a class=Lbtn href="#">
+                        <input type=button id="btnSaveContinue" value="Save And Continue">
+                        @Html.HiddenFor(m => m.ISCONTINUE)
+                    </a>*@
+                <a class=Lbtn href="@Url.Action("Index","Faq")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+
+
+    <div style="clear: both"></div>
+    <div class="divContent">
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-1">
+                        <label class="label">System</label>
+                    </th>
+                    <td class="tb-col-2">
+                        @Html.ValidationMessageFor(m => m.CategoryName)
+                        <div id="treeviewDrop" class="treeview-custom" style="height: 300px; display:none"></div>
+                        <input id="dropdown" class="" style="display: none" />
+                        @Html.HiddenFor(m => m.Category)
+                        @Html.HiddenFor(m => m.CategoryName, new { @id = "hdfCateNm" })
+                        <input type="hidden" id="hdfCateId" />
+                    </td>
+                    <th class="tb-col-1">
+                        @*@Html.LabelFor(m => m.Kind, new { @class = "label" })*@
+                        <label class="label">Module</label>
+                    </th>
+                    <td class="tb-col-2" style="text-align: left">
+                        <div id="cbKind"></div>
+                        <input type="hidden" id="hdfKindId" />
+                    </td>
+                    <th class="tb-col-1">
+                        <label class="label" for="IsActive">Active</label>
+                    </th>
+                    <td class="tb-col-1" style="text-align: left">
+                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "input", @style = "width: 30px" })
+                    </td>
+                    <th class="tb-col-1" style="text-align:center">
+                        <label class="label">Apply For Plant</label>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="input-require">
+                        <label class="label">Question</label>
+                    </th>
+                    <td colspan="5">
+                        @Html.ValidationMessageFor(m => m.Subject)
+                        @Html.TextBoxFor(m => m.Subject, new { @class = "input", @id = "txtSubject" })
+                    </td>
+                    <td rowspan="3" class="tb-col-2" id="tdPlantTree">
+                        <div class="jqx-hideborder" id='jqxPlant' style="max-height:100%; overflow:auto; height:100%">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="">
+                        <label class="label">Answer</label>
+                    </th>
+                    <td colspan="5">
+                        @Html.ValidationMessageFor(m => m.Content)
+                        <textarea id="txtContent"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var dataAttachment = [];
+
+    var postsModel = {
+        PostId: "",
+        Subject: "",
+        Category: "",
+        CategoryName: "",
+        IsActive: false,
+        Kind: "",
+        KindName: "",
+        Content: "",
+        ApplyToPlant: ""
+    };
+
+    var listChecked = [];
+
+    $(window).resize(function () {
+        SetHeight($("#jqxWidget-portal"), $('footer').position().top - 130);
+
+    });
+
+    $(document).ready(function () {
+        //alert($(window).height());
+        SetHeight($("#jqxWidget-portal"), $('footer').position().top - 130);
+
+        CreateMenuTreeForDrop();
+        CreateDropdown();
+        setValueTreeView(readCookie("SSO_CMS_FAQ_NAME"), readCookie("SSO_CMS_FAQ_ID"));
+        //setValueTreeView($("#hdfCateNm").val(), $("#CATEGORY").val());
+        fnSetDataDropDown();
+        fnGetDataSourceTreeView();
+        //alert($("#container").height());
+        $('#txtContent').ckeditor({
+            height: $("#jqxWidget-portal").height() - 167 - 195,
+            language: "en"
+        });
+        setTimeout(function () {
+            $("#cke_1_contents").css({ height: $("#cke_1_contents").height() - 28 });
+            $('#jqxPlant').jqxTree({ height: $("#tdPlantTree").height() - 5 });
+            $("#jqxPlant").css({ "max-height": $("#tdPlantTree").height() - 5 });
+        }, 1000);
+        $("#txtSubject").jqxInput({ placeHolder: "Enter the question", height: 25, width: "100%", minLength: 1, maxLength: 1000 });
+
+    });
+
+
+    function fnGetDataSourceTreeView() {
+        var api = "../Faq/GetPlant";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    id: 'id',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#jqxPlant').jqxTree({ source: records, width: '100%', hasThreeStates: true, checkboxes: true });
+
+                var items = $('#jqxPlant').jqxTree('getItems');
+                $('#jqxPlant').jqxTree('selectItem', items[0]);
+                //console.log(records);
+                //$('#jqxPlant').on('select', function (event) {
+                //    var args = event.args;
+                //    var item = $('#jqxPlant').jqxTree('getItem', args.element);
+
+                //    var id = args.element.ID;
+                //    console.log(args.element);
+                //});
+
+                //$("#jqxPlant").on("checkChange", function (event) {
+                //    var args = event.args;
+                //    var element = args.element;
+                //    var checkState = args.checked;
+                //    var item = $("#jqxPlant").jqxTree('getItem', element);
+
+                //    // tree label.
+                //});
+
+
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    function fnSetDataDropDown() {
+        var source =
+            {
+                datatype: "json",
+                datafields: [
+                    { name: 'ID', type: 'string' },
+                    { name: 'Name', type: 'string' }
+                ],
+                async: false,
+                url: '/Category/GetListValueViaCate',
+                data: {
+                    category: '0ab7cf6d-56a4-4cf1-bd9e-1d5fbc1c0ff0',
+                    isFilter: false
+                }
+            };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#cbKind").jqxComboBox(
+        {
+            source: dataAdapter,
+            width: "100%",
+            height: 25,
+            displayMember: 'Name',
+            valueMember: 'ID'
+        });
+
+        $('#cbKind').on('select', function (event) {
+            var args = event.args;
+            if (args != undefined) {
+                var item = event.args.item;
+                if (item != null) {
+                    $("#hdfKindId").val(item.value);
+                }
+            }
+        });
+    }
+
+    function CreateMenuTreeForDrop() {
+        var data = new kendo.data.HierarchicalDataSource({
+            transport: {
+                read: {
+                    url: "../../Category/GetListViaParent/" + "7ee83563-73bf-4562-b91b-29ff46071775",
+                    contentType: "application/json"
+                }
+            },
+            schema: {
+                model: {
+                    id: "Id",
+                    children: "Children",
+                    hasChildren: "HasChildren"
+                }
+            }
+        });
+        function treeviewDropSelect(e) {
+            var data = this.dataItem(e.node);
+            $("#hdfCateId").val(data.Id);
+
+            $(".k-dropdown-wrap .k-input").text(data.Name);
+            $("#hdfCateNm").val(data.Name);
+        }
+        $("#treeviewDrop").kendoTreeView({
+            Name: "MenuTreeDrop",
+            dataSource: data,
+            loadOnDemand: true,
+            dataTextField: "Name",
+            select: treeviewDropSelect
+        });
+
+    }
+
+    function CreateDropdown() {
+        var dropdown = $("#dropdown").kendoDropDownList({
+            dataSource: [{ text: "", value: "" }],
+            dataTextField: "text",
+            dataValueField: "value",
+            open: function (e) {
+                // If the treeview is not visible, then make it visible.
+                if (!$treeviewRootElem.hasClass("k-custom-visible")) {
+                    $treeviewRootElem.slideToggle('fast', function () {
+                        dropdown.close();
+                        $treeviewRootElem.addClass("k-custom-visible");
+                    });
+                }
+            }
+        }).data("kendoDropDownList");
+        var $dropdownRootElem = $(dropdown.element).closest("span.k-dropdown");
+
+        var treeview = $("#treeviewDrop").kendoTreeView({
+            select: function (e) {
+                // When a node is selected, display the text for the node in the dropdown and hide the treeview.
+                var $treeviewRootElem = $(treeview.element).closest("div.k-treeview");
+
+                //$dropdownRootElem.find("span.k-input").text($(e.node).children("div").text());
+                $treeviewRootElem.slideToggle('fast', function () {
+                    $treeviewRootElem.removeClass("k-custom-visible");
+                });
+            }
+        }).data("kendoTreeView");
+        var $treeviewRootElem = $(treeview.element).closest("div.k-treeview");
+
+        // Hide the treeview.
+        $treeviewRootElem
+            .width($dropdownRootElem.width())
+            .css({ "border": "1px solid grey", "display": "none", "position": "absolute" });
+
+        // Position the treeview so that it is below the dropdown.
+        $treeviewRootElem
+            .css({ "top": $dropdownRootElem.position().top + $dropdownRootElem.height(), "left": $dropdownRootElem.position().left });
+
+        $(document).click(function (e) {
+            // Ignore clicks on the treetriew.
+            if ($(e.target).closest("div.k-treeview").length == 0) {
+                // If visible, then close the treeview.
+                if ($treeviewRootElem.hasClass("k-custom-visible")) {
+                    $treeviewRootElem.slideToggle('fast', function () {
+                        $treeviewRootElem.removeClass("k-custom-visible");
+                    });
+                }
+            }
+        });
+    }
+
+    function setValueTreeView(text, value) {
+
+        $(".k-dropdown-wrap .k-input").text(text);
+        $("#Category").val(value);
+        $("#hdfCateId").val(value);
+        $("#hdfCateNm").val(text);
+    }
+
+    function fnAttachment(dataSource) {
+        var attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            //<a href='../Data/FormTemplate/QUYTRINHQUANLYNHANVIEN/1. DONDENGHITUYENDUNG (worker-đã chỉnh sửa 20 07 2014).doc'><img src='../Content/img/icon-paperclip.gif'></a>
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:5px; color:#606060'></i></a>"
+                : ""; //onclick = 'showModalAttachment(&#39;" + rowData.ID + "&#39;);'
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' }
+            ],
+            localdata: dataSource
+        };
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+
+        $("#gridAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "77%",
+            source: dataAdapter,
+            pageable: true,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderLeft },
+                { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft },
+                { text: 'Delete', dataField: 'Delete', width: 43, cellsrenderer: deleteColumn, renderer: colHeaderCenter }
+            ]
+        });
+    }
+
+    function deleteFile(model) {
+        var result = confirm('Do you really want to delete that row?');
+        if (result) {
+            var api = "../FormTemplate/DeleteFile";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete file success", "gray success");
+                        var filePath = JSON.parse(model).FilePath;
+                        dataAttachment.forEach(function (item) {
+                            if (item.FilePath === filePath) {
+                                dataAttachment.splice(dataAttachment.indexOf(item), 1);
+                            }
+                        });
+                        fnAttachment(dataAttachment);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    //$("#btnSaveContinue").on("click", function () {
+    //    if (!checkData()) return;
+    //    $("#ISCONTINUE").val(true);
+    //    $("#frmInsertFormtemplate").submit();
+    //});
+
+    function fnGetCheckedItem() {
+        var items = $('#jqxPlant').jqxTree('getCheckedItems')
+        listChecked = [];
+        items.forEach(function (item) {
+            var plant = {
+                Id: item.id,
+                Name: item.label,
+                ParentId: item.parentId,
+                HasChild: item.hasItems
+            };
+            if (listChecked.length === 0)
+                listChecked.push(plant);
+            else {
+                var flag = false//biến kiểm tra đã có trong danh sách chưa?
+                listChecked.forEach(function (p) {
+                    if (plant.ParentId === p.Id && p.HasChild)//kiểm tra xem thằng plant đang xét có cha nằm trong danh sách đã checked chưa, nếu có rồi thì bỏ qua nó
+                        flag = true;
+                })
+                if (!flag)//nếu node cha chưa có trong danh sách thì thêm vào
+                    listChecked.push(plant);
+            }
+        });
+    }
+
+    $("#btnSave").on("click", function () {
+
+        if (!getData()) return;
+        fnInsertFaq();
+        return;
+
+    });
+
+    function getData() {
+        var cateNm = $("#hdfCateId");
+        if (cateNm.val() === "") {
+            showNotification("Hyosung Portal", "Please select system of FAQ", "gray error");
+            return false;
+        }
+        var subject = $("#txtSubject");
+        if (subject.val() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Question", "gray error");
+            subject.focus();
+            return false;
+        }
+
+        var kind = $("#hdfKindId");
+        if (kind.val() === "") {
+            showNotification("Hyosung Portal", "Please select kind of FAQ", "gray error");
+            $("#cbKind").jqxComboBox('open');
+            return false;
+        }
+
+        var descript = $("#txtContent");
+        if (removeTags(descript.val()).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Answer", "gray error");
+            descript.focus();
+            return false;
+        }
+
+        fnGetCheckedItem();
+
+        postsModel.Subject = subject.val();
+        postsModel.Category = $("#hdfCateId").val();
+        postsModel.CategoryName = $("#hdfCateNm").val();
+        postsModel.IsActive = $("#IsActive").prop("checked");
+        postsModel.Content = $("#txtContent").val();
+        postsModel.Kind = $("#hdfKindId").val();
+        postsModel.ApplyToPlant = $.map(listChecked, function (item) {
+            return item.Id;
+        }).join(",");
+
+        return true;
+    }
+
+    function fnInsertFaq() {
+        var api = "../Faq/Insert";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(postsModel),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", "Insert success", "gray success");
+                setTimeout(function () {
+                    window.location = "../Faq/Index";
+                }, 1000);
+
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+
+</script>
+
+

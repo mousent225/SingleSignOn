@@ -1,0 +1,595 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+<div id='jqxWidget-portal' class="col-8">
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+
+    <div id=LblockSearch>
+        <table>
+            <tbody>
+                <tr>
+
+                    <th class="LtextRight" style="width:27px">Name</th>
+                    <td>
+                        <input type="text" id="txtSubject" class="Ltext input" style="WIDTH: 100%" />
+                    </td>
+                    <th class="LtextRight" style="width:35px">Create Date</th>
+                    <td style="width:228px">
+                        <input type="text" id="dateFrom" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                        ~
+                        <input type="text" id="dateTo" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateTo" src="/Content/img/icon_cal.gif" border="0"></span>
+                    </td>
+                    <td class="tools" style="width:137px">
+                        <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Search"></a>
+                        @if (ViewBag.Rights.Contains("Insert"))
+                            {
+                        <a class="Lbtn" href="javascript:;"> <input type="button" id="btnNew" value="New"></a>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="clear:both"></div>
+    </div>
+    <div id="gridApplication"></div>
+</div>
+
+<div id="divRight" class="col-4">
+
+    <div id=LblockSearch>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="tools">
+                        @*<a class="Lbtn" href="javascript:;"> <input id="btnReset" type="button" value="Reset"></a>*@
+                        @*@if (ViewBag.Rights.Contains("Insert"))
+                            {*@
+                        <a class="Lbtn" href="javascript:;"> <input type="button" id="btnApprovalLine" value="Approval Line"></a>
+                        <a class="Lbtn" href="javascript:;"> <input type="button" id="btnDelete" value="Delete"></a>
+                        <a class="Lbtn" href="javascript:;"> <input type="button" id="btnSave" value="Save"></a>
+                        @*}*@
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="clear:both"></div>
+        <!-- end LblockPageTitle -->
+    </div>
+    <div style="clear: both"></div>
+    <div class="divContent">
+
+        <div id=LblockSearch style="margin:0">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="LtextLeft" style="text-align:left"><label class="label">Approval List</label></th>
+                        <td class="tools" style="width:13px">
+                            <a href="javascript:;" id="btnHideApprovalLine"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="gridViewApprovalLine"></div>
+            <div style="clear:both"></div>
+        </div>
+
+        <div id=LblockSearch style="margin:0">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="LtextLeft" style="text-align:left"><label class="label">Circulator List</label></th>
+                        <td class="tools" style="width:13px">
+                            <a href="javascript:;" id="btnHideCirculator"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="gridViewCirculator"></div>
+            <div style="clear:both"></div>
+        </div>
+
+
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-3">
+                        @Html.Label("Code", new { @class = "label" })
+                        <input type="hidden" id="hdfApplicationId" value="0" />
+                    </th>
+                    <td class="tb-col-9">
+                        @Html.TextBox("txtCode")
+                    </td>
+                </tr>
+                <tr>
+                    <th class="input-require tb-col-3">
+                        @Html.Label("Name", new { @class = "label" })
+                    </th>
+                    <td class="tb-col-9">
+                        @Html.TextBox("txtName")
+                    </td>
+                </tr>
+                <tr>
+                    <th class="input-require tb-col-3">
+                        @Html.Label("Department", new { @class = "label" })
+                    </th>
+                    <td class="tb-col-9">
+                        <div id="treeviewDrop" class="treeview-custom" style="height:340px"></div>
+                        <input id="dropdown" class="" style="display: none" />
+                        <input type="hidden" id="hdfDeptName" />
+                        <input type="hidden" id="hdfDeptId" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="input-require tb-col-3">
+                        @Html.Label("Description", new { @class = "label" })
+                    </th>
+                    <td class="tb-col-9">
+                        @Html.TextArea("txtDesc", new { @rows = 10 })
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Approval Line//------------------------------------------------------------------------------------->
+<div id="mdApprovalLine" class="modal fade" tabindex="-1" data-width="90%" style="display: none;">
+    <input type="hidden" id="hdfApprovalKind" value=""/>
+    <div class="popup"></div>
+    <div style="clear:both"></div>
+</div>
+<script type="text/javascript">
+
+    var dateFrom, dateTo;
+    //biến cho modal approval
+    var dataApprovalLine = [];
+    var dataCirculator = [];
+
+    var dataEntity = {
+        Id: 0,
+        Name: "",
+        Code: "",
+        DeptId: "",
+        DeptName: "",
+        Description: "",
+        ApprovalLineDefault: "",
+        ApprovalLineName: "",
+        ApprovalLineJson: "",
+        ApprovalKind: "",
+        ApprovalKindName: "",
+        CreateDate: "",
+        CreateUid: "",
+        CreateName: ""
+    };
+
+    $(document).ready(function () {
+
+        //hiện thông tin approval line
+        if (dataApprovalLine.length === 0) {
+            $("#gridViewApprovalLine").parent().closest("div").hide();
+        } else {
+            fnViewApprovalLine();
+        }
+
+        if (dataApprovalLine.length === 0) {
+            $("#gridViewCirculator").parent().closest("div").hide();
+        } else {
+            fnViewCirculator();
+        }
+
+        CreateMenuTreeForDropCommon("#treeviewDrop", "#hdfDeptId", false);
+        CreateDropdownCommon("#dropdown", "#treeviewDrop");
+
+        dateFrom = new dhtmlXCalendarObject({ input: "dateFrom", button: "iconDateFrom" });
+        dateFrom.setDateFormat("%Y.%m.%d");
+
+        dateTo = new dhtmlXCalendarObject({ input: "dateTo", button: "iconDateTo" });
+        dateTo.setDateFormat("%Y.%m.%d");
+
+        $("#txtSubject").jqxInput({ placeHolder: "Enter the name", height: 21, width: "97%", minLength: 1, maxLength: 500 });
+
+        $("#txtCode").jqxInput({ placeHolder: "Enter the Code (max length: 20)", height: 21, width: "97%", minLength: 1, maxLength: 20 });
+        $("#txtName").jqxInput({ placeHolder: "Enter the Name (max length: 200)", height: 21, width: "97%", minLength: 1, maxLength: 200 });
+        //SetHeight($("#jqxWidget-portal"), $('footer').position().top - 125);
+
+        fnGridApplication($("#txtSubject").val(), 0, "", $("#dateFrom").val(), $("#dateTo").val())
+
+        //set height modal
+        $("#mdApprovalLine").height($('footer').position().top - 29);
+
+    });
+
+    var displayColumn = [], attachFile, rowApprove, rowSubject, rowIndex, cellbeginedit, dataAdapterForm, categoryId;
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Custom function----------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    function showDetail(id) {
+        window.location.href = "/ApplicationConfig/ViewDetail/" + id;
+        return true;
+    }
+
+    function fnSetValueTreeView(text, value) {
+        $(".k-dropdown-wrap .k-input").text(text);
+        $("#hdfDeptId").val(value);
+    }
+
+    function fnSetAuthorize(dataSource) {
+        //console.log(dataSource);
+        rowIndex = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="text-align: center; margin-top: 5px;">' + (row + 1).toString() + '</div>';
+        }
+
+        rowSubject = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;"><a href="javascript:;" onclick="fnShowDetail(&#39;' + row + '&#39;)" style="color:#343434; cursor:pointer">' + value + '</a></div>' +
+                '</div>';
+        }
+
+        rowApprovalLine = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            var display = (value === "" ? "" : value.split('|')[1]);
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;" title="' + display + '">' + display + '</a></div>' +
+                '</div>';
+        }
+
+        displayColumn = [
+            { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+            { text: 'Code', filterable: false, dataField: 'Code', width: 90, sortable: false, renderer: colHeaderLeft },
+            { text: 'Name', dataField: 'Name', width: 220, cellsrenderer: rowSubject, renderer: colHeaderLeft },
+            { text: 'Dept Name', dataField: 'DeptName', width: 120, renderer: colHeaderLeft },
+            { text: 'Approval Line', dataField: 'ApprovalLineDefault', cellsrenderer: rowApprovalLine, renderer: colHeaderLeft },
+            { text: 'Approval Type', dataField: 'KindName', width: 120, renderer: colHeaderLeft },
+            { text: 'Writer', filterable: false, dataField: 'CreateName', width: 160, cellsalign: 'left', renderer: colHeaderLeft },
+            { text: 'Create Date', filterable: false, dataField: 'CreateDate', width: 90, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter }
+        ]
+    };    
+
+    function fnGetData() {
+        dataEntity.Id = $("#hdfApplicationId").val();
+        dataEntity.Code = $("#txtCode").val();
+        if (dataEntity.Code === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in Code", "gray error");
+            $("#txtCode").focus();
+            return false;
+        }
+        dataEntity.Name = $("#txtName").val();
+        if (dataEntity.Name === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in Name", "gray error");
+            $("#txtName").focus();
+            return false;
+        }
+        dataEntity.DeptId = $("#hdfDeptId").val();
+        if (dataEntity.DeptId === "") {
+            showNotification("Hyosung Portal", "Check again: Please select department", "gray error");
+            return false;
+        }
+        dataEntity.Description = $("#txtDesc").val();
+
+        //set lại giá trị mặc định
+        dataEntity.ApprovalLineDefault = "";
+        dataEntity.ApprovalKind = "";
+
+        if (dataApprovalLine.length !== 0) {
+            dataEntity.ApprovalLineDefault = fnConvertApprToString(dataApprovalLine, "EmpId", "_") + "|" + fnConvertApprToString(dataApprovalLine, "Name", " > ") + "|" + fnConvertApprToString(dataApprovalLine, "ApproverType", "_");
+            if ($("#rdOrder").prop("checked") !== undefined)
+                dataEntity.ApprovalKind = $("#rdOrder").prop("checked") ? $("#rdOrder").attr("data-id") : $("#rdParallel").attr("data-id");
+        }
+        else
+            dataEntity.ApprovalLineDefault = "||";
+        if (dataCirculator.length !== 0) {
+            dataEntity.dataCirculator = fnConvertApprToString(dataCirculator, "EmpId") + "|" + fnConvertApprToString(dataCirculator, "Name");
+            dataEntity.ApprovalLineDefault += "|" + dataEntity.dataCirculator;
+        }
+        console.log(dataApprovalLine);
+        dataEntity.ApprovalLineJson = JSON.stringify(dataApprovalLine) + "|" + JSON.stringify(dataCirculator);
+
+        return true;
+    }
+
+    function fnSetData(rowData) {
+        dataApprovalLine = [];
+        dataCirculator = [];
+
+        $("#hdfApplicationId").val(rowData.Id);
+        $("#txtCode").val(rowData.Code);
+        $("#txtName").val(rowData.Name);
+        $("#hdfDeptId").val(rowData.DeptId);
+        $("#txtDesc").val(rowData.Description);
+
+        console.log(rowData.ApprovalKind);
+        $("#hdfApprovalKind").val(rowData.ApprovalKind);
+
+
+        if (rowData.ApprovalLineJson !== "") {
+            var approvalLine = rowData.ApprovalLineJson.split("|")[0];
+            var circulator = rowData.ApprovalLineJson.split("|")[1];
+            dataApprovalLine = JSON.parse(approvalLine);
+            dataCirculator = JSON.parse(circulator);
+        }
+
+        fnSetDisplay();
+        fnSetValueTreeView(rowData.DeptName, rowData.DeptId);
+
+    }
+    function showModalApprovalLine(approvalLine) {
+        var link = '@Url.Action("ShowModalConfig", "ApplicationConfig", new { id = "approvalLine" })';
+        $("#mdApprovalLine").modal("show");
+        $.get(link.replace('approvalLine', approvalLine), function (data) {
+            $("#mdApprovalLine .popup").html(data);
+        });
+    };
+
+    function fnShowDetail(index) {
+        var row = $("#gridApplication").jqxGrid("getrowdata", index);
+        fnSetData(row);
+    }
+
+    function fnSetDisplay() {
+        if (dataApprovalLine.length === 0) {
+            $("#gridViewApprovalLine").parent().closest("div").hide();
+        } else {
+            $("#gridViewApprovalLine").show();
+            $("#gridViewApprovalLine").parent().closest("div").show();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-minus");
+            fnViewApprovalLine();
+        }
+
+        if (dataCirculator.length === 0) {
+            $("#gridViewCirculator").parent().closest("div").hide();
+        } else {
+            $("#gridViewCirculator").show();
+            $("#gridViewCirculator").parent().closest("div").show();
+            $("#btnHideCirculator").children().prop("class", "fa fa-minus");
+            fnViewCirculator();
+        }
+    }
+
+    function fnInsert(action) {
+        var api = "../ApplicationConfig/" + action;
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(dataEntity),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", action + " success", "gray success");
+                fnGridApplication($("#txtSubject").val(), 0, "", $("#dateFrom").val(), $("#dateTo").val());
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    function fnGridApplication(name, deptId, kind, dateFrom, dateTo) {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Id', type: 'int' },
+                { name: 'Code', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'DeptId', type: 'int' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'ApprovalLineDefault', type: 'string' },
+                { name: 'ApprovalLineJson', type: 'string' },
+                { name: 'ApprovalKind', type: 'string' },
+                { name: 'Description', type: 'string' },
+                { name: 'KindName', type: 'string' },
+                { name: 'CreateName', type: 'string' },
+                { name: 'CreateDate', type: 'date' },
+                { name: 'Active', type: 'bool' }
+            ],
+            url: '/ApplicationConfig/GetAll',
+            data: {
+                name: name,
+                deptId: deptId,
+                kind: kind,
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            },
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+        };
+        dataAdapter = new $.jqx.dataAdapter(source);
+        fnSetAuthorize(dataAdapter);
+        //alert($('footer').position().top);
+        $("#gridApplication").jqxGrid(
+            {
+                width: "99%",
+                height: $('footer').position().top - 209,
+                source: dataAdapter,
+                rendergridrows: function () {
+                    return dataAdapter.records;
+                },
+                virtualmode: true,
+                pageable: true,
+                pagesize: 20,
+                pagesizeoptions: ['20', '50', '100'],
+                sortable: true,
+                enabletooltips: true,
+                columns: displayColumn,
+                columnsresize: true,
+                rowsheight: 22,
+                altrows: true
+            });
+    }
+
+    function fnViewApprovalLine() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'DeptFullName', type: 'string' },
+                { name: 'ApproverType', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'Seq', type: 'int' }
+            ],
+            localdata: dataApprovalLine
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridViewApprovalLine").jqxGrid(
+            {
+                width: "100%",
+                height: 100,
+                source: dataAdapter,
+                selectionmode: 'singlerow',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75 },
+                    { text: 'Name', dataField: 'Name' },
+                    { text: 'Approver Type', dataField: 'ApproverTypeName', width: 120 }
+                    //{ text: 'Seq', dataField: 'Seq', width: 30, cellsalign: "right", renderer: colHeaderRight }
+                ]
+            });
+    }
+
+    function fnViewCirculator() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'Seq', type: 'int' }
+            ],
+            localdata: dataCirculator
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridViewCirculator").jqxGrid(
+            {
+                width: "100%",
+                height: 100,
+                source: dataAdapter,
+                selectionmode: 'singlerow',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75 },
+                    { text: 'Name', dataField: 'Name' }
+                    //{ text: 'Seq', dataField: 'Seq', width: 30, cellsalign: "right", renderer: colHeaderRight }
+                ]
+            });
+    }
+
+    $("#btnApprovalLine").on("click", function () {
+        showModalApprovalLine("");
+    })
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //On Click function--------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    $("#btnSearch").on("click", function () {
+        //(name, deptId, kind, dateFrom, dateTo)
+        fnGridApplication($("#txtSubject").val(), 0, "", $("#dateFrom").val(), $("#dateTo").val())
+    });
+
+    $("#btnReset").on("click", function () {
+        dataApprovalLine = [];
+        dataCirculator = [];
+        fnViewApprovalLine();
+        fnViewCirculator();
+    });
+
+    $("#btnHideApprovalLine").on("click", function () {
+        if ($("#btnHideApprovalLine").children().prop("class") === "fa fa-plus") {
+            $("#gridViewApprovalLine").show();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-minus");
+        } else {
+            $("#gridViewApprovalLine").hide();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-plus");
+        }
+
+    });
+
+    $("#btnHideCirculator").on("click", function () {
+        if ($("#btnHideCirculator").children().prop("class") === "fa fa-plus") {
+            $("#gridViewCirculator").show();
+            $("#btnHideCirculator").children().prop("class", "fa fa-minus");
+        } else {
+            $("#gridViewCirculator").hide();
+            $("#btnHideCirculator").children().prop("class", "fa fa-plus");
+        }
+    });
+
+    $("#btnNew").on("click", function () {
+        dataApprovalLine = [];
+        dataCirculator = [];
+        var rowData = {
+            Id: 0, Code: "", Name: "", DeptId: 0, DeptName: "", ApprovalLineDefault: "",
+            ApprovalLineJson: "", Description: "", KindName: "", CreateName: "", CreateDate: "", Active: false
+        };
+        fnSetData(rowData);
+    })
+
+    $("#btnSave").on("click", function () {
+        if (fnGetData()) {
+            fnInsert(dataEntity.Id != 0 ? "Update" : "Insert");
+        }
+    })
+
+    $("#btnDelete").on("click", function () {
+
+        var api = "../ApplicationConfig/Delete";  
+
+        var getselectedrowindexes = $('#gridApplication').jqxGrid('getselectedrowindexes');
+        var selectedRowData = $('#gridApplication').jqxGrid('getrowdata', getselectedrowindexes[0]);
+        dataEntity.Id = selectedRowData.Id;
+        if (dataEntity.Id == 0) {
+            showNotification("Hyosung Portal", "Please select row", "gray error");
+            return;
+        }
+
+        var result = confirm('Do you really want to delete that row?');
+        if (result) {
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify(dataEntity),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    showNotification("Hyosung Portal", "Delete success", "gray success");
+                    fnGridApplication($("#txtSubject").val(), 0, "", $("#dateFrom").val(), $("#dateTo").val());
+                },
+                error: function (result) {
+                    alert('Oh no: ' + result.responseText);
+                    return false;
+                }
+            });
+        }
+    })
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Other function-----------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    $("#txtSubject").keyup(function (e) {
+        if (e.keyCode == 13) {
+            fnGridApplication($("#txtSubject").val(), 0, "", $("#dateFrom").val(), $("#dateTo").val())
+
+        }
+    });
+</script>

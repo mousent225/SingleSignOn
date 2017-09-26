@@ -1,0 +1,346 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@model SingleSignOn.ViewModels.NoticesModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxfileupload")
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div class="" style="float: left">
+                <h1>Edit Notice</h1>
+            </div>
+            <div class="" style="float: right">
+                @if (Model.Writer == User.GetClaimValue(ClaimTypes.PrimarySid))
+            {
+                    <a class=Lbtn href="@Url.Action("Edit", "Notices")">
+                        <input type="reset" value="Reset">
+                    </a>
+                    <a class=Lbtn href="javascript:;">
+                        <input type="button" value=Save id="btnSave">
+                    </a>
+                }
+                <a class=Lbtn href="@Url.Action("Index","Notices")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+        <!-- end LblockPageTitle -->
+    </div>
+
+    <div style="clear: both"></div>
+    <div class="divContent">
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+
+                    <th class="input-require tb-col-1">
+                        @Html.LabelFor(m => m.Subject, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-5">
+                        @Html.ValidationMessageFor(m => m.Subject)
+                        @Html.TextBoxFor(m => m.Subject, new { @class = "input", @id = "txtSubject" })
+                        @Html.HiddenFor(m => m.UpdateUid, new { @id = "hdfCreater" })
+                        @Html.HiddenFor(m => m.Id, new { @id = "hdfFormId" })
+                        <input type="hidden" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" id="hdfEmpId" />
+                    </td>
+                    <th class="tb-col-1">
+                        @Html.LabelFor(m => m.Active, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-1" style="text-align: left">
+                        @Html.CheckBoxFor(m => m.Active, new { @class = "input", @style = "width: 30px" })
+                    </td>
+                    <td class="tb-col-4" style="text-align: left; vertical-align: top" rowspan="2">
+                        <table>
+                            <tr>
+                                <th>
+                                    <label class="label">Writer</label>
+                                </th>
+                                <td>
+                                    <label class="label">@User.GetClaimValue(ClaimTypes.Name)</label>
+                                </td>
+                                <th>
+                                    <label class="label">Last Update Date</label>
+                                </th>
+                                <td>
+                                    <label class="label">@String.Format("{0:yyyy.MM.dd}", Model.UpdateDate)</label>
+                                </td>
+                            </tr>
+                        </table>
+                        @if (Model.UpdateUid == User.GetClaimValue(ClaimTypes.PrimarySid))
+                        {
+                            <label class="label">A filename contain any of the following characters will be replace with blank: &#92; &#47; &#58; &#42; &#63; &quot; &lt; &gt; &#124;</label>
+                            <div id="jqxFileUpload">
+                            </div>
+                        }
+                        <div id="gridAttachment" style="float: right">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="">
+                        @Html.LabelFor(m => m.Descript, new { @class = "label" })
+                    </th>
+                    <td colspan="3">
+                        @Html.ValidationMessageFor(m => m.Descript)
+                        @Html.TextAreaFor(m => m.Descript, new { @class = "input", @rows = "10", @id = "txtDesc" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var dataAttachment = [];
+    var columnsAttachment = [];
+    var NoticesModel = {
+        id: $("#hdfFormId").val(),
+        Subject: "",
+        Descript: "",
+        AttachFile: false,
+        Active: false,
+        FileName: "",
+        FilePath: "",
+    };
+    $(window).resize(function () {
+        SetHeight($("#jqxWidget-portal"), $('footer').position().top - 145);
+        $('#txtDesc').ckeditor({
+            height: $("#jqxWidget-portal").height() - 300,
+            language: "en"
+        });
+    });
+    $(document).ready(function () {
+        var fileDownLoad = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : ""; //onclick = 'showModalAttachment(&#39;" + rowData.ID + "&#39;);'
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+
+        SetHeight($("#jqxWidget-portal"), $('footer').position().top - 145);
+        columnsAttachment = [{ text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                            { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: fileDownLoad, renderer: colHeaderLeft },
+                            { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft }, ];
+        checkAuthor();
+        fnGetDataAttachment($("#hdfFormId").val());
+
+        $("#txtSubject").jqxInput({ placeHolder: "Enter Subject", height: 25, width: "100%", minLength: 1, maxLength: 199 });
+
+        $('#txtDesc').ckeditor({
+            height: $("#jqxWidget-portal").height() - 300,
+            language: "en"
+        });
+
+        setTimeout(function () {
+            $("#cke_1_contents").css({ height: $("#cke_1_contents").height() - 28 });
+        }, 1000);
+
+        $('#jqxFileUpload').jqxFileUpload({
+            autoUpload: true,
+            width: '100%',
+            accept: ".gif,.jpg,.jpeg,.png,.bmp,.doc,.docx,.xlsx,.xls,.pdf,.ppt,.pptx",
+            uploadUrl: "@Url.Content("~/Notices/UploadFile")",
+            fileInputName: 'fileToUpload',
+            localization: {
+                browseButton: 'Select File ...'
+            }
+        });
+
+        $('#jqxFileUpload').on('select', function (event) {
+            var SIZE_ALLOW = $("#hdfMaxFileSize");
+            var args = event.args;
+            var fileName = args.file;
+            var fileSize = args.size;
+            if (fileSize > SIZE_ALLOW) {
+                showNotification("Hyosung Portal", "Check again: No support file size over: " + SIZE_ALLOW, "gray error");
+                $('#jqxFileUpload').jqxFileUpload('cancelFile', 0);
+            }
+        });
+
+        $('#jqxFileUpload').on('uploadEnd', function (event) {
+            var args = event.args;
+            var fileName = args.file;
+            var serverResponce = args.response;
+            if (args.response.indexOf("Check again") !== -1) {
+                showNotification("Hyosung Portal", args.response, "gray error");
+                return;
+            }
+            result = JSON.parse(serverResponce);
+            console.log(result);
+            var item = { AttachId: null, FileName: result[0].FileName, FilePath: result[0].FilePath, MasterId: null, ModuleId: null };
+            dataAttachment.push(item);
+            fnAttachment(dataAttachment);
+
+        });
+
+    });
+
+    function fnAttachment(dataSource) {
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'AttachId', type: 'int' },
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' },
+                { name: 'MasterId', type: 'string' },
+                { name: 'ModuleId', type: 'string' }
+            ],
+            localdata: dataSource
+        };
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+
+        $("#gridAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "77%",
+            source: dataAdapter,
+            pageable: true,
+            columns: columnsAttachment
+        });
+    }
+
+    $("#btnSave").on("click", function () {
+        if (!getData()) return;
+        fnUpdateCate();
+        return;
+    });
+
+    function getData() {
+
+        var subject = $("#txtSubject");
+        if (subject.val() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Title", "gray error");
+            subject.focus();
+            return false;
+        }
+        var descript = $("#txtDesc");
+        if (removeTags(descript.val()).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Descript", "gray error");
+            descript.focus();
+            return false;
+        }
+
+        NoticesModel.Subject = subject.val();
+        NoticesModel.Descript = $("#txtDesc").val();
+        NoticesModel.Active = $("#Active").prop("checked");
+
+        NoticesModel.FileName = "";
+        NoticesModel.FilePath = "";
+
+        if (dataAttachment.length >= 1) {
+            dataAttachment.forEach(function (item) {
+                NoticesModel.FileName = (NoticesModel.FileName === "" ? item.FileName : (NoticesModel.FileName + "|" + item.FileName));
+                NoticesModel.FilePath = (NoticesModel.FilePath === "" ? item.FilePath : (NoticesModel.FilePath + "|" + item.FilePath));
+            })
+        }
+
+        return true;
+    }
+
+    function fnUpdateCate() {
+        var api = "/Notices/Edit";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(NoticesModel),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", "Update success", "gray success");
+                setTimeout(function () {
+                    window.location = "/Notices/Index";
+                }, 1000);
+
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    function deleteFile(model) {
+        var result = confirm('Do you really want to delete that row?');
+        if (result) {
+            var api = "/Notices/DeleteFile";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete file success", "gray success");
+                        var filePath = JSON.parse(model).FilePath;
+                        dataAttachment.forEach(function (item) {
+                            if (item.FilePath === filePath) {
+                                dataAttachment.splice(dataAttachment.indexOf(item), 1);
+                            }
+                        });
+                        fnAttachment(dataAttachment);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    function fnGetDataAttachment(masterId) {
+        var api = "/Notices/GetAttachment";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ attachment: masterId, moduleId: '01e35e18-c660-4e7a-b1f8-f71c1c667f10' }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                //var result = JSON.parse(data);
+                console.log(data);
+                data.forEach(function (item) {
+                    var attach = { AttachId: item.AttachId, FileName: item.FileName, FilePath: item.FilePath, MasterId: item.MasterId, ModuleId: item.ModuleId };
+                    dataAttachment.push(attach);
+                });
+                fnAttachment(dataAttachment);
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    function checkAuthor() {
+        var creater = $("#hdfCreater").val();
+        var empId = $("#hdfEmpId").val();
+        if (creater === empId) {
+            columnsAttachment.push({ text: 'Delete', dataField: 'Delete', width: 43, cellsrenderer: deleteColumn, renderer: colHeaderCenter });
+        }
+    }
+
+    function fnRefresh() {
+        window.location.href = "/Notices/Edit/" + $("#hdfFormId").val();
+    }
+</script>

@@ -1,0 +1,181 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@model SingleSignOn.ViewModels.PostsModel
+@{
+    ViewBag.Title = "View Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqwidgetsCombobox")
+@Scripts.Render("~/bundles/jqxTree")
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div style="float:left">
+                <label class="label" style="color:#448CCB">View Detail FAQ</label>
+            </div>
+            <div class="" style="float: right">
+                @if (Model.CreateUid == User.GetClaimValue(ClaimTypes.PrimarySid))
+            {
+                    <a class=Lbtn href="javascript:;">
+                        <input type="button" value="Edit" id="btnEdit">
+                    </a>
+                    <a class=Lbtn href="javascript:;">
+                        <input type="reset" value="Delete" id="btnDelete">
+                    </a>
+                }
+                <a class=Lbtn href="@Url.Action("Index","Faq")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+            <!-- end LblockPageTitle -->
+        </div>
+    </div>
+
+    <div style="clear: both"></div>
+    <div class="divContent">
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-1">
+                        <label class="label">System</label>
+                    </th>
+                    <td class="tb-col-3">
+                        @Html.LabelFor(m => m.CategoryName, new { @class = "label", @id = "lblCateName" })
+                        @Html.HiddenFor(m => m.CategoryName, new { @id = "hdfCateName" })
+                        @Html.HiddenFor(m => m.KindName, new { @id = "hdfKindName" })
+                        @Html.HiddenFor(m => m.PostId, new { @id = "hdfPostId" })
+                    </td>
+                    <th class="tb-col-1">
+                        @*@Html.LabelFor(m => m.Kind, new { @class = "label" })*@
+                        <label class="label">Module</label>
+                    </th>
+                    <td class="tb-col-3" style="text-align: left">
+                        @*<div id="cbKind"></div>
+                            <input type="hidden" id="hdfKindId" />*@
+                        @Html.LabelFor(m => m.KindName, new { @class = "label", @id = "lblKindName" })
+                    </td>
+                    <th class="tb-col-1">
+                        <label class="label" for="IsActive">Active</label>
+                    </th>
+                    <td class="tb-col-3" style="text-align: left">
+                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "input", @style = "width: 30px" })
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label class="label">Apply For Plant</label>
+                    </th>
+                    <td colspan="5">
+                        <label class="label">@Model.ApplyToPlantName</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="input-require">
+                        <label class="label">Question</label>
+                    </th>
+                    <td colspan="5">
+                        @Html.ValidationMessageFor(m => m.Subject)
+                        <label class="label">@Model.Subject</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="">
+                        <label class="label">Answer</label>
+                    </th>
+                    <td colspan="5">
+                        @Html.TextAreaFor(m => m.Content, new { @id = "txtContent" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    var postsModel = {
+        PostId: "",
+        Subject: "",
+        Category: "",
+        CategoryName: "",
+        IsActive: false,
+        Kind: "",
+        KindName: "",
+        Content: "",
+        ApplyToPlant: ""
+    };
+
+    var listChecked = [];
+
+    $(window).resize(function () {
+        SetHeight($("#jqxWidget-portal"), $('footer').position().top - 130);
+    });
+
+    $(document).ready(function () {
+
+        $("#lblCateName").html($("#hdfCateName").val());
+        $("#lblKindName").html($("#hdfKindName").val());
+
+        $('#IsActive').prop("disabled", "disabled");
+        SetHeight($("#jqxWidget-portal"), $('footer').position().top - 130);
+
+        $('#txtContent').ckeditor({
+            height: $("#jqxWidget-portal").height() - 412,
+            language: "en",
+            readOnly: true
+        });
+        //ẩn tool bar
+        setTimeout(function () {
+            $("#cke_1_top").hide();
+            $("#cke_1_contents").css({ height: $("#cke_1_contents").height() + 45 });
+        }, 700);
+
+
+    });
+    $("#btnEdit").on("click", function () {
+        window.location.href = "/Faq/Edit/" + $("#hdfPostId").val();
+    });
+
+    $("#btnDelete").on("click", function () {
+        fnDelete();
+    });
+
+    function fnDelete() {
+        var result = confirm('Do you really want to delete this data?');
+        if (result) {
+            var api = "/Faq/Delete";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify({ id: $("#hdfPostId").val() }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete success", "gray success");
+                        setTimeout(function () {
+                            window.location = "/Faq/Index";
+                        }, 1000);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+</script>
+
+

@@ -1,0 +1,358 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@*Application master*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@section PanelLeft{
+    <div class="jqx-hideborder text-intro">
+        Category
+    </div>
+    <div id='jqxTree' style="border-style:none">
+    </div>
+}
+
+<div id='jqxWidget-portal' style="width:100%" class="row">
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+
+    <div id=LblockSearch>
+        <table>
+            <tbody>
+                <tr>
+                    <th class="LtextRight" style="width: 58px">
+                        Subject
+                    </th>
+                    <td>
+                        <input type="text" id="txtSubject" class="Ltext input" style="WIDTH: 100%" />
+                    </td>
+                    <th class="LtextRight" style="width:35px">Create Date</th>
+                    <td style="width:228px">
+                        <input type="text" id="dateFrom" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                        ~
+                        <input type="text" id="dateTo" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateTo" src="/Content/img/icon_cal.gif" border="0"></span>
+                    </td>
+                    <td class="tools" style="width:137px">
+                        <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Search"></a>
+                        @*@if (ViewBag.Rights.Contains("Insert"))
+                            {*@
+                        <a class="Lbtn" href="javascript:;"> <input type="button" data-toggle="modal" data-target="#mdListApplication" id="btnNew" value="New"></a>
+                        @*}*@
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="clear:both"></div>
+    </div>
+    <div id="gridApplication"></div>
+</div>
+
+<!-- Modal Approval Line//------------------------------------------------------------------------------------->
+<div id="mdListApplication" class="modal fade" tabindex="-1" data-width="25%" style="display: none;">
+    <div class="modal-header">
+        <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>
+                <label>List of Applications </label>
+            </h3>
+        </div>
+    </div>
+    <div class="modal-body" style="height:250px">
+        <div class="jqx-hideborder" id='treeApplicationList'>
+        </div>
+        <input type="hidden" id="hdfApplicationId" value="0" />
+    </div>
+    <div class="modal-footer">
+        @*<a class=Lbtn href="javascript:;">
+            <input type="button" value="Select" id="btnMdSelect" />
+        </a>*@
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var categoryId = "";
+    $(document).ready(function () {
+        //fnGridApplication($("#txtSubject").val(), 0, readCookie("SSO_APP_CATE_ID") !== "" ? readCookie("SSO_APP_CATE_ID") : categoryId, $("#dateFrom").val(), $("#dateTo").val());
+        fnGetListApplication();
+        
+        //menu bên trái
+        fnGetDataSourceTreeView();
+        if (readCookie("SSO_APP_CATE_ID") === "") {
+            var items = $('#jqxTree').jqxTree('getItems');
+            $('#jqxTree').jqxTree('selectItem', items[0]);
+        }
+        fnSetValueTreeView();
+         
+    });
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    function fnGridApplication(name, deptId, kind, dateFrom, dateTo) {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Id', type: 'int' },
+                { name: 'IdEncrypt', type: 'int' },
+                { name: 'Code', type: 'string' },
+                { name: 'ApplicationName', type: 'string' },
+                { name: 'Subject', type: 'string' },
+                { name: 'DeptId', type: 'int' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'ApprovalLine', type: 'string' },
+                { name: 'ApprovalLineJson', type: 'string' },
+                { name: 'ApprovalKind', type: 'string' },
+                { name: 'Description', type: 'string' },
+                { name: 'KindName', type: 'string' },
+                { name: 'CreateName', type: 'string' },
+                { name: 'CreateDate', type: 'date' },
+                { name: 'ConfirmDate', type: 'date' },
+                { name: 'ApprovalStatusName', type: 'string' },
+                { name: 'ApprovalStatus', type: 'string' },
+                { name: 'NextApprover', type: 'string' },
+                { name: 'NextApproverName', type: 'string' },
+            ],
+            url: '/ApplicationMaster/GetAll',
+            data: {
+                name: name,
+                deptId: deptId,
+                kind: kind,
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            },
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+        };
+        dataAdapter = new $.jqx.dataAdapter(source);
+        fnSetAuthorize(dataAdapter);
+        //alert($('footer').position().top);
+        $("#gridApplication").jqxGrid(
+            {
+                width: "100%",
+                height: $('footer').position().top - 183,
+                source: dataAdapter,
+                rendergridrows: function () {
+                    return dataAdapter.records;
+                },
+                enablebrowserselection: true,
+                virtualmode: true,
+                pageable: true,
+                pagesize: 20,
+                pagesizeoptions: ['20', '50', '100'],
+                sortable: true,
+                enabletooltips: true,
+                columns: displayColumn,
+                columnsresize: true,
+                rowsheight: 22,
+                altrows: true
+            });
+    };
+
+    //lấy lên danh sách application
+    function fnGetListApplication() {
+        var api = '/ApplicationConfig/GetListApplication';
+        $.ajax({
+            type: "GET",
+            url: api,
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            cache: true,
+            success: function (data) {
+                //console.log(data);
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' },
+                        { name: 'Code' }
+                    ],
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#treeApplicationList').jqxTree({ source: records, width: '100%', height: '100%', toggleMode: 'none' });
+                var items = $('#treeApplicationList').jqxTree('getItems');                
+
+                $('#treeApplicationList').jqxTree('selectItem', items[0]);
+                $('#treeApplicationList').jqxTree('expandAll');
+                $('#treeApplicationList').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#treeApplicationList').jqxTree('getItem', args.element);
+                    $("#hdfApplicationId").val(item.id);
+                });
+                //bắt sự kiện dbclick trên item node
+                //viết lại sự kiện click
+                function singleClick(event) {
+                    var _item = event.target;
+                    if (_item.tagName != "LI") {
+                        _item = $(_item).parents("li:first");
+                    };
+                    var item = $('#treeApplicationList').jqxTree('getItem', _item[0]);
+                    if (item.isExpanded == true) {
+                        $('#treeApplicationList').jqxTree('collapseItem', _item[0]);
+                    } else {
+                        $('#treeApplicationList').jqxTree('expandItem', _item[0]);
+                    };
+                };
+                //viết lại dbclick
+                function doubleClick(event) {
+                    var _item = event.target;
+                    if (_item.tagName != "LI") {
+                        _item = $(_item).parents("li:first");
+                    };
+                    var item = $('#treeApplicationList').jqxTree('getItem', _item[0]);
+                    if (!item.hasItems) {
+                        var code = "";
+                        $.each(data, function (index, d) {
+                            if (d.id == item.id)
+                                code = d.Code;
+                        })
+                        //alert("Write your code here");
+                        window.location = "../Application/Index/" + code;
+                    }
+                };
+                $("#treeApplicationList .jqx-tree-item").click(function (event) {
+                    var that = this;
+                    setTimeout(function () {
+                        var dblclick = parseInt($(that).data('double'), 10);
+                        if (dblclick > 0) {
+                            $(that).data('double', dblclick - 1);
+                        } else {
+                            singleClick.call(that, event);
+                        }
+                    }, 100);
+                }).dblclick(function (event) {
+                    $(this).data('double', 2);
+                    doubleClick.call(this, event);
+                });
+
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+    function fnSetValueTreeView() {
+        if (readCookie("SSO_APP_CATE_PARENT") !== "0")
+            $("#jqxTree").jqxTree('expandItem', $("#" + readCookie("SSO_APP_CATE_PARENT") + "")[0]);
+        $("#jqxTree").jqxTree('selectItem', $("#" + readCookie("SSO_APP_CATE_ID") + "")[0]);//SSO_APP_CATE_PARENT
+    }
+    //lấy dữ liệu cho menu bên trái
+    function fnGetDataSourceTreeView() {
+        var api = "../Category/GetListTreeView";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ category: 'd22ae106-e891-46b5-8f3d-61d4d83d7b2e' }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' },
+                        { name: 'SubCode' }
+                    ],
+                    id: 'ID',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ icon: 'SubCode', name: 'Name', map: 'label' }]);
+
+                $('#jqxTree').jqxTree({ source: records, width: '100%', height: $('footer').position().top - 250 });                
+                
+                //console.log(records);   
+                $('#jqxTree').on('select', function (event) {
+                    var item = $('#jqxTree').jqxTree('getItem', event.args.element);
+                    categoryId = item.id;
+                    createCookie("SSO_APP_CATE_ID", item.id, 1);
+                    createCookie("SSO_APP_CATE_NAME", item.label, 1);//parentId
+                    createCookie("SSO_APP_CATE_PARENT", item.parentId, 1)
+                    fnGridApplication($("#txtSubject").val(), 0, categoryId, $("#dateFrom").val(), $("#dateTo").val());
+                }); 
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Custom function----------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    function fnSetAuthorize(dataSource) {
+        //console.log(dataSource);
+        rowIndex = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="text-align: center; margin-top: 5px;">' + (row + 1).toString() + '</div>';
+        }
+
+        rowSubject = function (row, column, value, defaultHtml, columnSettings, rowData) {            
+            console.log(rowData.IdEncrypt);
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;"><a href="javascript:;" onclick="fnShowDetail(&#39;' + rowData.IdEncrypt + '&#39;)" style="color:#343434; cursor:pointer">' + value + '</a></div>' +
+                '</div>';
+        }
+
+        rowApprovalLine = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            var display = (value === "" ? "" : value.split('|')[1]);
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;" title="' + display + '">' + display + '</a></div>' +
+                '</div>';
+        }
+        //, pinned: true
+        displayColumn = [
+            { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+            { text: 'Application', dataField: 'ApplicationName', width: 280, cellsrenderer: rowSubject, renderer: colHeaderLeft },
+            { text: 'Code', filterable: false, dataField: 'Code', cellsrenderer: rowSubject, sortable: false, renderer: colHeaderLeft },
+            //{ text: 'Subject', dataField: 'Subject', width: 220, cellsrenderer: rowSubject, renderer: colHeaderLeft },
+            { text: 'Dept Name', dataField: 'DeptName', width: 320, renderer: colHeaderLeft },
+            //{ text: 'Approval Line', dataField: 'ApprovalLine', width: 320, cellsrenderer: rowApprovalLine, renderer: colHeaderLeft },
+            //{ text: 'Approval Type', dataField: 'KindName', width: 120, renderer: colHeaderLeft },
+            { text: 'Approval Status', dataField: 'ApprovalStatusName', width: 120, renderer: colHeaderLeft },
+            { text: 'Next Approver', dataField: 'NextApproverName', width: 120, renderer: colHeaderLeft },
+            { text: 'Writer', filterable: false, dataField: 'CreateName', width: 160, cellsalign: 'left', renderer: colHeaderLeft },
+            { text: 'Create Date', filterable: false, dataField: 'CreateDate', width: 90, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter }
+        ]
+    };
+    function fnShowDetail(id) {
+        window.location.href = "/Application/ViewDetail/" + id;
+        return true;
+    }
+
+    //$("#btnMdSelect").on("click", function (){
+    //    var item = $('#treeApplicationList').jqxTree('getSelectedItem');
+    //    console.log(item);
+    //})
+
+</script>

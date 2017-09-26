@@ -1,0 +1,145 @@
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\SingleSignOn.dll.config
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\SingleSignOn.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\SingleSignOn.pdb
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Antlr3.Runtime.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Kendo.Mvc.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\log4net.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.AspNet.Identity.Core.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.Security.Cookies.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.Security.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Web.Infrastructure.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\MvcSiteMapProvider.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\MvcSiteMapProvider.WebActivator.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Newtonsoft.Json.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Owin.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Net.Http.Formatting.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Helpers.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Http.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Mvc.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Optimization.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Razor.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.WebPages.Deployment.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.WebPages.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.WebPages.Razor.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\WebActivatorEx.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\WebGrease.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Antlr3.Runtime.pdb
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Kendo.Mvc.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\log4net.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.AspNet.Identity.Core.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.Security.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Microsoft.Owin.Security.Cookies.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\MvcSiteMapProvider.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\MvcSiteMapProvider.WebActivator.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\Newtonsoft.Json.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Net.Http.Formatting.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Helpers.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Http.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Mvc.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Optimization.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.Razor.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.WebPages.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.WebPages.Deployment.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\System.Web.WebPages.Razor.xml
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\bg-BG\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\cs-CZ\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\da-DK\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\de-DE\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\es-ES\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\fr-CA\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\fr-FR\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\it-IT\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\nl-NL\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\pl-PL\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\pt-BR\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\pt-PT\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\ro-RO\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\ru-RU\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\sv-SE\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\tr-TR\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\uk-UA\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\bin\zh-CN\Kendo.Mvc.resources.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\obj\Release\SingleSignOn.csprojResolveAssemblyReference.cache
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\obj\Release\SingleSignOn.dll
+D:\NhanNghia\ProjectTest\SingleSignOn\SingleSignOn\obj\Release\SingleSignOn.pdb
+E:\Hyosung System\SSO\SingleSignOn\bin\SingleSignOn.dll.config
+E:\Hyosung System\SSO\SingleSignOn\bin\SingleSignOn.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\SingleSignOn.pdb
+E:\Hyosung System\SSO\SingleSignOn\bin\Antlr3.Runtime.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Elmah.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\EntityFramework.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\EntityFramework.SqlServer.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Kendo.Mvc.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\log4net.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.AspNet.Identity.Core.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.AspNet.Identity.Owin.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Host.SystemWeb.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Security.Cookies.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Security.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Security.OAuth.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Web.Infrastructure.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\MvcSiteMapProvider.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\MvcSiteMapProvider.WebActivator.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Newtonsoft.Json.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Owin.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Net.Http.Formatting.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Helpers.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Http.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Mvc.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Optimization.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Razor.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.WebPages.Deployment.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.WebPages.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.WebPages.Razor.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\WebActivatorEx.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\WebGrease.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Web.Administration.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\Antlr3.Runtime.pdb
+E:\Hyosung System\SSO\SingleSignOn\bin\Kendo.Mvc.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\log4net.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.AspNet.Identity.Core.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.AspNet.Identity.Owin.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Host.SystemWeb.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Security.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Microsoft.Owin.Security.Cookies.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\MvcSiteMapProvider.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\MvcSiteMapProvider.WebActivator.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\Newtonsoft.Json.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Net.Http.Formatting.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Helpers.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Http.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Mvc.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Optimization.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.Razor.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.WebPages.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.WebPages.Deployment.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\System.Web.WebPages.Razor.xml
+E:\Hyosung System\SSO\SingleSignOn\bin\bg-BG\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\cs-CZ\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\da-DK\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\de-DE\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\es-ES\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\fr-CA\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\fr-FR\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\it-IT\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\nl-NL\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\pl-PL\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\pt-BR\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\pt-PT\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\ro-RO\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\ru-RU\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\sv-SE\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\tr-TR\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\uk-UA\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\bin\zh-CN\Kendo.Mvc.resources.dll
+E:\Hyosung System\SSO\SingleSignOn\obj\Release\SingleSignOn.csprojResolveAssemblyReference.cache
+E:\Hyosung System\SSO\SingleSignOn\obj\Release\SingleSignOn.dll
+E:\Hyosung System\SSO\SingleSignOn\obj\Release\SingleSignOn.pdb

@@ -1,0 +1,178 @@
+﻿
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+<input type="hidden" id="hdfApplicationMasterName" value="@ViewBag.ApplicationMasterName" />
+<input type="hidden" id="hdfInformationSystemId" />
+<input type="hidden" id="hdfInformationSystemMasterId" />
+<div class="tb-table" style="float: right">
+    <table>
+        <tr>
+            <th class="tb-col-1">
+                @Html.Label("Detail", new { @class = "label", @style = "color: red;" })
+            </th>
+            <th class="input-require tb-col-2">
+                @Html.Label("System", new { @class = "label" })
+                <input type="hidden" id="hdfSystemId" value="0" />
+            </th>
+            <td class="tb-col-2">
+                <div id="cbSystem"></div>
+            </td>
+            <th class="input-require tb-col-2">
+                @Html.Label("Seriousness", new { @class = "label" })
+                <input type="hidden" id="hdfSeriousId" value="0" />
+            </th>
+            <td class="tb-col-5">
+                <div id="cbSerious"></div>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="6">
+                @Html.Label("Explanation", new { @class = "label" })
+            </th>
+        </tr>
+        <tr>
+            <td colspan="6">
+                @Html.TextArea("txtExplanation", new { @style = "height: 100px" })
+            </td>
+        </tr>
+        <tr class="trSolution">
+            <th class="tb-col-1">
+                @Html.Label("Solution", new { @class = "label" })
+            </th>
+            <th class="input-require tb-col-2">
+                @Html.Label("Person in charge", new { @class = "label" })
+                @Html.Hidden("hdfPic")
+            </th>
+            <td class="tb-col-2">
+                @Html.TextBox("txtPic")
+            </td>
+            <th class="input-require tb-col-2">
+                @Html.Label("Estimate completed days", new { @class = "label" })
+            </th>
+            <td>
+                @Html.TextBox("txtNumDays")
+            </td>
+        </tr>
+        <tr class="trSolution">
+            <td colspan="6">
+                @Html.TextArea("txtSolution", new { @style = "height: 100px" })
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+
+<script type="text/javascript">
+
+    var dataItEquipment = [];
+    var repeatIndex = 0;
+    var dataItEquipmentEntities = {};
+    var txtExplanation;
+    var txtSolution;
+    $(document).ready(function () {
+
+
+        //set height modal
+        $("#mdApprovalLine").height($('footer').position().top - 29);
+
+        $("#txtPic").jqxInput({ height: 21, width: "99%", minLength: 1, disabled: true });
+        $("#txtNumDays").jqxNumberInput({ spinButtonsWidth: 30, width: '30%', height: 21, spinButtons: true, decimalDigits: 0, min: 0, inputMode: 'simple', disabled: true });
+
+        fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbSystem"), $("#hdfSystemId"), 'f13323ec-ead6-42b0-89bc-eac0589983fc', "100%");
+        fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbSerious"), $("#hdfSeriousId"), '6efeae92-60da-4c99-8455-73885f00d936', "100%");
+
+        txtExplanation = CKEDITOR.replace('txtExplanation');
+        txtSolution = CKEDITOR.replace('txtSolution');
+
+        txtSolution.on("instanceReady", function () {
+            setTimeout(function () {
+                $(".cke_inner").height(442);
+                $(".cke_contents").height(400);
+                $("#cke_txtSolution").parent().height($("#cke_txtSolution").height() + 27);
+                $("#cke_txtExplanation").parent().height($("#cke_txtExplanation").height() + 27);
+            }, 1000);
+            
+        });
+        fnLoadDataForInformationSystem();
+        txtExplanation.config.readOnly = !isEdit;
+
+        $("#cbSerious").jqxComboBox({ disabled: !isEdit });
+        $("#cbSystem").jqxComboBox({ disabled: !isEdit });
+    });
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    function fnLoadDataForInformationSystem() {
+        $.ajax({
+            type: "POST",
+            url: "/Application/InformationSystemDetail",
+            data: JSON.stringify({ masterId: $("#hdfMasterId").val() }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                var dataInformationSystem = result;
+                //kiểm tra xem có phải người đang đăng nhập là người xử lý vấn đề này hay không
+                if ($("#hdfUserLoginId").val() === dataInformationSystem.EmpIp && dataInformationSystem.EmpIp === $("#hdfNextApprover").val()) {
+                    txtSolution.config.readOnly = false;
+                    $("#txtNumDays").jqxNumberInput({ disabled: false });
+                } else {
+                    txtSolution.config.readOnly = true;
+                    $("#txtNumDays").jqxNumberInput({ disabled: true });
+                }
+                fnSetValueForElement(dataInformationSystem);
+            },
+            error: function (mess) {
+                console.log(mess);
+            }
+        });
+    }
+
+    function fnGetDataApplicationDetail() {
+        var dataInformationSystem = {};
+        dataInformationSystem.System = $("#hdfSystemId").val();
+        dataInformationSystem.Seriousness = $("#hdfSeriousId").val();
+        dataInformationSystem.Explanation = txtExplanation.getData();
+        dataInformationSystem.Id = $("#hdfInformationSystemId").val();
+        dataInformationSystem.MasterId = $("#hdfInformationSystemMasterId").val();
+        return dataInformationSystem;
+    }
+
+    function fnGetDataForInformationSystemApproval() {
+        var dataInformationSystem = {};
+        dataInformationSystem.Id = $("#hdfInformationSystemId").val();
+        dataInformationSystem.Solution = txtSolution.getData();
+        dataInformationSystem.NumDays = $("#txtNumDays").val();
+        dataInformationSystem.EmpIp = $("#hdfPic").val();
+        return dataInformationSystem;
+    }
+
+    function fnSetupStatusForInformationSystem(status) {
+        $("#txtNumDays").jqxNumberInput({ disabled: !status });
+        $("#cbSerious").jqxComboBox({ disabled: !status });
+        $("#cbSystem").jqxComboBox({ disabled: !status });
+    }
+
+    function fnSetValueForElement(data) {
+        fnSetValueForComboBox($("#cbSystem"), data.System);
+        fnSetValueForComboBox($("#cbSerious"), data.Seriousness);
+        //alert(data.Explanation);
+        CKEDITOR.instances.txtExplanation.setData(data.Explanation);
+        CKEDITOR.instances.txtSolution.setData(data.Solution);
+
+        $("#hdfInformationSystemMasterId").val(data.MasterId);
+        $("#hdfInformationSystemId").val(data.Id);
+
+        $("#txtNumDays").val(data.NumDays);
+        $("#txtPic").val(data.EmpName);
+        $("#hdfPic").val(data.EmpIp);
+
+        if (!isEdit) {
+            $(".trSolution").show();
+        } else {
+            $(".trSolution").hide();
+        }
+    }
+
+</script>

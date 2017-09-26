@@ -1,0 +1,198 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.bg1{background:#F00; color:#ff0}
+.bg2{background:#F0f; color:#ff0}
+.bg3{background:#Ff0; color:#f00}
+.bg4{background:#F36; color:#6F3}
+.bg5{background:#660; color:#93C}
+.bg6{background:#C30; color:#999}
+
+body {color:#343434; font-size:12px; font-family:Arial, Helvetica, sans-serif; margin:0; padding:0; }
+h1, h2, h3, h4, h5 ,h6 {margin:0; padding:0}
+img {border:none}
+a, a:hover {text-decoration:none;
+-moz-transition: .4s;
+-o-transition: .4s;
+-webkit-transition: .4s;
+ transition: .4s;
+ }
+a:hover {color:#999}
+ul, li {list-style:none; margin:0; padding:0} 
+.container {width:100%; margin:0 auto}
+.row {padding:0 1%}
+/*-----------LOGIN----------*/
+.wrap-login {width:400px;   margin:150px auto 0 auto; }
+.wrap-login .logo {width:100%; float:left}
+.box-login {width:372px; height:172px; padding:14px; float:left;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1a5caa+38,1487ea+100 */
+background: rgb(26,92,170); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(26,92,170,1) 38%, rgba(20,135,234,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(26,92,170,1) 38%,rgba(20,135,234,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(26,92,170,1) 38%,rgba(20,135,234,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a5caa', endColorstr='#1487ea',GradientType=0 ); /* IE6-9 */
+}
+
+.box-login .title { text-align:right; height: 45px; width: 100%; margin-top: 7px; float:left}
+.box-login .title img {line-height:52px}
+.box-login .content {background-color:#eaebed; width:100%; float:left; height:120px; background:#DDD;
+ -moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+ }
+ 
+.box-login .content table {border: 1px solid #FFF; border-left:0; border-right:0; padding:23px 0 7px 0; margin:5px 0 5px 0; width: 90%;}
+.box-login .content td {margin:0; padding:0}
+.box-login .content td input {width:100%}
+.box-login .content th {width: 50%; text-align:right; font-weight:bold; }
+.box-login .content th button.login {background:#003fa0; border:1px solid #FFF; color:#FFF; font-weight:bold; padding:3px 15px; font-size:12px; margin-top:5px;
+-moz-box-shadow:0px 0px 2px #003fa0;
+-webkit-box-shadow:0px 0px 2px #003fa0;
+box-shadow:0px 0px 2px #003fa0;
+ -moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+}
+.login-copyright {width:100%; text-align:right; font-size:8px; margin-top:5px; text-transform:uppercase; float:left}
+
+
+/*--------------HEADER------------*/
+header {width:98%; padding:0 1% ;height:40px; background:#e4edf9}
+.logo {width:30%; float:left}
+.nav-head {width:70%; float:right; text-align:right}
+.nav-head a {padding:0 10px; font-weight:bold; color:#343434; line-height:40px; }
+.nav-head i {color:#12208B}
+.nav-head a:hover {color:#666}
+.nav-head select {margin-right:10px; border:1px solid #CCC; font-size:12px; padding:2px}
+
+/*--------------footer------------*/
+footer {border-top:1px solid #d8d8d8; position:fixed ;bottom:0; left:0; width:96%; padding:5px 2% ;  height:20px; line-height:20px; float:left; background:#FFF }
+.link-footer {  float:left}
+.link-footer a{padding:0 5px; float:left; display:block; color:#343434}
+.copyright {float:right; text-align:right; font-size:10px; text-transform:uppercase}
+
+/*---------SECTION---------*/
+section {width:100%; float:left;}
+.left{width:20%; float:left}
+.left:before{width:20%; background:#F2F2F2; min-height:100%; content:""; position:fixed;top:0; z-index:-1; border-left: 1px solid #D8D8D8}
+.center {width:80%; float:left}
+.right {width:20%; float:right}
+.right:before{width:20%; background:#EEE; min-height:100%; content:""; position:fixed;top:0; z-index:-1}
+.main {width:80%; float:left}
+.main2 {width:100%; float:left}
+#contents2 .main{width:100%}
+ 
+.bannner {height:200px; width:100%; float:left; text-align:center; background:url(../img/banner.png) no-repeat center;}
+.ssh_main {background: white url("../img/bg_sshmain.gif") repeat-x scroll 0 0;height: 200px;}
+
+/*----------LEFT----------------*/
+.user-login {width:99%; float:left; border:1px solid #0099FF;color:#FFF; padding:10px 0; text-align:center;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e5799+0,2989d8+50,207cca+51,7db9e8+100;Blue+Gloss+Default */
+background: rgb(30,87,153); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(30,87,153,1) 0%, rgba(41,137,216,1) 50%, rgba(32,124,202,1) 51%, rgba(125,185,232,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(30,87,153,1) 0%,rgba(41,137,216,1) 50%,rgba(32,124,202,1) 51%,rgba(125,185,232,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(30,87,153,1) 0%,rgba(41,137,216,1) 50%,rgba(32,124,202,1) 51%,rgba(125,185,232,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 ); /* IE6-9 */
+}
+.user-app {text-align:right; font-size:11px; background:#666; color:#FFF; padding:12px 5px}
+.user-app:before {content:"\f007"; font-family: 'FontAwesome';}
+
+
+.content-left {width:100%; float:left}
+.banner-link {width:96%; float:left; margin:10px 2%}
+.banner-link-2 {width:96%; float:left; margin:0 2% 20px 2%}
+
+
+
+#left_wrap {float: left;width: 20%;	height: 100%;position: relative;}
+#left_wrap2 {float: left;width: 0;height: 100%;	position: relative; margin-left: -20%;}  
+#div_img_toggle_btn{ position:absolute; padding-bottom:0; padding-top:2px;  padding-right:0; left:0}
+
+
+
+/*-------------MAIN--------------------*/
+.link {width:98%; padding:11px 1% 10px 1%; background-color:#F8f8f8; border-bottom:1px solid #CCC; margin-bottom:10px;
+-moz-box-shadow:1px 1px 2px #DDD;
+-webkit-box-shadow:1px 1px 2px #DDD;
+box-shadow:1px 1px 2px #DDD;}
+.link b {color:#F00}
+.link a {font-size:11px; padding:5px; color:#448CCB}
+.link a:after {content:"\f101"; padding-left:10px;font-family: 'FontAwesome'; color:#343434}
+
+.content-main {width:100%; float:left}
+.content-main .child{width:48%; margin:0 1% 0 1% ; float:left;}
+.content-main .child h4 {background:#CCC; color:#343434; padding:10px ; border-bottom:1px solid #CCC}
+
+.content-main .child-2{width:98%;float:left; padding:0 1%; margin-bottom:20px}
+.content-main .child-2 h4 {background:#CCC; color:#343434; padding:10px ; border-bottom:1px solid #CCC}
+
+#contents .content-main {width:97%; padding-left:2% ; padding-right:1%}
+#contents2 .content-main {width:98%; float:left ; padding:0 1%}
+
+.content-main h2 {font-size:20px; font-weight:bold; color:#343434; border-bottom:3px solid #A0CAFC; padding-bottom:5px; margin-bottom:10px; color:#0071BC}
+
+
+/*-------------POPUP--------------------*/
+.popup {width:100%; float:left; margin-bottom:20px}
+.popup h1{color:#0071BC; border-bottom:2px solid #A0CAFC ; font-size:20px; padding-bottom:6px}
+.popup-setting {width:100%; float:left; text-align:right; margin:5px 0 10px 0}
+.popup-setting input {border:1px solid #DDD; padding:5px}
+
+/*-------------PAGE--------------------*/
+.page {width:100%; float:left; text-align:center; margin:20px 0 10px 0; display:block}
+.page a {border:1px solid #AAA; margin:0 -1px ; padding:4px 8px ; font-size:12px; font-weight:bold; color:#343434;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7f7f7+0,e5e5e5+50,cecece+51,f7f7f7+100 */
+background: rgb(247,247,247); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(247,247,247,1) 0%, rgba(229,229,229,1) 50%, rgba(206,206,206,1) 51%, rgba(247,247,247,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(229,229,229,1) 50%,rgba(206,206,206,1) 51%,rgba(247,247,247,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(247,247,247,1) 0%,rgba(229,229,229,1) 50%,rgba(206,206,206,1) 51%,rgba(247,247,247,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
+
+}
+.page a:hover, .page a.active {background:#FFF}
+
+/*-------------------SEARCH------------------------*/
+.search-high {width:100%; float:left; }
+.search-high table th {background:#F3F3F3; border-bottom:1px solid #DDD; text-align:right}
+.search-high table tr td {background:#FAFAFA; border-bottom:1px solid #DDD} 
+.search-high table tr td input,.search-high table tr td select {width:96%; float:left; padding:5px 2%; border:#DDD 1px solid} 
+
+.adv-search {width:100%; float:left;}
+.adv-search table {padding:20px 0}
+.adv-search table th {background:#FFF ;border:none; text-align:right;  padding-top:7px; padding-bottom:7px}
+.adv-search table tr td {background:#FFF; border-bottom:none; padding:0; text-align:left} 
+.adv-search table tr td input {vertical-align:middle}
+.adv-search table tr td input[type="text"],.adv-search table tr td select {width:96%; float:left; padding:3px 2%; border:#DDD 1px solid} 
+ 
+ 
+@media only screen and (max-width: 980px) {
+header, footer {width:975px; padding:0 10px}
+.container {width:975px; padding: 0 10px}
+.nav {width:975px!important; padding: 0 10px}
+/*---------SECTION---------*/
+.left{width:210px; float:left}
+.left:before{width:210px; position:fixed }
+.center {width:435px; float:left;}
+.right {width:310px; float:right}
+.right:before{width:310px; position:absolute  }
+.main {width:765px; float:left}
+
+.content-main .child:nth-child(odd) {width:48%; margin:0 1% 0 1% ; float:left;  }
+.content-main .child:nth-child(even) {width:48%; margin: 0 0 0 2%; float:left ; }
+
+.content-main .child-2{width:100%;float:left;}
+.content-main-3 {width:99%}
+
+
+#left_wrap {float: left;width:210px;	height: 100%;position: relative;}
+#left_wrap2 {float: left;width: 0;height: 100%;	position: relative; margin-left: -220px;}  
+#div_img_toggle_btn {left:0!important; position:fixed!important}
+
+
+
+}

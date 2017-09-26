@@ -1,0 +1,685 @@
+﻿
+<div class="modal-header">
+    <div>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>
+            <label>Manage Approval Line </label>
+        </h3>
+    </div>
+</div>
+<div class="modal-body row">
+    <div id="divAppLeft" style="padding-right:5px" class="col-6">
+        <div id="divAppTop" style="height:50%">
+            <div id="divAppDept">
+                <ul>
+                    <li style="margin-left: 15px;">Search</li>
+                    <li>Default</li>
+                    <li>Recent</li>
+                </ul>
+                <div id="divAppSearch">
+                    <div id=LblockSearch style="margin-bottom:5px">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th class="LtextRight" style="width:27px">Name</th>
+                                    <td>
+                                        <input type="text" id="txtAppName" class="Ltext input" style="WIDTH: 100%" />
+                                    </td>
+                                    <td class="tools" style="width:80px">
+                                        <a class="Lbtn" href="javascript:;"> <input id="btnAppSearch" type="button" value="Search"></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="clear:both"></div>
+                    </div>
+
+                    <div id="divAppTree">
+                        <div class="jqx-hideborder" id='jqxAppPlant'>
+                        </div>
+                        <input type="hidden" id="hdfAppDept" value="0" />
+                    </div>
+                </div>
+                <div style="padding: 5px 5px 0 5px">
+                    <div id="gridApprovalLineDefault">
+                    </div>
+                </div>
+                <div id="divTabGridApplicationHistory" style="padding: 5px 5px 0 5px">
+                    <div id="gridApplicationHistory"></div>
+                </div>
+            </div>
+        </div>
+        <div id="divAppBottom" style="height:50%; padding-top:10px">
+            <div id="gridAppEmpInfor"></div>
+        </div>
+    </div>
+    <div id="divAppMiddle" style="overflow:auto; height:100%; max-width:8%; padding: 18% 1px 0 1px" class="col-1">
+        <div class="tools" style="display:table-cell; vertical-align:middle; text-align:left">
+            <button id="btnAppApply" data-id="E408D53D-6E62-4D63-A3D4-CD3EA9A14D36" data-name="Approver" style="width:110px; text-align:left; margin-bottom:5px">
+                Apply&emsp;<i class="fa fa-hand-o-right" style="float:right" aria-hidden="true"></i>
+            </button><br />
+            <button id="btnAppApprover" data-id="E408D53D-6E62-4D63-A3D4-CD3EA9A14D36" data-name="Approver" style="width:110px; text-align:left">
+                Approver&emsp;<i class="fa fa-hand-o-right" style="float:right" aria-hidden="true"></i>
+            </button><br />
+            <button id="btnAppConsenter" data-id="5325E6FF-6430-49A2-B3D3-D9ABDBE06F9E" data-name="Consenter" style="margin:5px 0; width:110px; text-align:left">
+                Consenter&emsp;<i class="fa fa-hand-o-right" style="float:right" aria-hidden="true"></i>
+            </button><br />
+
+            <div>
+                <input type="radio" id="rdOrder" data-id="2600C4A7-CFB3-4E08-A08D-EDF0C1D99A71" data-name="Order" checked="" name="approvalType" />
+                <label for="rdOrder" class="label">Order</label><br />
+                <input type="radio" id="rdParallel" data-id="C546BB90-1CBD-44AE-BF4B-85FC2C12A213" data-name="Parallel" name="approvalType" />
+                <label for="rdParallel" class="label">Parallel</label>
+            </div><br />
+
+            <button id="btnAppCirculator" data-id="045872C8-638C-4A12-A70B-4E471C5D90EB" data-name="Circulator" style="width:110px; text-align:left">
+                Circulator&emsp;<i class="fa fa-hand-o-right" style="float:right" aria-hidden="true"></i>
+            </button><br />
+        </div>
+    </div>
+    <div id="divAppRight" style="" class="col-5">
+        <div id="divApprovalLine" style="height:50%">
+            <div id=LblockSearch style="margin:0">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th class="LtextLeft" style="text-align:left"><label class="label">Approval List</label></th>
+                            <td class="tools" style="width:375px">
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppInitial" type="button" value="Initial"></a>
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppTop" type="button" value="Top"></a>
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppUp" type="button" value="Up"></a>
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppDown" type="button" value="Down"></a>
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppButtom" type="button" value="Bottom"></a>
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppDelete" type="button" value="Delete"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="gridApprovalLine"></div>
+        </div>
+        <div id="divCirculator" style="height:50%; padding-top:10px">
+            <div id=LblockSearch style="margin:0">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th class="LtextLeft" style="text-align:left"><label class="label">Circulator List</label></th>
+                            <td class="tools" style="width:140px">
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppCirInitial" type="button" value="Initial"></a>
+                                <a class="Lbtn" href="javascript:;"> <input id="btnAppCirDelete" type="button" value="Delete"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="gridCirculator"></div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <a class=Lbtn href="javascript:;">
+        <input type="button" value="Confirm" id="btnMdConfirm" />
+    </a>
+    <a class=Lbtn href="javascript:;">
+        <input data-dismiss="modal" type="button" value="Close" />
+    </a>
+</div>
+
+<script type="text/javascript">
+    var dataModal = [];
+    var dataCirculatorModal = [];
+    var dataEmployeeSelected = [];
+    var gridSelected;
+    $(document).ready(function () {
+        dataModal = dataApprovalLine;
+        dataCirculatorModal = dataCirculator;
+        //set height modal
+
+        $("#mdApprovalLine .modal-body").css({ height: $("#mdApprovalLine").height() - 95, "max-height": $("#mdApprovalLine").height() - 95, overflow: "auto" });
+
+
+        $('#divAppDept').jqxTabs({ width: '100%', height: "100%", position: 'top', keyboardNavigation: false });
+        $("#txtAppName").jqxInput({ placeHolder: "Search by Name/EmpId, split by semi-colon (';')", height: 21, width: "97%", minLength: 1 });
+
+        fnAppPlantTree();
+        fnAppUserInfor();
+
+        fnApprovalLine();
+        fnCirculator();
+        fnApprovalHistory();
+        fnGetDefaultApproval($("#hdfApplicationId").val());
+        setStyle();
+        $("#rdParallel").prop("checked", $("#hdfApprovalKind").val().toLowerCase() === $("#rdParallel").attr("data-id").toLowerCase());
+    });
+
+    $(window).resize(function () {
+        //$("#divAppRight").width("40%");
+        //if ($("#mdApprovalLine").width() > ($("#divAppLeft").width() + $("#divAppMiddle").width() + $("#divAppRight").width())) {
+        //    $("#divAppRight").width("35%");
+        //}
+    })
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //load dữ liệu cho cây phòng ban
+    function fnAppPlantTree() {
+        var api = 'http://' + hostAddress + '//User/GetListTreeView';
+        $.ajax({
+            type: "GET",
+            url: api,
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            cache: true,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#jqxAppPlant').jqxTree({ source: records, width: '100%', height: '100%' });
+                var items = $('#jqxAppPlant').jqxTree('getItems');
+                $('#jqxAppPlant').jqxTree('selectItem', items[0]);
+                $('#jqxAppPlant').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxAppPlant').jqxTree('getItem', args.element);
+
+                    $("#hdfAppDept").val(item.id);
+                    fnAppUserInfor();
+                });
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+    //load dữ liệu cho thông tin nhân viên
+    function fnAppUserInfor() {
+        source = {
+            datatype: "json",
+            enablebrowserselection: true,
+            datafields: [
+                { name: 'OrganizeName', type: 'string' },
+                { name: 'PlantName', type: 'string' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'DeptFullName', type: 'string' },
+                { name: 'SectionName', type: 'string' },
+                { name: 'ID', type: 'string' },
+                { name: 'LoginID', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'Email', type: 'string' }
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/User/User_Read',
+            cache: true,
+            async: true,
+            data: {
+                selectType: 1,
+                deptCode: $("#hdfAppDept").val(),
+                userId: $("#txtAppName").val(),
+                userName: $("#txtAppName").val(),
+                status: ""//$("#cbStatus").val() === "00000000-0000-0000-0000-000000000000" ? "" : $("#cbStatus").val()
+            },
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridAppEmpInfor").jqxGrid({
+            width: "100%",
+            height: "98%",
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            pageable: true,
+            sortable: true,
+            selectionmode: 'checkbox',
+            pagesize: 20,
+            columnsresize: true,
+            pagesizeoptions: ['20', '50', '80', '100'],
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                { text: 'EmpId', dataField: 'LoginID', width: 75, renderer: colHeaderLeft },
+                { text: 'Name', dataField: 'Name', width: 180, renderer: colHeaderLeft },
+                { text: 'Email', dataField: 'Email', width: 120, renderer: colHeaderLeft },
+                { text: 'Organization', filterable: false, dataField: 'OrganizeName', width: 150, sortable: false, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Plant', dataField: 'PlantName', width: 130, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Department', dataField: 'DeptName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+                { text: 'Section', dataField: 'SectionName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false }
+            ]
+        });
+    }
+    //load dữ liệu cho dòng phê duyệt
+    function fnApprovalLine() {
+        //console.log(dataModal);
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'DeptFullName', type: 'string' },
+                { name: 'ApproverType', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'Seq', type: 'int' }
+            ],
+            localdata: dataModal
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridApprovalLine").jqxGrid(
+            {
+                width: "100%",
+                height: $("#divApprovalLine").height() - 40,
+                source: dataAdapter,
+                selectionmode: 'singlerow',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75, renderer: colHeaderLeft },
+                    { text: 'Name', dataField: 'Name', renderer: colHeaderLeft },
+                    { text: 'Approver Type', dataField: 'ApproverTypeName', width: 120, renderer: colHeaderCenter, cellsalign: "center" }
+                ]
+            });
+    }
+    //load dữ liệu cho người tham khảo
+    function fnCirculator() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'Seq', type: 'int' }
+            ],
+            localdata: dataCirculatorModal
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridCirculator").jqxGrid(
+            {
+                width: "100%",
+                height: $("#divCirculator").height() - 42,
+                source: dataAdapter,
+                selectionmode: 'singlerow',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75, renderer: colHeaderLeft },
+                    { text: 'Name', dataField: 'Name', renderer: colHeaderLeft }
+                    //{ text: 'Seq', dataField: 'Seq', width: 30, cellsalign: "right", renderer: colHeaderRight }
+                ]
+            });
+    }
+    //load dữ liệu cho dòng approval history
+    function fnApprovalHistory() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Id', type: 'int' },
+                { name: 'ApplicationId', type: 'int' },
+                { name: 'ApplicationMasterName', type: 'string' },
+                { name: 'MasterId', type: 'int' },
+                { name: 'ApplicationSubject', type: 'string' },
+                { name: 'ApprovalLine', type: 'string' },
+                { name: 'Circulator', type: 'string' },
+                { name: 'ApprovalLineJson', type: 'string' },
+                { name: 'CreateDate', type: 'date' }
+            ],
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            url: '/ApplicationMaster/ApprovalHistoryGetList',
+            cache: true,
+            async: true,
+            data: {
+                applicationId: 0
+            },
+        };
+        rowApprovalLine = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            var display = (value === "" ? "" : value.split('|')[1]);
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;" title="' + display + '">' + display + '</a></div>' +
+                '</div>';
+        }
+        rowCirculator = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            var display = (rowData.ApprovalLine === "" ? "" : rowData.ApprovalLine.split('|')[4]);
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;" title="' + display + '">' + display + '</a></div>' +
+                '</div>';
+        }
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridApplicationHistory").jqxGrid(
+            {
+                width: "100%",
+                height: "98%",
+                source: dataAdapter,
+                rendergridrows: function () {
+                    return dataAdapter.records;
+                },
+                virtualmode: true,
+                pageable: true,
+                sortable: false,
+                selectionmode: 'singlerow',
+                pagesize: 20,
+                columnsresize: true,
+                pagesizeoptions: ['20', '50', '80', '100'],
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'Application Name', dataField: 'ApplicationMasterName', width: 165, renderer: colHeaderLeft },
+                    { text: 'Approval Line', dataField: 'ApprovalLine', width: 300, cellsrenderer: rowApprovalLine, renderer: colHeaderLeft },
+                    { text: 'Circulator', dataField: 'Circulator', width: 200, cellsrenderer: rowCirculator, renderer: colHeaderLeft },
+                    { text: 'Create Date', dataField: 'CreateDate', width: 80, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter, editable: false }
+                ]
+            });
+    }
+    //lấy lên dữ liệu approval line mặc định
+    function fnGetDefaultApproval(applicationId) {
+        //GetDefaultApprovalLine
+        $.ajax({
+            type: "POST",
+            url: "/ApplicationConfig/GetDefaultApprovalLine",
+            data: JSON.stringify({ applicationId: applicationId }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                //console.log(result.data);
+                var dataApprovalLineDefault = JSON.parse(result.data.split("|")[0]);
+                fnViewApprovalLineDefault(dataApprovalLineDefault);
+                //alert(result.data[0].split("|")[1]);
+                //dataCirculator = JSON.parse(result.data.split("|")[1]);
+                //$("#hdfApprovalKind").val(result.data.split("|")[2]);
+                //fnSetDisplay();
+            },
+            error: function () {
+                return [];
+            }
+        });
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Custom function----------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    function fnViewApprovalLineDefault(dataApprovalLine) {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'DeptFullName', type: 'string' },
+                { name: 'ApproverType', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'Seq', type: 'int' }
+            ],
+            localdata: dataApprovalLine
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridApprovalLineDefault").jqxGrid(
+            {
+                width: "100%",
+                height: "99%",
+                source: dataAdapter,
+                selectionmode: 'checkbox',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75, renderer: colHeaderLeft },
+                    { text: 'Name', dataField: 'Name', width: 130, renderer: colHeaderLeft },
+                    { text: 'Department', dataField: 'DeptFullName', renderer: colHeaderLeft },
+                    { text: 'Approver Type', dataField: 'ApproverTypeName', width: 120, renderer: colHeaderCenter, cellsaign: "center" }
+                    //{ text: 'Seq', dataField: 'Seq', width: 30, cellsalign: "right", renderer: colHeaderRight }
+                ]
+            });
+    }
+    function setStyle() {
+        $("#divAppTree").height($("#divAppTop").height() - 72);
+
+        var tabItem = $('#divAppDept').jqxTabs('selectedItem');
+        //console.log(tabItem);
+        if (tabItem === 2)
+            $("#btnAppApply").show();
+        else
+            $("#btnAppApply").hide();
+    }
+
+    //đổi thứ tự người phê duyệt
+    function fnSwapItem(item, index) {
+        var i = dataModal.map(function (d) { return d["EmpId"] }).indexOf(item.EmpId);
+
+        dataModal[i] = dataModal[i + index];
+        dataModal[i + index] = item;
+        return i + index;
+    }
+
+    //thêm 1 người vào danh sách phê duyệt
+    function fnPushToApprovaline(getselectedrowindexes, gridSelector, approverType, approverTypeName) {
+        for (var i = 0; i < getselectedrowindexes.length; i++) {
+            var selectedRowData = gridSelector.jqxGrid('getrowdata', getselectedrowindexes[i]);
+            //console.log(selectedRowData);
+            if (!dataModal.some(function (item) { return item.EmpId == selectedRowData.LoginID; })) {
+                //console.log(selectedRowData.LoginID);
+                var dataItem = {
+                    EmpId: selectedRowData.LoginID == undefined ? selectedRowData.EmpId : selectedRowData.LoginID,
+                    Name: selectedRowData.Name,
+                    DeptFullName: selectedRowData.DeptFullName,
+                    ApproverType: approverType,
+                    ApproverTypeName: approverTypeName,
+                    Seq: dataModal.length + 1
+                };
+                dataModal.push(dataItem);
+            }
+        }
+        //console.log(dataModal);
+    }
+
+    //thêm 1 người vào danh sách tham khảo
+    function fnPushToCirculator(getselectedrowindexes, gridSelector) {
+        for (var i = 0; i < getselectedrowindexes.length; i++) {
+            var selectedRowData = gridSelector.jqxGrid('getrowdata', getselectedrowindexes[i]);
+            if (!dataCirculatorModal.some(function (item) { return item.EmpId == selectedRowData.LoginID; })) {
+                var dataItem = {
+                    EmpId: selectedRowData.LoginID == undefined ? selectedRowData.EmpId : selectedRowData.LoginID,
+                    Name: selectedRowData.Name,
+                    Seq: dataCirculatorModal.length
+                };
+                dataCirculatorModal.push(dataItem);
+            }
+        }
+        //console.log(dataCirculatorModal);
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //On Click function--------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //xóa tất cả dữ liệu người tham khảo
+    $("#btnAppCirInitial").on("click", function () {
+        dataCirculatorModal = [];
+        fnCirculator();
+    })
+    //xóa tất cả dữ liệu người phê duyệt
+    $("#btnAppInitial").on("click", function () {
+        dataModal = [];
+        fnApprovalLine();
+    })
+    //xóa 1 người tham khảo
+    $("#btnAppCirDelete").on("click", function () {
+        var getselectedrowindexes = $('#gridCirculator').jqxGrid('getselectedrowindexes');
+        var selectedRowData = $('#gridCirculator').jqxGrid('getrowdata', getselectedrowindexes[0]);
+        if (selectedRowData !== undefined) {
+            var index = dataCirculatorModal.map(function (d) { return d["EmpId"] }).indexOf(selectedRowData.EmpId);
+            dataCirculatorModal.splice(index, 1)[0];
+            //console.log(dataCirculatorModal);
+            fnCirculator();
+        }
+    })
+    //di chuyển lên đầu dòng phê duyệt
+    $("#btnAppTop").on("click", function () {
+        var getselectedrowindexes = $('#gridApprovalLine').jqxGrid('getselectedrowindexes');
+        var selectedRowData = $('#gridApprovalLine').jqxGrid('getrowdata', getselectedrowindexes[0]);
+        var index = dataModal.map(function (d) { return d["EmpId"] }).indexOf(selectedRowData.EmpId);
+        if (index > -1) {
+            //cắt item tại vị trí đó
+            var extracted = dataModal.splice(index, 1)[0];
+            //hàm chèn vào đầu mảng
+            dataModal.unshift(extracted);
+        }
+        fnApprovalLine();
+        $("#gridApprovalLine").jqxGrid('selectrow', 0);
+    })
+    //di chuyển lên 1 người dòng phê duyệt
+    $("#btnAppUp").on("click", function () {
+        var getselectedrowindexes = $('#gridApprovalLine').jqxGrid('getselectedrowindexes');
+        if (getselectedrowindexes.length > 0) {
+            //nếu nó là dòng đầu tiên rồi thì bỏ qua
+            if (getselectedrowindexes[0] == 0)
+                return;
+            var selectedRowData = $('#gridApprovalLine').jqxGrid('getrowdata', getselectedrowindexes[0]);
+            var newIndex = fnSwapItem(selectedRowData, -1);
+            fnApprovalLine();
+            $("#gridApprovalLine").jqxGrid('selectrow', newIndex);
+        }
+    })
+    //di chuyển xuống dưới 1 người dòng phê duyệt
+    $("#btnAppDown").on("click", function () {
+        var getselectedrowindexes = $('#gridApprovalLine').jqxGrid('getselectedrowindexes');
+
+        if (getselectedrowindexes.length > 0) {
+            //nếu nó là dòng cuối cùng rồi thì bỏ qua
+            if (getselectedrowindexes[0] == dataModal.length - 1)
+                return;
+            var selectedRowData = $('#gridApprovalLine').jqxGrid('getrowdata', getselectedrowindexes[0]);
+            var newIndex = fnSwapItem(selectedRowData, 1);
+            fnApprovalLine();
+            $("#gridApprovalLine").jqxGrid('selectrow', newIndex);
+        }
+    })
+    //di chuyển xuống dưới cùng trong dòng phê duyệt
+    $("#btnAppButtom").on("click", function () {
+        var getselectedrowindexes = $('#gridApprovalLine').jqxGrid('getselectedrowindexes');
+        var selectedRowData = $('#gridApprovalLine').jqxGrid('getrowdata', getselectedrowindexes[0]);
+        var index = dataModal.map(function (d) { return d["EmpId"] }).indexOf(selectedRowData.EmpId);
+        if (index > -1) {
+            var extracted = dataModal.splice(index, 1)[0];
+            dataApprovalLine.push(extracted);
+        }
+        fnApprovalLine();
+        $("#gridApprovalLine").jqxGrid('selectrow', dataModal.length - 1);
+    })
+    //xóa đi 1 người phê duyệt
+    $("#btnAppDelete").on("click", function () {
+        var getselectedrowindexes = $('#gridApprovalLine').jqxGrid('getselectedrowindexes');
+        var selectedRowData = $('#gridApprovalLine').jqxGrid('getrowdata', getselectedrowindexes[0]);
+        if (selectedRowData !== undefined) {
+            var index = dataModal.map(function (d) { return d["EmpId"] }).indexOf(selectedRowData.EmpId);
+            dataModal.splice(index, 1)[0];
+            fnApprovalLine();
+        }
+    })
+    //thêm người phê duyệt
+    $("#btnAppApprover").on("click", function () {
+        var tabItem = $('#divAppDept').jqxTabs('selectedItem');
+        if (gridSelected === undefined)
+            gridSelected = $('#gridAppEmpInfor');
+
+        var getselectedrowindexes = gridSelected.jqxGrid('getselectedrowindexes');
+        var approverType = $(this).attr("data-id");
+        var approverTypeName = $(this).attr("data-name");
+        if (getselectedrowindexes.length > 0) {
+            // returns the selected row's data.
+            fnPushToApprovaline(getselectedrowindexes, gridSelected, approverType, approverTypeName);
+        }
+
+        fnApprovalLine();
+    })
+    //thêm người consenter
+    $("#btnAppConsenter").on("click", function () {
+        if (gridSelected === undefined)
+            gridSelected = $('#gridAppEmpInfor');
+        
+        var getselectedrowindexes = gridSelected.jqxGrid('getselectedrowindexes');
+        var approverType = $(this).attr("data-id");
+        var approverTypeName = $(this).attr("data-name");
+        if (getselectedrowindexes.length > 0) {
+            // returns the selected row's data.
+            fnPushToApprovaline(getselectedrowindexes, gridSelected, approverType, approverTypeName);
+        }
+
+        fnApprovalLine();
+    })
+    //thêm người tham khảo
+    $("#btnAppCirculator").on("click", function () {
+        if (gridSelected === undefined)
+            gridSelected = $('#gridAppEmpInfor');
+
+        var getselectedrowindexes = gridSelected.jqxGrid('getselectedrowindexes');
+        var approverType = $(this).attr("data-id");
+        var approverTypeName = $(this).attr("data-name");
+        if (getselectedrowindexes.length > 0) {
+            // returns the selected row's data.
+            fnPushToCirculator(getselectedrowindexes, gridSelected);
+        }
+        fnCirculator();
+    })
+
+    //cập nhật lại dòng appr khi nhấn confirm, đóng modal lại
+    $("#btnMdConfirm").on("click", function () {
+        dataApprovalLine = dataModal;
+        dataCirculator = dataCirculatorModal;
+        //console.log(dataApprovalLine);
+        $("#mdApprovalLine").modal("hide");
+        fnSetDisplay();
+    });
+    //lấy dữ liệu nhân viên
+    $("#btnAppSearch").on("click", function () {
+        fnAppUserInfor();
+    });
+    $("#btnAppApply").on("click", function () {
+        var getselectedrowindexes = $('#gridApplicationHistory').jqxGrid('getselectedrowindexes');
+        var selectedRowData = $('#gridApplicationHistory').jqxGrid('getrowdata', getselectedrowindexes[0]);
+        dataModal = JSON.parse(selectedRowData.ApprovalLineJson.split("|")[0]);
+        dataCirculatorModal = JSON.parse(selectedRowData.ApprovalLineJson.split("|")[1]);
+        fnApprovalLine();
+        fnCirculator();
+    })
+    //bắt sự kiện tabs click
+    $('#divAppDept').on('tabclick', function (event) {
+        var clickedItem = event.args.item;
+        if (clickedItem === 2)
+            $("#btnAppApply").show();
+        else
+            $("#btnAppApply").hide();
+    });
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Other function-----------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    $("#txtAppName").keyup(function (e) {
+        if (e.keyCode == 13) {
+            fnAppUserInfor();
+        }
+    });
+
+    $('#gridAppEmpInfor').on("click", function () {
+        gridSelected = $(this);
+    })
+    $('#gridApprovalLineDefault').on("click", function () {
+        gridSelected = $(this);
+    })
+</script>

@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<style type="text/css">
+    #LblockPageHeader {
+        height: 35px;
+        margin: -10px 0 15px;
+        position: relative;
+    }
+</style>
+@using (Html.BeginForm("Edit", "FormTemplate", FormMethod.Post, new { enctype = "multipart/form-data" }))
+//@using (Html.BeginForm("Edit", "FormTemplate", FormMethod.Post, new {@class = "overflow", enctype = "multipart/form-data"}))
+{
+    <label for="file1">Filename:</label>
+    <input type="file" name="fileUpload" id="file1" />
+
+  <label for="file2">Filename:</label>
+    <input type="file" name="fileUpload" id="file2" />
+
+  <input type="submit"  />
+}

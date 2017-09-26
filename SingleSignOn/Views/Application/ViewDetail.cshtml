@@ -1,0 +1,1010 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@model SingleSignOn.Approval.ViewModels.ApplicationMasterModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+<input type="hidden" id="hdfUserId" value="@User.GetClaimValue(ClaimTypes.Sid)" />
+
+<input type="hidden" value="@ViewBag.ApplicationId" id="hdfApplicationId" />
+<input type="hidden" value="@ViewBag.MasterId" id="hdfMasterId" />
+<input type="hidden" value="@User.GetClaimValue(ClaimTypes.Sid)" id="hdfUserLoginId" />
+<input type="hidden" value="@Model.NextApprover" id="hdfNextApprover" />
+@Html.HiddenFor(m => m.System, new { @id = "hdfSystem" })
+
+<div id='jqxWidget-portal' class="row">
+    <div id="LblockPageHeader">
+        <div id=LblockPageTitle>
+            <div class="col-8" style="padding-top:5px">
+                <label class="label" style="color:#448CCB" id="lblApplicationName"></label>
+            </div>
+            <div class="col-4" style="text-align:right">
+
+                @if (User.GetClaimValue(ClaimTypes.Sid).ToUpper() == Model.NextApprover.ToUpper() && Model.ApprovalStatus.ToString().ToUpper() == "C4FF5A2F-CD32-4785-9499-A26E5148D58D")
+                {
+                    <a class=Lbtn id="btnApprove">
+                        <input type="button" value="Approve">
+                    </a>                    
+                }
+                @if (Model.IsRecall && Model.ApprovalLine.IndexOf(User.GetClaimValue(ClaimTypes.Sid)) != -1)
+                {
+                    <a class=Lbtn id="btnRecallApprove">
+                        <input type="button" value="Recall">
+                    </a>
+                }
+                @if (User.GetClaimValue(ClaimTypes.Sid) == Model.CreateUid)
+                {
+                    if (Model.ApprovalStatus.ToString().ToUpper() == "9C817780-2079-4417-B87B-B7E537BBAE8A" && Model.ConfirmDate == null)
+                    {
+                        <a class=Lbtn id="btnConfirm">
+                            <input type="button" value="Confirm">
+                        </a>
+                    }
+                    if (Model.IsRecall)
+                    {
+                        <a class=Lbtn id="btnRecall">
+                            <input type="button" value="Recall">
+                        </a>
+                    }
+                    else if (!Model.IsRecall && Model.ApprovalStatus.ToString().ToUpper() == "9C817780-2079-4417-B87B-B7E537BBAE8A")
+                    {
+                        <a class=Lbtn href="javascript:;">
+                            <input type="button" value="Edit" id="btnEdit">
+                        </a>
+                        <a class=Lbtn href="javascript:;" name="btnGroupEdit">
+                            <input type="button" value="Approval Line" id="btnApprovalLine">
+                        </a>
+                        <a class=Lbtn href="javascript:;" name="btnGroupEdit">
+                            <input type="button" value=Save id="btnSave">
+                        </a>
+                        <a class=Lbtn href="javascript:;" name="btnGroupEdit">
+                            <input type="button" value=Delete id="btnDelete">
+                        </a>
+                    }
+                }
+                @Html.HiddenFor(m => m.IsRecall)
+                <a class=Lbtn href="@Url.Action("Index","ApplicationMaster")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+    <div style="clear: both"></div>
+    <div id="divMainContent">
+        <div id="divViewApprovalLine">
+
+            @*<div class="row bs-wizard" style="border-bottom:0;">
+
+                    <div class="col-2 bs-wizard-step complete">
+                        <div class="text-center bs-wizard-stepnum">Step 1</div>
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot" data-toggle="collapse" href="#step-pane" aria-expanded="false"><span class="glyphicon" aria-hidden="true"></span></a>
+
+                    </div>
+
+                    <div class="col-2 bs-wizard-step active">
+                        <!-- active -->
+                        <div class="text-center bs-wizard-stepnum">Step 2</div>
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"><span class="fa fa-check" aria-hidden="true"></span></a>
+
+                    </div>
+
+                    <div class="col-2 bs-wizard-step disabled" style="clear:right">
+                        <!-- disabled -->
+                        <div class="text-center bs-wizard-stepnum">Step 3</div>
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"><span class="glyphicon" aria-hidden="true"></span></a>
+                    </div>
+
+                </div>*@
+
+            <div id=LblockSearch style="margin:0">
+                <table class="tb-table">
+                    <tbody>
+                        <tr>
+                            <th class="LtextLeft" style="text-align:left" colspan="2">
+                                <label class="label">
+                                    <a href="javascript:;" id="btnHideApprovalLine">
+                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                    </a>Approval List
+                                </label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                @Html.HiddenFor(m => m.ApprovalLineJson, new { @id = "hdfApprovalLineJson" })
+                                <div id="gridViewApprovalLine"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="LtextLeft tb-col-2" style="text-align:left"><label class="label">Circulator List</label></th>
+                            <td>
+                                <input type="text" id="txtCirculator" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="clear:both"></div>
+            </div>
+        </div>
+        <br />
+        <div class="divContent">
+            <div class="tb-table" style="float: right">
+                <table>
+                    <tr>
+                        <th class="tb-col-6" colspan="4">
+                            @Html.Label("Common Information", new { @class = "label", @style = "color: red;" })
+                        </th>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Code", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-3">
+                            @Html.TextBoxFor(m => m.Code, new { @id = "txtCode" })
+                        </td>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Write Date", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-1">
+                            @Html.TextBoxFor(m => m.RequestDate, new { @id = "txtWriteDate", @style = "width: 77%" })
+                            @*<input type="text" id="txtWriteDate" class="Ltext" style="width: 77%">*@
+                            <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Subject", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-10" colspan="7">
+                            @Html.TextBoxFor(m => m.Subject, new { @id = "txtSubject" })
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("EmpId", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-2">
+                            @*<input type="text" id="txtEmpId" />*@
+                            <div class="inner-addon right-addon">
+                                <span onclick="fnShowModalEmployeeInfor(this)"> <i class="fa fa-search"></i></span>
+                                @Html.TextBoxFor(m => m.Applicant, new { @id = "txtEmpId", @style = "padding-right: 23px" })
+                                @*<input type="text" id="txtEmpId" style="padding-right: 23px" />*@
+                            </div>
+                        </td>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Name", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-2">
+                            @Html.TextBoxFor(m => m.ApplicantName, new { @id = "txtEmpName" })
+                            @*@Html.TextBox("txtEmpName")*@
+                        </td>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Department", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-3">
+                            @Html.TextBoxFor(m => m.DeptName, new { @id = "txtDeptName" })
+                            @Html.HiddenFor(m => m.DeptId, new { @id = "hdfDeptId" })
+                            @*<input type="hidden" id="hdfDeptId" />*@
+                        </td>
+                        <th class="tb-col-1">
+                            @Html.Label("Cost Center", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-1">
+                            @Html.TextBoxFor(m => m.CostCenter, new { @id = "txtCostCenter" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="clear:both"></div>
+            <br />
+            <div id="divApplicationDetail">
+            </div>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>
+
+<!-- Modal Employee Infor//------------------------------------------------------------------------------------->
+<div id="mdEmployeeInfor" class="modal fade" tabindex="-1" data-width="900px" style="display: none; height:90%">
+    <div class="popup"></div>
+    <div style="clear:both"></div>
+</div>
+
+<!-- Modal Approval Line//------------------------------------------------------------------------------------->
+<div id="mdApprovalLine" class="modal fade" tabindex="-1" data-width="90%" style="display: none;">
+    @Html.HiddenFor(m => m.ApprovalKind, new { @id = "hdfApprovalKind" })
+    <div class="popup"></div>
+    <div style="clear:both"></div>
+</div>
+
+<!-- Modal Approve//------------------------------------------------------------------------------------->
+<div id="mdApproveApplication" class="modal fade" tabindex="-1" data-width="60%" style="display: none;">
+    <div class="modal-header">
+        <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>
+                <label>Approval</label>
+            </h3>
+        </div>
+    </div>
+    <div class="modal-body" style="height:250px">
+        <div id=LblockSearch style="margin:0">
+            <table>
+                <tr>
+                    <th class="tb-col-3">
+                        <label class="label">Department</label>
+                    </th>
+                    <td class="tb-col-9" colspan="2">
+                        <label class="label">@User.GetClaimValue("DeptName")</label>
+                    </td>
+                <tr>
+                    <th class="tb-col-3">
+                        <label class="label">Name</label>
+                    </th>
+                    <td class="tb-col-9" colspan="2">
+                        <label class="label">@User.GetClaimValue(ClaimTypes.Name)</label>
+                    </td>
+                <tr>
+                    <th class="tb-col-3">
+                        <label class="label">Employee ID</label>
+                    </th>
+                    <td class="tb-col-9" colspan="2">
+                        <label class="label" id="lblApproveEmpid">@User.GetClaimValue(ClaimTypes.Sid)</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="tb-col-3">
+                        <label class="label">Choice</label>
+                    </th>
+                    <td class="tb-col-4">
+                        <input type="radio" checked name="cbMdApprove" id="cbMdApprove" />
+                        <label for="cbMdApprove" class="label">Approve</label>
+                    </td>
+                    <td class="tb-col-5">
+                        <input type="radio" name="cbMdApprove" id="cbMdReject" />
+                        <label for="cbMdApprove" class="label">Reject</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="tb-col-3">
+                        <label class="label">Comment</label>
+                    </th>
+                    <td class="tb-col-9" colspan="2">
+                        <input type="text" id="txtMdApproveComment" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class=Lbtn href="javascript:;">
+            <input type="button" value="Confirm" id="btnMdApproveConfirm" />
+        </a>
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+<script type="text/javascript">
+
+    //biến cho modal approval
+    var dataApprovalLine = [];
+    var dataCirculator = [];
+    var dataEntities = {};
+    var isEdit = false;
+    $(document).ready(function () {
+        fnInitialSelector();
+        //gọi partial view trả về loại application
+        fnApplicationDetail($("#hdfApplicationId").val());
+
+        //thiết lập cho dòng approve
+        fnViewApprovalLine();
+        fnSetDisplay()
+
+        //lấy lên defaul approval line
+        fnGetDefaultApproval();
+        SetHeight($("#divMainContent"), $('footer').position().top - 155);
+    });
+
+    function fnGetDataApplicationMaster() {
+        dataEntities.Id = $("#hdfMasterId").val();
+        dataEntities.ApplicationId = $("#hdfApplicationId").val();
+        dataEntities.Subject = $("#txtSubject").val();
+        if (dataEntities.Subject === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in field: Subject", "gray error");
+            $("#txtSubject").focus();
+            return false;
+        }
+        dataEntities.Applicant = $("#txtEmpId").val();
+        if ($("#txtEmpName").val() === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in field: EmpId", "gray error");
+            return false;
+        }
+        dataEntities.RequestDate = $("#txtWriteDate").val();
+        if (dataEntities.RequestDate === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in field: Write date", "gray error");
+            return false;
+        }
+        dataEntities.DeptId = $("#hdfDeptId").val();
+        dataEntities.CostCenter = $("#txtCostCenter").val();
+
+        //set lại giá trị mặc định
+        dataEntities.ApprovalLine = "";
+        dataEntities.ApprovalKind = "";
+
+        if (dataApprovalLine.length !== 0) {
+            dataEntities.ApprovalLine = fnConvertApprToString(dataApprovalLine, "EmpId", "_") + "|" + fnConvertApprToString(dataApprovalLine, "Name", " > ") + "|" + fnConvertApprToString(dataApprovalLine, "ApproverType", "_");
+            if ($("#rdOrder").prop("checked") !== undefined)
+                dataEntities.ApprovalKind = $("#rdOrder").prop("checked") ? $("#rdOrder").attr("data-id") : $("#rdParallel").attr("data-id");
+            else
+                dataEntities.ApprovalKind = $("#hdfApprovalKind").val();
+        }
+        else
+            dataEntities.ApprovalLine = "||";
+        if (dataCirculator.length !== 0) {
+            dataEntities.dataCirculator = fnConvertApprToString(dataCirculator, "EmpId") + "|" + fnConvertApprToString(dataCirculator, "Name");
+            dataEntities.ApprovalLine += "|" + dataEntities.dataCirculator;
+        }
+        dataEntities.ApprovalLineJson = JSON.stringify(dataApprovalLine) + "|" + JSON.stringify(dataCirculator);
+
+        switch ($("#hdfApplicationId").val()) {
+            case "1"://check for system role
+                if (!fnCheckDataForSystemRole())
+                    return false;
+                break;
+            case "4":
+                if (!fnCheckDataForEmailRequest())
+                    return false;
+                break;
+            case "6":
+                if (!fnCheckDataForInformationSystem())
+                    return false;
+                break;
+            default:
+        }
+
+        if (dataEntities.ApprovalLine === "||") {
+            showNotification("Hyosung Portal", "Please select approval line", "gray error");
+            return false;
+        }
+        return true;
+    }
+
+    function fnCheckDataForSystemRole() {
+        if (typeof ($("#cbSystem")) !== undefined) {
+            dataEntities.System = $("input[name='system']:checked").map(function (d) { return $(this).val() }).get().join(',');
+            if (dataEntities.System === "") {
+                showNotification("Hyosung Portal", "Check again: Please select system", "gray error");
+                return false;
+            }
+        }
+        return true;
+    }
+    function fnCheckDataForInformationSystem() {
+        var model = fnGetDataApplicationDetail();
+        if (model.System === "0") {
+            showNotification("Hyosung Portal", "Check again: Please select: System", "gray error");
+            return false;
+        }
+        if (model.Seriousness === "0") {
+            showNotification("Hyosung Portal", "Check again: Please select: Seriousness", "gray error");
+            return false;
+        }
+        if (removeTags(model.Explanation).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Check again: Please enter in field: Explanation", "gray error");
+            return false;
+        }
+        return true;
+    }
+    function fnCheckDataForEmailRequest() {
+        var rowBlank = "";
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            if (item.Request === "")
+                rowBlank += (rowBlank === "" ? + (index + 1) : (", " + (index + 1)));
+        })
+        if (rowBlank === "")
+            return true;
+        showNotification("Hyosung Portal", "Please select request type for rows: " + rowBlank, "gray error");
+        return false;
+    }
+
+    //những function dành cho application systemrole
+    function fnGetDataSystemRole(masterId)
+    {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = masterId;
+        })
+        //console.log(models);
+        return models;
+    }
+    function fnGetDataItEquipment(masterId) {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = masterId;
+            if (item.ItemName === "")
+                models.splice(index, 1);
+        })
+        //console.log(models);
+        return models;
+    }
+    function fnGetDataNetClientPolicy(masterId) {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = masterId;
+            if (item.IpAddress === "" || item.AssetNo === "")
+                models.splice(index, 1);
+        })
+        console.log(models);
+        return models;
+    }
+    function fnGetDataInformationSystem(masterId) {
+        var model = fnGetDataApplicationDetail();
+        return model;
+    }
+    //hàm cập nhật thông tin cho đơn systemrole
+    function fnUpdateSystemRole() {
+        var masterId = $("#hdfMasterId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Application/SystemRoleUpdate",
+            data: JSON.stringify({ models: fnGetDataSystemRole(masterId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Update success", "gray success");
+                }
+                //console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    //hàm cập nhật thông tin cho đơn email request
+    function fnUpdateEmailRequest() {
+        var masterId = $("#hdfMasterId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Application/EmailRequestUpdate",
+            data: JSON.stringify({ models: fnGetDataSystemRole(masterId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Update success", "gray success");
+                }
+                //console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    //hàm cập nhật thông tin cho đơn It Equipment
+    function fnUpdateItEquipment() {
+        var masterId = $("#hdfMasterId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Application/ItEquipmentUpdate",
+            data: JSON.stringify({ models: fnGetDataItEquipment(masterId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Update success", "gray success");
+                }
+                //console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    //hàm cập nhật thông tin cho đơn Information system
+    function fnUpdateInformationSystem() {
+        var masterId = $("#hdfMasterId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Application/InformationSystemUpdate",
+            data: JSON.stringify({ models: fnGetDataInformationSystem(masterId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                //console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    //hàm cập nhật thông tin cho đơn Information system
+    function fnUpdateNetClientPolicy() {
+        var masterId = $("#hdfMasterId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Application/NetClientPolicyUpdate",
+            data: JSON.stringify({ models: fnGetDataNetClientPolicy(masterId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                //console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    //cập nhật thông tin cho bảng master của application
+    function fnUpdateApplicationMaster() {
+        if (fnGetDataApplicationMaster())
+        {
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/ApplicationMasterUpdate",
+                data: JSON.stringify(dataEntities),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (response) {
+                    response = $("#hdfMasterId").val();
+                    switch ($("#hdfApplicationId").val()) {
+                        case "1"://Application for system role
+                            fnUpdateSystemRole(response);
+                            break;
+                        case "4"://Application for email
+                            fnUpdateEmailRequest(response);
+                            break;
+                        case "5"://Application for it equipment
+                            fnUpdateItEquipment(response);
+                            break;
+                        case "6"://Application for information system
+                            fnUpdateInformationSystem(response);
+                            break;
+                        case "7"://Application for netclient policy
+                            fnUpdateNetClientPolicy(response);
+                            break;
+                        default:
+                    }
+                },
+                error: function (mess) {
+                    console.log(mess)
+                    return [];
+                }
+            });
+        }
+    }
+    //hàm khởi tạo cho các element
+    function fnInitialSelector(status) {
+        txtWriteDate = new dhtmlXCalendarObject({ input: "txtWriteDate", button: "iconDateFrom" });
+        txtWriteDate.setDateFormat("%Y.%m.%d");
+
+        $("#txtCode").jqxInput({ height: 21, width: "97%", minLength: 1, maxLength: 40, disabled: true });
+        $("#txtSubject").jqxInput({ placeHolder: "Max lenght 200", height: 21, width: "99%", minLength: 1, maxLength: 200 });
+        $("#txtEmpId").jqxInput({ height: 21, width: "90%", minLength: 1 });
+        $("#txtEmpName").jqxInput({ height: 21, width: "97%", disabled: true });
+        $("#txtDeptName").jqxInput({ height: 21, width: "97%", disabled: true });
+        $("#txtCostCenter").jqxInput({ height: 21, width: "88%", disabled: true });
+        //$("#txtApprovalLine").jqxInput({ height: 21, width: "99%", disabled: true });
+        $("#txtMdApproveComment").jqxInput({ height: 21, width: "97%" });
+
+        $("#txtCirculator").jqxInput({ height: 21, width: "99%", disabled: true });
+
+    }
+    function fnSetStatusForSelector(status) {
+        $("#txtEmpId").jqxInput({ disabled: !status });
+        $("#txtSubject").jqxInput({ disabled: !status });
+        $("#txtWriteDate").prop("disabled", !status);
+
+        if (status) {
+            $("a[name='btnGroupEdit']").show();
+            $("#txtEmpId").parent().find("i").show();
+            $("#txtWriteDate").parent().find("span").show();
+        } else {
+            $("a[name='btnGroupEdit']").hide();
+            $("#txtWriteDate").parent().find("span").hide();
+            $("#txtEmpId").parent().find("i").hide();
+        }
+
+        //system role
+        if (typeof fnSetupStatusForSystemRole === "function")
+            fnSetupStatusForSystemRole(status);
+        if (typeof fnSetupStatusForEmailRequest === "function")
+            fnSetupStatusForEmailRequest(status);
+        if (typeof fnSetupStatusForItEquipment === "function")
+            fnSetupStatusForItEquipment(status);
+    }
+    //hàm lấy lên danh sách approval line mặc định cho application
+    function fnGetDefaultApproval() {
+        var result = $("#hdfApprovalLineJson").val();
+        dataApprovalLine = JSON.parse(result.split("|")[0]);
+        //alert(result.data[0].split("|")[1]);
+        dataCirculator = JSON.parse(result.split("|")[1]);
+        $("#hdfApprovalKind").val(result.split("|")[2]);
+        fnSetDisplay();
+
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    function fnViewApprovalLine() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'EmpName', type: 'string' },
+                { name: 'DeptFullName', type: 'string' },
+                { name: 'ApproverType', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'IsApprove', type: 'bool' },
+                { name: 'Comment', type: 'string' },
+                { name: 'DateApprove', type: 'date' },
+                { name: 'Seq', type: 'int' }
+            ],
+            url: '/ApplicationMaster/ApprovalLineGetList',
+            data: {
+                masterId: $("#hdfMasterId").val(),
+                applicationId: $("#hdfApplicationId").val()
+            }
+
+        };
+        rowStatus = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            var displayText = "";
+            if (value === "")
+                displayText = "";
+            else
+                displayText = value ? "fa fa-check" : "fa fa-times";
+
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: center; margin-top: 5px;"><i class="' + displayText + '"/></div>' +
+                '</div>';
+        }
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridViewApprovalLine").jqxGrid(
+            {
+                width: "100%",
+                height: 100,
+                source: dataAdapter,
+                selectionmode: 'singlerow',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75, renderer: colHeaderLeft },
+                    { text: 'Name', dataField: 'EmpName', width: 250, renderer: colHeaderLeft },
+                    { text: 'Department', dataField: 'DeptFullName', width: 320, renderer: colHeaderLeft },
+                    { text: 'Approver Type', dataField: 'ApproverTypeName', width: 120, renderer: colHeaderCenter, cellsalign:"center" },
+                    { text: 'Approval', dataField: 'IsApprove', width: 70, cellsrenderer: rowStatus, renderer: colHeaderCenter },
+                    { text: 'Comment', dataField: 'Comment', renderer: colHeaderLeft },
+                    { text: 'Date Approve', width: 90, dataField: 'DateApprove', cellsalign: 'center', renderer: colHeaderCenter, cellsformat: 'yyyy.MM.dd' }
+                ]
+            });
+    }
+
+    function fnGetEmployeeInfor(sender) {
+        var empId = $(sender).val();
+        $.ajax({
+            type: "POST",
+            url: "/User/User_Read",
+            data: JSON.stringify({filterscount: 0, groupscount: 0, pagenum: 0,pagesize: 20,recordstartindex: 0,recordendindex: 20,
+                selectType: 1, deptCode: 0, userId: empId, userName: empId,status: ""
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                var resultData = result.Rows;
+                //console.log(resultData);
+                if (resultData.length === 1) {
+                    $("#txtEmpId").val(resultData[0].LoginID);
+                    $("#txtEmpName").val(resultData[0].Name);
+                    $("#txtCostCenter").val(resultData[0].CostCenter);
+                    $("#hdfDeptId").val(resultData[0].DeptId);
+                    $("#txtDeptName").val(resultData[0].DeptFullName);
+
+                } else {
+                    var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+                    $("#mdEmployeeInfor").modal("show");
+                    $.get(link.replace('empId', empId), function (data) {
+                        $("#mdEmployeeInfor .popup").html(data);
+                    });
+                }
+            },
+            error: function () {
+                return [];
+            }
+        });
+    }
+
+    function fnApplicationDetail(applicationId) {
+        //loading();
+        var link = '@Url.Action("ShowApplicationDetailForEdit", "Application", new { id = "applicationId" })';
+        $.get(link.replace('applicationId', applicationId), function (data) {
+            $("#divApplicationDetail").html(data);
+            $("#lblApplicationName").html($("#hdfApplicationMasterName").val());
+
+            //khi view detail thì disable edit
+            fnSetStatusForSelector(false);
+        });
+    }
+
+    function fnShowModalEmployeeInfor(sender) {
+        var empId = $(sender).parent().find("input").val();
+        var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+        $("#mdEmployeeInfor").modal("show");
+        $.get(link.replace('empId', empId), function (data) {
+            $("#mdEmployeeInfor .popup").html(data);
+        });
+    }
+
+    function showModalApprovalLine(approvalLine) {
+        var link = '@Url.Action("ShowModalConfig", "ApplicationConfig", new { id = "approvalLine" })';
+        $("#mdApprovalLine").modal("show");
+        $.get(link.replace('approvalLine', approvalLine), function (data) {
+            $("#mdApprovalLine .popup").html(data);
+        });
+    };
+
+    function fnCheckDataInformtionSystemApprove(data){
+        if (data.NumDays === 0) {
+            showNotification("Hyosung Portal", "Check again: Please select: Num Days", "gray error");
+            return false;
+        }
+        if (removeTags(data.Solution).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Check again: Please enter in field: Solution", "gray error");
+            return false;
+        }
+        return true;
+    }
+
+    function fnInformationSystemUpdateApprove(model){
+        $.ajax({
+            type: "POST",
+            url: "/Application/InformationSystemUpdateApprove",
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                //console.log(result);
+                window.location = "../../ApplicationMaster/Index";
+            },
+            error: function (mess) {
+                console.log(mess);
+                return [];
+            }
+        });
+    }
+
+    function fnGetDataForApproval() {
+        var dataApproval = {
+            MasterId: $("#hdfMasterId").val(),
+            ApplicationId: $("#hdfApplicationId").val(),
+            IsApprove: $("#cbMdApprove").prop("checked"),
+            Comment: $("#txtMdApproveComment").val(),
+            UserId: $("#lblApproveEmpid").html(),
+            LinkApplication: window.location.href
+        };
+        if (dataApproval.IsApprove === false && dataApproval.Comment === ""){
+            showNotification("Hyosung Portal", "Check again: Please fill in field: Comment", "gray error");
+            $("#txtMdApproveComment").focus();
+            return false;
+        }
+        //console.log(dataApproval);
+        return dataApproval;
+    }
+
+    //hiển thị dữ liệu cho dach sách approval line
+    function fnSetDisplay() {
+        if (dataCirculator.length > 0) $("#txtCirculator").val(fnConvertApprToString(dataCirculator, "Name"));
+        else $("#txtCirculator").val("");
+
+        $("#divApplicationDetail").height($("footer").position().top - $("#divViewApprovalLine").height() - 258);
+        //chỉnh lại chiều cao của application for system role
+        if (typeof fnResize === "function")
+            fnResize();
+
+    }
+
+    //ẩn đi hàng approval line
+    $("#btnHideApprovalLine").on("click", function () {
+        if ($("#btnHideApprovalLine").children().prop("class") === "fa fa-plus") {
+            $("#gridViewApprovalLine").parent().parent().show();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-minus");
+        } else {
+            $("#gridViewApprovalLine").parent().parent().hide();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-plus");
+        }
+
+        $("#divApplicationDetail").height($("footer").position().top - $("#divViewApprovalLine").height() - 258);
+        //chỉnh lại chiều cao của application for system role
+        if (typeof fnResize === "function")
+            fnResize();
+    });
+    //hiện modal approval
+    $("#btnApprovalLine").on("click", function () {
+        showModalApprovalLine("");
+    })
+    //lưu thông tin application
+    $("#btnSave").on("click", function () {
+        fnUpdateApplicationMaster();
+    })
+    //confirm application
+    $("#btnConfirm").on("click", function () {        
+        var result = confirm('Do you really want to confirm this application?');
+        if (result) {
+            var masterId = $("#hdfMasterId").val();
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/ApplicationConfirm",
+                data: JSON.stringify({ id: masterId, linkApplication: window.location.href}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    window.location = "../../ApplicationMaster/Index";
+                },
+                error: function (mess) {
+                    console.log(mess);
+                    return [];
+                }
+            });
+        }
+    })
+    //recall application
+    $("#btnRecall").on("click", function () {
+        var result = confirm('Do you really want to recall this application?');
+        if (result) {
+            var masterId = $("#hdfMasterId").val();
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/ApplicationRecallConfirm",
+                data: JSON.stringify({ id: masterId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    //console.log(result);
+                    location.reload();
+                    //fnSetStatusForSelector(true);
+                },
+                error: function (mess) {
+                    console.log(mess);
+                    return [];
+                }
+            });
+        }
+    })
+
+    //approve application
+    $("#btnMdApproveConfirm").on("click", function () {
+        var dataApprove = fnGetDataForApproval();
+        if (dataApprove === false)
+            return;
+        var result = confirm('Do you really want to approve this application?');
+        if (result) {
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/ApproveApplication",
+                data: JSON.stringify( dataApprove ),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    switch ($("#hdfApplicationId").val()) {
+                        case "6":
+                            fnInformationSystemUpdateApprove(fnGetDataForInformationSystemApproval());
+                            break;
+                        default:
+                            window.location = "../../ApplicationMaster/Index";
+                    }
+                },
+                error: function (mess) {
+                    console.log(mess);
+                    return [];
+                }
+            });
+        }
+    })
+
+    $("#btnRecallApprove").on("click", function () {
+        var dataApprove = fnGetDataForApproval();
+        if (dataApprove == false)
+            return;
+        var result = confirm('Do you really want to approve this application?');
+        if (result) {
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/RecallApplication",
+                data: JSON.stringify({ masterId: $("#hdfMasterId").val(), applicationId: $("#hdfApplicationId").val()}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    //console.log(result);
+                    //showNotification("Hyosung Portal", "Approve success", "gray success");
+                    window.location = "../../ApplicationMaster/Index";
+                },
+                error: function (mess) {
+                    console.log(mess);
+                    return [];
+                }
+            });
+        }
+    })
+
+    $("#btnEdit").on("click", function () {
+        isEdit = true;
+        if (typeof fnSetupStatusForInformationSystem === "function") {
+            //load lại nội dung cho thằng information system vì cái editor ko set readonly được :((
+            var link = '@Url.Action("ShowApplicationDetailForEdit", "Application", new { id = "applicationId" })';
+            $.get(link.replace('applicationId', $("#hdfApplicationId").val()), function (data) {
+                $("#divApplicationDetail").html(data);
+                $("#lblApplicationName").html($("#hdfApplicationMasterName").val());
+                fnSetStatusForSelector(true);
+            });
+        } else {
+            fnSetStatusForSelector(true);
+        }
+
+    })
+
+    $("#btnApprove").on("click", function () {
+        if (typeof fnGetDataForInformationSystemApproval === "function") {
+            if (!fnCheckDataInformtionSystemApprove(fnGetDataForInformationSystemApproval()))
+                return false;
+        }
+        $("#mdApproveApplication").modal("show");
+    })
+
+    $("#btnDelete").on("click", function () {
+        var result = confirm('Do you really want to delete this application?');
+        if (result) {
+            var masterId = $("#hdfMasterId").val();
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/ApplicationDelete",
+                data: JSON.stringify({ id: masterId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    window.location = "../../ApplicationMaster/Index";
+                },
+                error: function (mess) {
+                    console.log(mess);
+                    return [];
+                }
+            });
+        }
+    })
+</script>

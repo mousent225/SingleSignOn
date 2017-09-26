@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style type="text/css">
+    ul.location {
+        float: left;
+        margin: 0;
+    }
+
+        ul.location li {
+            display: inline;
+        }
+
+    a:link {
+        color: #343434;
+        text-decoration: none;
+    }
+
+    #sub_content {
+        padding-left: 10px;
+        width: auto;
+    }
+    
+    #LblockPageHeader {
+        height: 35px;
+        margin: -10px 0 15px;
+        position: relative;
+    }
+
+    #LblockPageTitle {
+        height: 100%;
+        background: rgba(0, 0, 0, 0) url("../Content/img/pageTitle_bg.gif") repeat-x scroll left bottom;
+        margin-top: 14px;
+    }
+
+        #LblockPageTitle h1 {
+            color: #377797;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 7px 0 0 5px;
+        }
+
+    #LblockMainBody {
+        height: 469px;
+        overflow: visible;
+    }
+
+    .myfos_type {
+        border-left: 1px dotted #e8e8e8;
+        float: left;
+        padding: 5px 0 5px 25px;
+        width: 30%;
+    }
+
+    .myfos_type_area {
+        border: 1px solid #c2dbf9;
+        overflow: hidden;
+    }
+
+        .myfos_type_area dl, dt, dd {
+            margin: 0;
+            padding: 0;
+        }
+
+    .myfos_type:first-child {
+        border-left: 0 none;
+        margin: 0;
+    }
+
+
+    .myfos_type DT {
+        color: #222;
+        font-weight: bold;
+        padding: 0 0 10px;
+    }
+
+    .myfos_typeBg03 {
+        position: relative;
+        right: 0;
+        top: 0;
+    }
+
+    .LblockApp table td {
+        border: 1px solid #c2dbf9;
+        line-height: 15px;
+        padding: 2px;
+    }
+
+    .info_txt {
+        color: #009;
+        font-size: 12px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+
+    .mifos_txt a {
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 12px;
+    }
+</style>
+
+@*@section MenuLeft{
+    <h1 class=tit_02>
+        <img width=209 height=80 alt=""
+             src="~/Content/img/app.jpg" border=0>
+    </h1>
+    <div style="MARGIN-BOTTOM: 1em; HEIGHT: 0px">
+        <ul id=navigation style="HEIGHT: auto">
+            <li class="">
+                <a class="head" href="">HR systems</a>
+                <ul style="POSITION: ; DISPLAY: block" oldblock="block">
+                    <li><a href="http://192.168.81.206/esys" target="_blank">HR Managerment</a></li>
+                </ul>
+            </li>
+            <li class="">
+                <a class="head" href="#">GA Systems</a>
+                <ul style="POSITION: ; DISPLAY: block" oldblock="block">
+                    <li><a target="_blank" href="http://192.168.81.222:8080/">Meal</a></li>
+                </ul>
+            </li>
+            <li class="">
+                <a class="head" href="#">TPM Systems</a>
+                <ul style="POSITION: ; DISPLAY: block" oldblock="block">
+                    <li><a href="http://192.168.81.215/" target="_blank">TCSS</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+}*@
+
+
+<!-- //Line Map--><!-- content -->
+<div id="sub_content">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <h1>Applications</h1>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+    <!-- end LblockPageHeader -->
+    <div id=LblockMainBody class="LblockApp">
+        @*<div class=myfos_type_area>
+            <div class="myfos_type myfos_typeBg01">
+                <dl>
+                    <dt>Authorization
+                    <dd><img src="~/Content/img/check-icon.png"> -&gt; Allow access system </dd>
+                </dl>
+            </div>
+            <div class="myfos_type myfos_typeBg03">
+                <dl>
+                    <dt>Not allowed
+                    <dd><img src="~/Content/img/shield.png"> -&gt; Can not access system </dd>
+                </dl>
+            </div>
+            <div class="myfos_type myfos_typeBg02">
+                <dl>
+                    <dt>System Access Request
+                    <dd><img src="~/Content/img/request.png"> -&gt; Click to request to access permission </dd>
+                </dl>
+            </div>
+        </div>*@
+        <h5 class="info_txt">HR systems</h5>
+        <table class="mifos_tb" cellspacing=0 cellpadding=0 width="100%" border="1">
+            <colgroup>
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td><div class=mifos_txt> <a target="_blank" class=btnM href="http://192.168.81.206/esys"><img src="~/Content/img/check-icon.png"/>HR Managerment</a> </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href="add.html"><img src="~/Content/img/request.png"></a> <a class=btnM href=""><img src="~/Content/img/shield.png"></a> <a>???</a>*@ </div></td>
+                </tr>
+            </tbody>
+        </table>
+        <h5 class="info_txt">GA Systems</h5>
+        <table class="mifos_tb" cellspacing=0 cellpadding=0 width="100%" border="1">
+            <colgroup>
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class=mifos_txt>
+                            <a class=btnM target="_blank" href="http://192.168.81.222:8080/"><img src="~/Content/img/check-icon.png"> Meal</a>
+                        </div>
+                    </td>
+                    <td><div class=mifos_txt> @*<a class=btnM href="add.html"><img src="~/Content/img/request.png"></a> <a class=btnM href=""><img src="~/Content/img/shield.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                </tr>
+            </tbody>
+        </table>
+        <h5 class="info_txt">TPM Systems</h5>
+        <table class="mifos_tb" cellspacing=0 cellpadding=0 width="100%" border="1">
+            <colgroup>
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td><div class=mifos_txt> <a target="_blank" class=btnM href="http://192.168.81.215/"><img src="~/Content/img/check-icon.png"/> TCSS</a> </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href="add.html"><img src="~/Content/img/request.png"></a> <a class=btnM href=""><img src="~/Content/img/shield.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                </tr>
+            </tbody>
+        </table>
+        <h5 class="info_txt">Support Systems</h5>
+        <table class="mifos_tb" cellspacing=0 cellpadding=0 width="100%" border="1">
+            <colgroup>
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td><div class=mifos_txt> <a class=btnM target="_blank" href="http://192.168.81.221:8787/"><img src="~/Content/img/shield.png">Draw Dies Systems</a> </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                    <td><div class=mifos_txt> @*<a class=btnM href=""><img src="~/Content/img/check-icon.png"></a> <a>???</a>*@ </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        SetHeight($("#sub_content", 244));
+        $("#contents").width($(window).width() - $("#left_wrap").width());
+    });
+    $(window).resize(function () {
+        SetHeight($("#sub_content"), 244);
+        $("#contents").width($(window).width() - $("#left_wrap").width());
+    });
+    function SetHeight(element, diff) {
+        element.css({
+            height: $(window).height() - diff,
+            "max-height": $(window).height() - diff,
+            overflow: "auto"
+        });
+    }
+</script>

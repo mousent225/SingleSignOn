@@ -1,0 +1,450 @@
+﻿@using System.Web.UI.WebControls
+@using SingleSignOn.Utilities
+@using System.Security.Claims
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxsplitter")
+@Scripts.Render("~/bundles/jqxtree")
+@Scripts.Render("~/bundles/jqxdatetimeinput")
+
+<script type="text/javascript">
+    $(window).resize(function () {
+        SetHeight($("#jqxWidget-portal"), $("body").height() - 112 - 48);
+    });
+    $(document).ready(function () {
+
+
+        $("#dateRange").jqxDateTimeInput('setRange', null, null);
+
+        SetHeight($("#jqxWidget-portal"), $("body").height() - 112 - 48);
+       
+        var rss = (function ($) {
+            var createWidgets = function () {
+
+                $('#mainSplitter').jqxSplitter({ theme: "jqx-portal-custom", width: '99%', height: "99%", panels: [{ size: 200, min: 100 }, { min: 200, size: 400 }] });
+               
+
+                $("#feedExpander").jqxExpander({
+                    theme: "jqx-portal-custom", toggleMode: 'none', showArrow: false, width: "100%", height: "100%",
+                    initContent: function () {
+                        $('#jqxTree').jqxTree({ height: '100%', width: '100%' });
+                    }
+                });
+                $("#feedListExpander").jqxExpander({
+                    theme: "jqx-portal-custom", toggleMode: 'none', showArrow: false, width: "100%", height: "100%", initContent: function () {
+                    }
+                });
+            };
+            var addEventListeners = function () {
+                $('#jqxTree').on('select', function (event) {
+                    var item = $('#jqxTree').jqxTree('getItem', event.args.element);
+                    categoryId = item.id;
+                    var dateSelect = $("#dateRange").jqxDateTimeInput('getRange');
+                    if (dateSelect.from != null && $("#inputdateRange").val() !== "") {
+                        fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, Dt2Str(dateSelect.from), Dt2Str(dateSelect.to))
+                    } else {
+                        fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, null, null)
+                    }
+                });
+            };
+            return {
+                init: function () {
+                    createWidgets();
+                    addEventListeners();
+                    //getFeed('sciencedaily');
+                }
+            }
+        }(jQuery));
+        rss.init();
+    });
+</script>
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%">
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+    <div id="mainSplitter">
+        <div>
+            <div style="border: none;" id="feedExpander">
+                <div class="jqx-hideborder">
+                    Category
+                </div>
+                <div class="jqx-hideborder jqx-hidescrollbars">
+                    <div class="jqx-hideborder" id='jqxTree'>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div id="contentSplitter">
+                <div class="feed-item-list-container" id="feedUpperPanel">
+                    <div class="jqx-hideborder" id="feedListExpander">
+                        <div class="jqx-hideborder" id="feedHeader">
+                        </div>
+                        <div class="jqx-hideborder jqx-hidescrollbars">
+                            <div id=LblockSearch>
+                                <table>
+                                    <tbody>
+                                        <tr>
+
+                                            <th class="LtextRight tb-col-1">Subject</th>
+                                            <td class="tb-col-6">
+                                                <input type="text" id="txtSubject" class="Ltext input" style="WIDTH: 100%" />
+                                            </td>
+                                            <th class="LtextRight tb-col-1">Date</th>
+                                            <td class="tb-col-2">
+                                                <div id="dateRange"></div>
+                                            </td>
+                                            <td class="tools tb-col-2 ">
+                                                <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Search"></a>
+                                                @if (ViewBag.Rights.Contains("Insert"))
+                                                {
+                                                    <a class="Lbtn" href="@Url.Action("Insert", "FormTemplate")"> <input type="button" value="New"></a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div id="gridFormTemplate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal //------------------------------------------------------------------------------------->
+<div id="mdAttachfile" class="modal fade" tabindex="-1" data-width="60%" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4>
+            <label>File Attachment</label>
+        </h4>
+    </div>
+    <div class="modal-body" style="height:400px">
+        <div id="gridAttachment">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class=Lbtn href="javascript:;">
+            <input type="button" value="Download All" id="btnDownloadAll" />
+        </a>
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var displayColumn = [], attachFile, rowApprove, rowSubject, rowIndex, cellbeginedit, dataAdapterForm, categoryId;
+
+    function fnGetDataSourceTreeView() {
+        var api = "../Category/GetListTreeView";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ category: '054e0f62-4efe-41e1-a18d-5c28a6531539' }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' },
+                        { name: 'SubCode' }
+                    ],
+                    id: 'ID',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ icon: 'SubCode', name: 'Name', map: 'label' }]);
+                $('#jqxTree').jqxTree({ source: records, width: '100%' });
+                var items = $('#jqxTree').jqxTree('getItems');
+                $('#jqxTree').jqxTree('selectItem', items[0]);
+                //console.log(records);
+                $('#jqxTree').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxTree').jqxTree('getItem', args.element);
+
+                    var id = args.element.ID;
+                    var ip;
+                    var recursion = function (object) {
+                        for (var i = 0; i < object.length; i++) {
+
+                            if (id == object[i].id) {
+                                ip = object[i].SubCode;
+                                break;
+                            } else if (object[i].items) {
+                                recursion(object[i].items);
+                            };
+                        };
+                    };
+
+                    recursion(records);
+                });
+
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    // -------> grid form template ----------------------------------------------------------------------------
+    function fnGridFormTemplate(subject, category, userId, id, dateFrom, dateTo) {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Id', type: 'int' },
+                { name: 'Subject', type: 'string' },
+                { name: 'LocalName', type: 'string' },
+                { name: 'CategoryName', type: 'string' },
+                { name: 'ApproveName', type: 'string' },
+                { name: 'Reason', type: 'string' },
+                { name: 'Descript', type: 'string' },
+                { name: 'IsActive', type: 'bool' },
+                { name: 'IsSubmit', type: 'bool' },
+                { name: 'AttachFile', type: 'bool' },
+                { name: 'IsApprove', type: 'bool' },
+                { name: 'NumRead', type: 'int' },
+                { name: 'Pin', type: 'bool' },
+                { name: 'ApproveDate', type: 'date' }
+            ],
+            url: '/FormTemplate/GetAll',
+            data: {
+                subject: subject,
+                category: category,
+                userId: userId,
+                id: id,
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            },
+            updaterow: function (rowid, rowdata, commit) {
+                fnPinFormTemplate(rowdata.Id, rowdata.Pin);
+                commit(true);
+            },
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            //string subject, string category, string userId, int id
+        };
+        dataAdapter = new $.jqx.dataAdapter(source);
+        // create Tree Grid
+        fnSetAuthorize(dataAdapter);
+        $("#gridFormTemplate").jqxGrid(
+        {
+            width: "100%",
+            height: "85%",
+            source: dataAdapter,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            pageable: true,
+            pagesize: 20,
+            pagesizeoptions: ['20', '50', '100'],
+            sortable: true,
+            editable: true,
+            enabletooltips: true,
+            columns: displayColumn,
+            columnsresize: true,
+        });
+
+        $('#gridFormTemplate').on('rowselect', function (event) {
+            var args = event.args;
+            $("#txtDesc").val(args.row.Descript);
+        });
+    }
+
+    function showModalAttachment(masterId) {
+        var attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            //<a href='../Data/FormTemplate/QUYTRINHQUANLYNHANVIEN/1. DONDENGHITUYENDUNG (worker-đã chỉnh sửa 20 07 2014).doc'><img src='../Content/img/icon-paperclip.gif'></a>
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : ""; //onclick = 'showModalAttachment(&#39;" + rowData.ID + "&#39;);'
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' }
+            ],
+            url: '/FormTemplate/GetAttachment',
+            data: {
+                attachment: masterId,
+                moduleId: '720DFEB8-A8FC-4ADB-BC81-33A9BAF633A0'
+            }
+        };
+
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+        $("#gridAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "99%",
+            source: dataAdapter,
+            pageable: false,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderLeft },
+                { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft }
+            ]
+        });
+
+        $("#gridAttachment").on('bindingcomplete', function (event) {
+            $("#mdAttachfile").modal("show");
+        });
+    }
+
+    function showDetail(id) {
+        window.location.href = "/FormTemplate/ViewDetail/" + id;
+        return true;
+    }
+
+    function fnPinFormTemplate(id, pin) {
+        var api = "/FormTemplate/PinFormTemplate";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ id: id, pin: pin }),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", "Update success", "gray success");
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+    function fnSetAuthorize(dataSource) {
+        console.log(dataSource);
+        rowIndex = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="text-align: center; margin-top: 5px;">' + (row + 1).toString() + '</div>';
+        }
+
+        rowSubject = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: left; margin-top: 5px;"><a href="#" onclick="showDetail(&#39;' + rowData.Id + '&#39;)" style=" ' +
+                    (rowData.IsApprove == false ? 'color:rgb(150, 150, 150); font-size:10pt' : (rowData.Pin == true ? 'color:red; font-size:10pt' : 'font-size:10pt')) +
+                '">' + value + '</a></div>'
+            '</div>';
+        }
+
+        rowApprove = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="margin-left:5px; margin-right:5px">' +
+                '<div style="text-align: center; margin-top: 5px;">' + value.split('|')[0] + '</div>' +
+                '<div style="text-align: center; margin-top:4px">' + value.split('|')[1] + '</div>' +
+            '</div>';
+        }
+
+        cellbeginedit = function (row, datafield, columntype, value) {
+            var rowData = dataAdapter.records[row];
+            return rowData.IsApprove == true;
+        }
+
+        attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return rowData.AttachFile === true ? "<a href='#' onclick='showModalAttachment(&#39;" + rowData.Id + "&#39;);'style='padding:10px' >" + "<i class='fa fa-paperclip' aria-hidden='true' style='padding-top:5px; color:#606060'></i></a>"
+                : "";
+        }
+
+        if ($("#hdfRole").val() === "AD01")
+            displayColumn = [
+                    { text: 'No', filterable: false, dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+                    { text: 'File', filterable: false, dataField: 'IsAttachFile', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderCenter, editable: false },
+                    { text: 'Subject', filtertype: 'input', dataField: 'Subject', cellsrenderer: rowSubject, renderer: colHeaderLeft, editable: false },
+                    { text: 'Pin To Dashboard', filterable: false, dataField: 'Pin', width: 120, columntype: 'checkbox', renderer: colHeaderCenter, cellbeginedit: cellbeginedit },
+                    { text: 'Date', filterable: false, dataField: 'ApproveDate', width: 90, cellsalign: 'center', cellsformat: 'yyyy.MM.dd', renderer: colHeaderCenter, editable: false },
+                    { text: 'Approve By', filterable: false, dataField: 'ApproveName', width: 160, cellsalign: 'center', renderer: colHeaderCenter, editable: false },
+                    { text: 'Read', filterable: false, dataField: 'NumRead', width: 40, renderer: colHeaderCenter, cellsalign: 'center', editable: false }
+            ]
+        else
+            displayColumn = [
+               { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter, editable: false },
+               { text: 'File', dataField: 'IsAttachFile', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderCenter, editable: false },
+               { text: 'Subject', dataField: 'Subject', cellsrenderer: rowSubject, renderer: colHeaderLeft, editable: false },
+               { text: 'Read', dataField: 'NumRead', width: 40, renderer: colHeaderCenter, cellsalign: 'center', editable: false }
+            ]
+    };
+
+    $("#btnSearch").on("click", function () {
+        var dateSelect = $("#dateRange").jqxDateTimeInput('getRange');
+        if (dateSelect.from != null && $("#inputdateRange").val() !== "") {
+            fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, Dt2Str(dateSelect.from), Dt2Str(dateSelect.to))
+        } else {
+            fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, null, null)
+        }
+    });
+
+
+    $("#btnDownloadAll").on("click", function () {
+        var rows = $("#gridAttachment").jqxGrid("getrows");
+        console.log(rows);
+        var files = [];
+        rows.forEach(function (row) {
+            files.push(row.FilePath);
+        })
+
+        var api = "/FormTemplate/GetZipFile";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ files: files }),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data !== "") {
+                    window.location.href = "/FormTemplate/DownloadFile?fileName=" + data;
+                }
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    });
+
+    $("#txtSubject").keyup(function (e) {
+        if (e.keyCode == 13) {
+            var dateSelect = $("#dateRange").jqxDateTimeInput('getRange');
+            if (dateSelect.from != null && $("#inputdateRange").val() !== "") {
+                fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, Dt2Str(dateSelect.from), Dt2Str(dateSelect.to))
+            } else {
+                fnGridFormTemplate($("#txtSubject").val(), categoryId, "", 0, null, null)
+            }
+        }
+    });
+</script>

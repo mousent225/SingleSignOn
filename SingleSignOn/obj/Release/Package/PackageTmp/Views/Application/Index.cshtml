@@ -1,0 +1,814 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<input type="hidden" id="hdfUserId" value="@User.GetClaimValue(ClaimTypes.Sid)" />
+<input type="hidden" value="@ViewBag.ApplicationId" id="hdfApplicationId" />
+<div id='jqxWidget-portal' class="row">
+    <div id="LblockPageHeader">
+        <div id=LblockPageTitle>
+            <div class="col-8" style="padding-top:5px">
+                <label class="label" style="color:#448CCB" id="lblApplicationName"></label>
+            </div>
+            <div class="col-4" style="text-align:right">
+
+                @*<a class=Lbtn id="btnReset">
+                        <input type="button" value="Reset">
+                    </a>*@
+                <a class=Lbtn>
+                    <input type="button" data-toggle="modal" data-target="#mdListApplication" value="Application Type">
+                </a>
+                <a class=Lbtn href="javascript:;">
+                    <input type="button" value="Approval Line" id="btnApprovalLine">
+                </a>
+                <a class=Lbtn href="javascript:;">
+                    <input type="button" value=Save id="btnSave">
+                </a>
+                <a class=Lbtn href="@Url.Action("Index","ApplicationMaster")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+    <div style="clear: both"></div>
+
+    <div id="divMainContent">
+
+        <div id="divViewApprovalLine">
+            <div id=LblockSearch style="margin:0">
+                <table class="tb-table">
+                    <tbody>
+                        <tr>
+                            <th class="LtextLeft" style="text-align:left" colspan="2">
+                                <label class="label">
+                                    <a href="javascript:;" id="btnHideApprovalLine">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </a>Approval List
+                                </label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div id="gridViewApprovalLine"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="LtextLeft tb-col-2" style="text-align:left"><label class="label">Circulator List</label></th>
+                            <td>
+                                <input type="text" id="txtCirculator" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="clear:both"></div>
+            </div>
+        </div>
+        <br />
+        <div class="divContent">
+            <div class="tb-table" style="float: right">
+                <table>
+                    <tr>
+                        <th class="tb-col-6" colspan="4">
+                            @Html.Label("Common Information", new { @class = "label", @style = "color: red;" })
+                        </th>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Code", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-3">
+                            @Html.TextBox("txtCode")
+                        </td>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Write Date", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-1">
+                            <input type="text" id="txtWriteDate" class="Ltext" style="width: 77%">
+                            <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Subject", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-10" colspan="7">
+                            @Html.TextBox("txtSubject")
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("EmpId", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-2">
+                            @*<input type="text" id="txtEmpId" />*@
+                            <div class="inner-addon right-addon">
+                                <span onclick="fnShowModalEmployeeInfor(this)"> <i class="fa fa-search"></i></span>
+                                <input type="text" id="txtEmpId" style="padding-right: 23px" />
+                            </div>
+                        </td>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Name", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-2">
+                            @Html.TextBox("txtEmpName")
+                        </td>
+                        <th class="input-require tb-col-1">
+                            @Html.Label("Department", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-3">
+                            @Html.TextBox("txtDeptName")
+                            <input type="hidden" id="hdfDeptId" />
+                        </td>
+                        <th class="tb-col-1">
+                            @Html.Label("Cost Center", new { @class = "label" })
+                        </th>
+                        <td class="tb-col-1">
+                            @Html.TextBox("txtCostCenter")
+                        </td>
+                    </tr>
+                    @*<tr>
+                            <th class="input-require tb-col-1">
+                                @Html.Label("Approval Line", new { @class = "label" })
+                            </th>
+                            <td class="tb-col-10" colspan="7">
+                                @Html.TextBox("txtApprovalLine")
+                            </td>
+                        </tr>*@
+                </table>
+            </div>
+            <div style="clear:both"></div>
+            <br />
+            <div id="divApplicationDetail">
+            </div>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>
+
+<!-- Modal Employee Infor//------------------------------------------------------------------------------------->
+<div id="mdEmployeeInfor" class="modal fade" tabindex="-1" data-width="900px" style="display: none; height:90%">
+    <div class="popup"></div>
+    <div style="clear:both"></div>
+</div>
+
+<!-- Modal Approval Line//------------------------------------------------------------------------------------->
+<div id="mdApprovalLine" class="modal fade" tabindex="-1" data-width="90%" style="display: none;">
+    <input type="hidden" id="hdfApprovalKind" value="" />
+    <div class="popup"></div>
+    <div style="clear:both"></div>
+</div>
+
+<!-- Modal List Of Application//------------------------------------------------------------------------------------->
+<div id="mdListApplication" class="modal fade" tabindex="-1" data-width="25%" style="display: none;">
+    <div class="modal-header">
+        <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>
+                <label>List of Applications </label>
+            </h3>
+        </div>
+    </div>
+    <div class="modal-body" style="height:250px">
+        <div class="jqx-hideborder" id='treeApplicationList'>
+        </div>
+        <input type="hidden" id="hdfApplicationId" value="0" />
+    </div>
+    <div class="modal-footer">
+        @*<a class=Lbtn href="javascript:;">
+                <input type="button" value="Select" id="btnMdSelect" />
+            </a>*@
+        <a class=Lbtn href="javascript:;">
+            <input data-dismiss="modal" type="button" value="Close" />
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    //biến cho modal approval
+    var dataApprovalLine = [];
+    var dataCirculator = [];
+    var dataEntities = {};
+
+    $(document).ready(function () {
+        fnInitialSelector();
+        //hiển thị nội dung của application
+        fnApplicationDetail($("#hdfApplicationId").val());
+        //lấy lên defaul approval line
+
+        //fnGetDefaultApproval($("#hdfApplicationId").val());
+
+        //lấy lên danh sách application
+        fnGetListApplication();
+
+        $("#txtEmpId").val($("#hdfUserId").val());
+
+        fnGetEmployeeInfor($("#txtEmpId"));
+
+        //thiết lập cho dòng approve
+        fnViewApprovalLine();
+        fnSetDisplay()
+
+        SetHeight($("#divMainContent"), $('footer').position().top - 155);
+    });
+
+    function fnGetDataApplicationMaster() {
+        dataEntities.ApplicationId = $("#hdfApplicationId").val();
+        dataEntities.Subject = $("#txtSubject").val();
+        if (dataEntities.Subject === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in field: Subject", "gray error");
+            $("#txtSubject").focus();
+            return false;
+        }
+        dataEntities.Applicant = $("#txtEmpId").val();
+        if ($("#txtEmpName").val() === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in field: EmpId", "gray error");
+            return false;
+        }
+        dataEntities.RequestDate = $("#txtWriteDate").val();
+        if (dataEntities.RequestDate === "") {
+            showNotification("Hyosung Portal", "Check again: Please fill in field: Write date", "gray error");
+            return false;
+        }
+        dataEntities.DeptId = $("#hdfDeptId").val();
+        dataEntities.CostCenter = $("#txtCostCenter").val();
+
+        //set lại giá trị mặc định
+        dataEntities.ApprovalLine = "";
+        dataEntities.ApprovalKind = "";
+
+        if (dataApprovalLine.length !== 0) {
+            dataEntities.ApprovalLine = fnConvertApprToString(dataApprovalLine, "EmpId", "_") + "|" + fnConvertApprToString(dataApprovalLine, "Name", " > ") + "|" + fnConvertApprToString(dataApprovalLine, "ApproverType", "_");
+            if ($("#rdOrder").prop("checked") !== undefined)
+                dataEntities.ApprovalKind = $("#rdOrder").prop("checked") ? $("#rdOrder").attr("data-id") : $("#rdParallel").attr("data-id");
+            else
+                dataEntities.ApprovalKind = $("#hdfApprovalKind").val();
+        }
+        else
+            dataEntities.ApprovalLine = "||";
+
+        if (dataCirculator.length !== 0) {
+            dataEntities.dataCirculator = fnConvertApprToString(dataCirculator, "EmpId") + "|" + fnConvertApprToString(dataCirculator, "Name");
+            dataEntities.ApprovalLine += "|" + dataEntities.dataCirculator;
+        }
+        dataEntities.ApprovalLineJson = JSON.stringify(dataApprovalLine) + "|" + JSON.stringify(dataCirculator);
+
+        switch ($("#hdfApplicationId").val()) {
+            case "1"://check for system role
+                if (!fnCheckDataForSystemRole())
+                    return false;
+                break;
+            case "4":
+                if (!fnCheckDataForEmailRequest())
+                    return false;
+                break;
+            case "6":
+                if (!fnCheckDataForInformationSystem())
+                    return false;
+                break;
+            default:
+        }
+
+
+        if (dataEntities.ApprovalLine === "||") {
+            showNotification("Hyosung Portal", "Please select approval line", "gray error");
+            return false;
+        }
+
+        //console.log(dataEntities);
+        return true;
+    }
+
+    function fnCheckDataForSystemRole() {
+        if (typeof ($("#cbSystem")) !== undefined) {
+            dataEntities.System = $("input[name='system']:checked").map(function (d) { return $(this).val() }).get().join(',');
+            if (dataEntities.System === "") {
+                showNotification("Hyosung Portal", "Check again: Please select system", "gray error");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function fnCheckDataForEmailRequest() {
+        var rowBlank = "";
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            if (item.Request === "")
+                rowBlank += (rowBlank === "" ? + (index + 1) : (", " + (index + 1)));
+        })
+        if (rowBlank === "")
+            return true;
+        showNotification("Hyosung Portal", "Please select request type for rows: " + rowBlank, "gray error");
+        return false;
+    }
+
+    function fnCheckDataForInformationSystem() {
+        var model = fnGetDataApplicationDetail();
+        if (model.System === "0") {
+            showNotification("Hyosung Portal", "Check again: Please select: System", "gray error");
+            return false;
+        }
+        if (model.Seriousness === "0") {
+            showNotification("Hyosung Portal", "Check again: Please select: Seriousness", "gray error");
+            return false;
+        }
+        if (removeTags(model.Explanation).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Check again: Please enter in field: Explanation", "gray error");
+            return false;
+        }
+        return true;
+    }
+
+    function fnGetDataSystemRole(applicationId)
+    {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = applicationId;
+        })
+        return models;
+    }
+    function fnGetDataItEquipment(masterId) {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = masterId;
+            if (item.ItemName === "")
+                models.splice(index, 1);
+        })
+        //console.log(models);
+        return models;
+    }
+
+    function fnGetDataNetClientPolicy(masterId) {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = masterId;
+            if (item.IpAddress === "" || item.AssetNo === "")
+                models.splice(index, 1);
+        })
+        console.log(models);
+        return models;
+    }
+
+    function fnGetDataEmailRequest(applicationId) {
+        var models = fnGetDataApplicationDetail();
+        $.each(models, function (index, item) {
+            item.MasterId = applicationId;
+            if (item.ItemName === "")
+                models.splice(index, 1);
+        })
+        return models;
+    }
+
+    function fnGetDataInformationSystem(applicationId) {
+        var model = fnGetDataApplicationDetail();
+        model.MasterId = applicationId;        
+        return model;
+    }
+
+    function fnInsertInformationSystem(applicationId) {        
+        $.ajax({
+            type: "POST",
+            url: "/Application/InformationSystemInsert",
+            data: JSON.stringify({ models: fnGetDataInformationSystem(applicationId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Insert success", "gray success");
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    function fnInsertSystemRole(applicationId) {
+        $.ajax({
+            type: "POST",
+            url: "/Application/SystemRoleInsert",
+            data: JSON.stringify({ models: fnGetDataSystemRole(applicationId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Insert success", "gray success");
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    function fnInsertEmailRequest(applicationId) {
+        $.ajax({
+            type: "POST",
+            url: "/Application/EmailRequestInsert",
+            data: JSON.stringify({ models: fnGetDataEmailRequest(applicationId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Insert success", "gray success");
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    function fnInsertItEquipment(applicationId) {
+        $.ajax({
+            type: "POST",
+            url: "/Application/ItEquipmentInsert",
+            data: JSON.stringify({ models: fnGetDataItEquipment(applicationId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Insert success", "gray success");
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    function fnInsertNetClientPolicy(applicationId) {
+        $.ajax({
+            type: "POST",
+            url: "/Application/NetClientPolicyInsert",
+            data: JSON.stringify({ models: fnGetDataNetClientPolicy(applicationId) }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                if (result.result === "OK") {
+                    showNotification("Hyosung Portal", "Insert success", "gray success");
+                    window.location = "../../ApplicationMaster/Index";
+                }
+                console.log(result);
+            },
+            error: function (mess) {
+                console.log(mess);
+                return false;
+            }
+        });
+    };
+    function fnInsertApplicationMaster() {
+        if (fnGetDataApplicationMaster())
+        {
+            $.ajax({
+                type: "POST",
+                url: "/ApplicationMaster/ApplicationMasterInsert",
+                data: JSON.stringify(dataEntities),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (response) {
+                    console.log(response);
+                    //if (response.responseText === "0")
+                    //    return;
+                    switch ($("#hdfApplicationId").val()) {
+                        case "1"://Application for system role
+                            fnInsertSystemRole(response);
+                            break;
+                        case "4"://Application email request
+                            fnInsertEmailRequest(response);
+                            break;
+                        case "5"://Application for it equipment
+                            fnInsertItEquipment(response);
+                            break;
+                        case "6"://Application for information system
+                            fnInsertInformationSystem(response);
+                            break;
+                        case "7"://Application for netclient policy
+                            fnInsertNetClientPolicy(response);
+                            break;
+                        default:
+                    }
+                },
+                error: function (mess) {
+                    console.log(mess)
+                    return [];
+                }
+            });
+        }
+    }
+
+    function fnInitialSelector() {
+        var date = new Date();
+        $("#txtWriteDate").val(Dt2StrFormat(date, "."));
+        txtWriteDate = new dhtmlXCalendarObject({ input: "txtWriteDate", button: "iconDateFrom" });
+        txtWriteDate.setDate(new Date(2017, 08, 31));
+
+
+        $("#txtCode").jqxInput({ height: 21, width: "97%", minLength: 1, maxLength: 40, disabled: true });
+        $("#txtSubject").jqxInput({ placeHolder: "Max lenght 200", height: 21, width: "99%", minLength: 1, maxLength: 200 });
+        $("#txtEmpId").jqxInput({ height: 21, width: "90%", minLength: 1 });
+        $("#txtEmpName").jqxInput({ height: 21, width: "97%", disabled: true });
+        $("#txtDeptName").jqxInput({ height: 21, width: "97%", disabled: true });
+        $("#txtCostCenter").jqxInput({ height: 21, width: "88%", disabled: true });
+        //$("#txtApprovalLine").jqxInput({ height: 21, width: "99%", disabled: true });
+
+        $("#txtCirculator").jqxInput({ height: 21, width: "99%", disabled: true });
+
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //lấy lên danh sách application
+    function fnGetListApplication() {
+        var api = '/ApplicationConfig/GetListApplication';
+        $.ajax({
+            type: "GET",
+            url: api,
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            cache: true,
+            success: function (data) {
+                //console.log(data);
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' },
+                        { name: 'Code' }
+                    ],
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#treeApplicationList').jqxTree({ source: records, width: '100%', height: '100%', toggleMode: 'none' });
+                var items = $('#treeApplicationList').jqxTree('getItems');
+
+                $('#treeApplicationList').jqxTree('selectItem', items[0]);
+                $('#treeApplicationList').jqxTree('expandAll');
+                $('#treeApplicationList').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#treeApplicationList').jqxTree('getItem', args.element);
+                    $("#hdfApplicationId").val(item.id);
+                });
+                //bắt sự kiện dbclick trên item node
+                //viết lại sự kiện click
+                function singleClick(event) {
+                    var _item = event.target;
+                    if (_item.tagName != "LI") {
+                        _item = $(_item).parents("li:first");
+                    };
+                    var item = $('#treeApplicationList').jqxTree('getItem', _item[0]);
+                    if (item.isExpanded == true) {
+                        $('#treeApplicationList').jqxTree('collapseItem', _item[0]);
+                    } else {
+                        $('#treeApplicationList').jqxTree('expandItem', _item[0]);
+                    };
+                };
+                //viết lại dbclick
+                function doubleClick(event) {
+                    var _item = event.target;
+                    if (_item.tagName != "LI") {
+                        _item = $(_item).parents("li:first");
+                    };
+                    var item = $('#treeApplicationList').jqxTree('getItem', _item[0]);
+                    if (!item.hasItems) {
+                        var code = "";
+                        $.each(data, function (index, d) {
+                            if (d.id == item.id)
+                                code = d.Code;
+                        })
+                        $("#hdfApplicationId").val(item.id);
+                        //hiển thị nội dung của application
+                        fnApplicationDetail($("#hdfApplicationId").val());
+                        //lấy lên defaul approval line
+                        //fnGetDefaultApproval($("#hdfApplicationId").val());
+                        //alert("Write your code here");
+                        //window.location = "../Application/Index/" + code;
+
+                        $("#mdListApplication").modal("hide");
+                    }
+                };
+                $("#treeApplicationList .jqx-tree-item").click(function (event) {
+                    var that = this;
+                    setTimeout(function () {
+                        var dblclick = parseInt($(that).data('double'), 10);
+                        if (dblclick > 0) {
+                            $(that).data('double', dblclick - 1);
+                        } else {
+                            singleClick.call(that, event);
+                        }
+                    }, 100);
+                }).dblclick(function (event) {
+                    $(this).data('double', 2);
+                    doubleClick.call(this, event);
+                });
+
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    //function fnGetDefaultApproval(applicationId) {
+    //    //GetDefaultApprovalLine
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/ApplicationConfig/GetDefaultApprovalLine",
+    //        data: JSON.stringify({ applicationId: applicationId}),
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        async: true,
+    //        success: function (result) {
+    //            //console.log(result.data);
+    //            dataApprovalLine = JSON.parse(result.data.split("|")[0]);
+    //            //alert(result.data[0].split("|")[1]);
+    //            dataCirculator = JSON.parse(result.data.split("|")[1]);
+    //            $("#hdfApprovalKind").val(result.data.split("|")[2]);
+    //            fnSetDisplay();
+    //        },
+    //        error: function () {
+    //            return [];
+    //        }
+    //    });
+    //}
+
+    function fnViewApprovalLine() {
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'EmpId', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'DeptFullName', type: 'string' },
+                { name: 'ApproverType', type: 'string' },
+                { name: 'ApproverTypeName', type: 'string' },
+                { name: 'Seq', type: 'int' }
+            ],
+            localdata: dataApprovalLine
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridViewApprovalLine").jqxGrid(
+            {
+                width: "100%",
+                height: 100,
+                source: dataAdapter,
+                selectionmode: 'singlerow',
+                columnsresize: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+                    { text: 'EmpId', dataField: 'EmpId', width: 75, renderer: colHeaderLeft },
+                    { text: 'Name', dataField: 'Name', width: 250, renderer: colHeaderLeft },
+                    { text: 'Department', dataField: 'DeptFullName', renderer: colHeaderLeft },
+                    { text: 'Approver Type', dataField: 'ApproverTypeName', width: 120, renderer: colHeaderLeft }
+                    //{ text: 'Seq', dataField: 'Seq', width: 30, cellsalign: "right", renderer: colHeaderRight }
+                ]
+            });
+    }
+
+    function fnGetEmployeeInfor(sender) {
+        var empId = $(sender).val();
+        $.ajax({
+            type: "POST",
+            url: "/User/User_Read",
+            data: JSON.stringify({filterscount: 0, groupscount: 0, pagenum: 0,pagesize: 20,recordstartindex: 0,recordendindex: 20,
+                selectType: 1, deptCode: 0, userId: empId, userName: empId,status: ""
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                var resultData = result.Rows;
+                //console.log(resultData);
+                if (resultData.length === 1) {
+                    $("#txtEmpId").val(resultData[0].LoginID);
+                    $("#txtEmpName").val(resultData[0].Name);
+                    $("#txtCostCenter").val(resultData[0].CostCenter);
+                    $("#hdfDeptId").val(resultData[0].DeptId);
+                    $("#txtDeptName").val(resultData[0].DeptFullName);
+
+                } else {
+                    var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+                    $("#mdEmployeeInfor").modal("show");
+                    $.get(link.replace('empId', empId), function (data) {
+                        $("#mdEmployeeInfor .popup").html(data);
+                    });
+                }
+            },
+            error: function () {
+                return [];
+            }
+        });
+    }
+
+    function fnApplicationDetail(applicationId) {
+        //loading();
+        var link = '@Url.Action("ShowApplicationDetail", "Application", new { id = "applicationId" })';
+        $.get(link.replace('applicationId', applicationId), function (data) {
+            $("#divApplicationDetail").html(data);
+            $("#lblApplicationName").html($("#hdfApplicationMasterName").val());
+        });
+    }
+
+    function fnShowModalEmployeeInfor(sender) {
+        var empId = $(sender).parent().find("input").val();
+        var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+        $("#mdEmployeeInfor").modal("show");
+        $.get(link.replace('empId', empId), function (data) {
+            $("#mdEmployeeInfor .popup").html(data);
+        });
+    }
+
+    function showModalApprovalLine(approvalLine) {
+        var link = '@Url.Action("ShowModalConfig", "ApplicationConfig", new { id = "approvalLine" })';
+        $("#mdApprovalLine").modal("show");
+        $.get(link.replace('approvalLine', approvalLine), function (data) {
+            $("#mdApprovalLine .popup").html(data);
+        });
+    };
+
+    //hiển thị dữ liệu cho dach sách approval line
+    function fnSetDisplay() {
+        if (dataApprovalLine.length === 0) {
+            $("#gridViewApprovalLine").parent().parent().hide();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-plus");
+        } else {
+            $("#gridViewApprovalLine").show();
+            $("#gridViewApprovalLine").parent().parent().show();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-minus");
+            fnViewApprovalLine();
+        }
+
+        if (dataCirculator.length > 0) $("#txtCirculator").val(fnConvertApprToString(dataCirculator, "Name"));
+        else $("#txtCirculator").val("");
+
+        $("#divApplicationDetail").height($("footer").position().top - $("#divViewApprovalLine").height() - 272);
+        //chỉnh lại chiều cao của application for system role
+        if (typeof fnResize === "function")
+            fnResize();
+
+    }
+
+    $("#txtEmpId").on("blur", function () {
+        fnGetEmployeeInfor(this);
+    })
+    $("#txtEmpId").keyup(function (e) {
+        if (e.keyCode == 13) {
+            fnGetEmployeeInfor(this);
+        }
+    });
+    $("#btnHideApprovalLine").on("click", function () {
+        if ($("#btnHideApprovalLine").children().prop("class") === "fa fa-plus") {
+            $("#gridViewApprovalLine").parent().parent().show();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-minus");
+        } else {
+            $("#gridViewApprovalLine").parent().parent().hide();
+            $("#btnHideApprovalLine").children().prop("class", "fa fa-plus");
+        }
+
+        $("#divApplicationDetail").height($("footer").position().top - $("#divViewApprovalLine").height() - 272);
+        //chỉnh lại chiều cao của application for system role
+        fnResize();
+    });
+
+    $("#btnApprovalLine").on("click", function () {
+        showModalApprovalLine("");
+    })
+
+    $("#btnSave").on("click", function () {
+        fnInsertApplicationMaster();
+    })
+
+</script>

@@ -1,0 +1,350 @@
+﻿
+@{
+    ViewBag.Title = "Index2";
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>HYOSUNG VIETNAM PORTAL</title>
+    <link href="~/Content/mainstyle/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/mainstyle/import.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/mainstyle/demo.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/mainstyle/calendar.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/mainstyle/pro_dropdown_2.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/mainstyle/dhtmlxcalendar.css" />
+
+    @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile.customized.min.js"></script>
+    <script type="text/javascript" src="js/camera.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/dhtmlxcalendar.js"></script>*@
+
+    <script type="text/javascript">
+
+		$(document).ready(function(){
+			//Slider
+			/*jQuery('#camera_wrap_1').camera();	*/
+		});
+    </script>
+    <script type="text/javascript">
+
+
+function loaded(){
+   var element = document.getElementById('loading'); // 로딩 요소
+   element.parentNode.removeChild(element); // 요소 제거
+}
+// 로딩 이벤트에 등록
+if(window.addEventListener){
+      window.addEventListener('load', loaded, false);
+    }else{
+      window.attachEvent('onload', loaded);
+}
+
+    </script>
+
+    <!--script>
+      $('#calendar').datepicker({
+        inline: true,
+        firstDay: 1,
+        showOtherMonths: true,
+        dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      });
+    </script-->
+
+</head>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$('.tab > div:eq(0)').show();
+    $(".tabs-menu a").click(function(event) {
+        event.preventDefault();
+        $(this).parent().addClass("Lcurrent");
+        $(this).parent().siblings().removeClass("Lcurrent");
+        var tab = $(this).attr("href");
+        $(".tab-content").not(tab).css("display", "none");
+        $(tab).fadeIn();
+    });
+
+	$(".p_ul").hide();
+	$("#ulti").click(function() {
+	if ($(".p_ul").css('display') == 'none')
+			$(".p_ul").slideToggle();
+	else if ($(".p_ul").css('display') == 'block')
+			$(".p_ul").slideToggle();
+	});
+
+});
+</script>
+
+<body>
+    <div id="loading"><img src="images/loading_en.gif" /></div>
+    <div id="wrapper" style="background-image:url('images/bg_header_main.gif')">
+        <!-- header -->
+        <div id="header">
+            <h1 class="top_logo"> <a href="home.html"><img src="images/lg_pis_logo.png" alt="Hyosung VietNam Portal" /></a> </h1>
+            <div class="p_ul">
+                <div><a href="">Personal Info </a></div>
+                <div><a href="">Change password </a></div>
+            </div>
+            <!-- util start -->
+            <div class="util">
+                <ul>
+                    <li>
+                        <fieldset>
+                            <p style="margin-top:-12px;">
+                                <label for="lang"><strong>Language</strong></label>
+                                <!--
+                                  <select id="lang">
+                                    <option>US English</option>
+                                  </select>
+                                   -->
+                                <select id="top_lang" onchange="" style="vertical-align: middle;margin-bottom:2px;">
+                                    <option value="EN">English</option>
+                                    <option value="VN" selected>Vietnammese</option>
+                                </select>
+                            </p>
+                        </fieldset>
+                    </li>
+                    <li><a href="#" class="todo" onClick="fncContact()">Sitemap</a></li>
+                    <li><a href="#" class="todo" onClick="fncContact()">Contact</a></li>
+                    <li><a href="#" class="todo" id="ulti">Settings</a></li>
+                    <li><a href="index.html" class="todo" onClick="fncContact()">Logout</a></li>
+                </ul>
+            </div>
+            <!-- //util -->
+            <!-- date start -->
+            <div id="date"></div>
+            <!-- //date Navi -->
+            <!-- top Navi start -->
+            <div id="topmenu">
+                <ul id="nav">
+                    <li class="top"> <a href="add.html" class="top_link"><span> Application Form</span> </a></li>
+                    <li class="top"> <a href="app.html" class="top_link"><span> Information system</span> </a></li>
+                    <li class="top"> <a href="approval.html" class="top_link"><span>Approval</span></a> </li>
+                    <li class="top"> <a href="board.html" class="top_link"> <span>Board</span></a> </li>
+                    <li class="top"> <a href="form.html" class="top_link"> <span>Form Templates</span> </a> </li>
+                    <li class="top"> <a href="rule.html" class="top_link"> <span>Policy</span></a> </li>
+                </ul>
+            </div>
+            <!-- //top Navi -->
+        </div>
+        <!-- //header -->
+
+        <div id="main_container">
+            <div class="ssh_main" style=""><img src="images/ssh_main_EN.jpg" alt="icon" /></div>
+            <DIV class=situation style="MARGIN-LEFT: 0px">
+                <DL>
+                    <DT>Welcome <STRONG>Vu Quang Vinh</STRONG></DT>
+                    <DD><A href="javascript:;">New Approved: <SPAN id=approvalcount>5</SPAN></A></DD>
+                </DL>
+            </DIV>
+            <div class="snb">
+                <div class="main_left_menu"> Updating Content ... </div>
+            </div>
+            <div id="m_layer">
+                <div id="main_content">
+                    <div class="h_notice">
+                        <table class="mifos_tb" cellspacing="0" cellpadding="0" width="100%">
+                            <colgroup>
+                                <col width="68%">
+                                <col width="20%">
+                                <col width="12%">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th colspan="7" class="i_notice"><IMG alt="HYOSUNG VietNam Notice" src="images/notice_board.png"> Hyosung VietNam Notice </th>
+                                </tr>
+                                <tr>
+                                    <td class="title_f"> Leave Application Form </td>
+                                    <td> RQST_APPRVL_PO </td>
+                                    <td> 2014-09-11 </td>
+                                </tr>
+                                <tr>
+                                    <td class="title_f"> Recruitment Request Form </td>
+                                    <td> RQST_APPRVL_PO </td>
+                                    <td> 2014-09-12 </td>
+                                </tr>
+                                <tr>
+                                    <td class="title_f"> Gate Passing Form </td>
+                                    <td> RQST_APPRVL_PO </td>
+                                    <td> 2014-09-13 </td>
+                                </tr>
+                                <tr>
+                                    <td class="title_f">Overtime Form </td>
+                                    <td> RQST_APPRVL_PO </td>
+                                    <td> 2014-09-14 </td>
+                                </tr>
+                                <tr>
+                                    <td class="title_f"> Shift Changing Form </td>
+                                    <td> RQST_APPRVL_PO </td>
+                                    <td> 2014-09-15 </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <DIV class=LblockTab id=LblockTab>
+                        <div id="tabs-container">
+                            <ul class="tabs-menu">
+                                <li class="Lcurrent"><a href="#tab-1">Approval</a></li>
+                                <li><a href="#tab-2">Process</a></li>
+                            </ul>
+                        </div>
+                    </DIV>
+                    <div class="tab">
+                        <div id="tab-1" class="tab-content">
+                            <div class="h_notice">
+                                <table class="mifos_tb" cellspacing="0" cellpadding="0">
+                                    <colgroup>
+                                        <col width="10%">
+                                        <col width="55%">
+                                        <col width="20%">
+                                        <col width="12%">
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th> Form </th>
+                                            <th> Subject </th>
+                                            <th> Author </th>
+                                            <th> Created </th>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f"> [4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-11 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f"> [4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-12 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f">[4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-13 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f">[4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-14 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f"> [4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-15 </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-content">
+                            <div class="h_notice">
+                                <table class="mifos_tb" cellspacing="0" cellpadding="0">
+                                    <colgroup>
+                                        <col width="10%">
+                                        <col width="55%">
+                                        <col width="20%">
+                                        <col width="12%">
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th> Form </th>
+                                            <th> Subject </th>
+                                            <th> Author </th>
+                                            <th> Created </th>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f"> [4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-11 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f"> [4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-12 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f">[4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-13 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f">[4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-14 </td>
+                                        </tr>
+                                        <tr>
+                                            <td> RQST_APPRVL_PO </td>
+                                            <td class="title_f"> [4500176134] ITEM A - DOMESTIC </td>
+                                            <td>Nguyen Tuan Anh</td>
+                                            <td> 2014-09-15 </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- main_content -->
+                <div class="schedule">
+                    Updating Content ...
+                    <!--<div id="main_slider">
+                      <div class="camera_wrap camera_azure_skin" id="camera_wrap_1">
+                        <div data-thumb="images/slide1.jpg" data-src="images/slide1.jpg">
+                          <div class="camera_caption fadeIn">
+                            <div>
+                              <div class="slide_descr">Smart Portal</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div data-thumb="images/slide2.jpg" data-src="images/slide2.jpg">
+                          <div  class="camera_caption2 fadeIn">
+                            <div class="slide_descr">Smart Hyosung</div>
+                          </div>
+                        </div>
+                        <div data-thumb="images/slide3.jpg" data-src="images/slide3.jpg">
+                          <div class="camera_caption fadeIn">
+                            <div class="slide_descr">Goes Hyosung Viet Nam Portal, goes smart choice</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="clear"></div>
+                    </div>-->
+                </div>
+                <!-- schedule
+                <script>showCalendar();</script>  -->
+            </div>
+            <table>
+                <tr>
+                    <br>
+                    </br>
+                </tr>
+            </table>
+            <div id="footer">
+                <div id="foot_con">
+                    <div class="foot_logo"><img src="images/foot_logo.gif" alt="Hyosung VietNam" /></div>
+                    <p class="copyright_txt"><img src="images/foot_copyright.png" alt="Hyosung VietNam" /></p>
+                </div>
+            </div>
+            <!-- //footer -->
+        </div>
+        <!-- main container -->
+    </div>
+    <!-- wrapper -->
+</body>
+</html>
+@Scripts.Render("~/bundles/common-js")
+@Scripts.Render("~/bundles/js")

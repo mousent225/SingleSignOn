@@ -1,0 +1,188 @@
+﻿
+<input type="hidden" id="hdfEmpInforId" value="@ViewBag.EmpId" />
+<input type="hidden" id="hdfEmpInforSelectMode" value="@ViewBag.SelectionMode" />
+<input type="hidden" id="hdfEmpInforAddition" value="@ViewBag.Addition" />
+<div class="modal-header">
+    <div>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>
+            <label>Employee Information </label>
+        </h3>
+    </div>
+</div>
+<div class="modal-body">
+    <div id="LblockSearch">
+        <table>
+            <tbody>
+                <tr>
+                    <th class="LtextRight" style="width:27px">Name</th>
+                    <td>
+                        <input type="text" id="txtEmpInforName" value="@ViewBag.EmpId" class="Ltext input" style="WIDTH: 100%" />
+                    </td>
+                    <td class="tools" style="width:80px">
+                        <a class="Lbtn" href="javascript:;"> <input id="btnEmpInforSearch" type="button" value="Search"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="clear:both"></div>
+    </div>
+    <div class="col-3">
+        <div class="jqx-hideborder" id='jqxEmpInforPlant'>
+        </div>
+        <input type="hidden" id="hdfEmpInforDept" value="0" />
+    </div>
+    <div class="col-9">
+        <div id="divEmpInforBottom" style="padding-top:5px">
+            <div id="gridEmpInfor"></div>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+</div>
+<div class="modal-footer">
+    <a class=Lbtn href="javascript:;">
+        <input type="button" value="Confirm" id="btnMdEmployeeConfirm" />
+    </a>
+    <a class=Lbtn href="javascript:;">
+        <input data-dismiss="modal" type="button" value="Close" />
+    </a>
+</div>
+
+<script type="text/javascript">
+    var dataEmployee = [];
+    var empId = "";
+    var dataFieldsEmployeeInfor = [
+        { name: 'OrganizeName', type: 'string' },
+        { name: 'PlantName', type: 'string' },
+        { name: 'DeptName', type: 'string' },
+        { name: 'SectionName', type: 'string' },
+        { name: 'ID', type: 'string' },
+        { name: 'LoginID', type: 'string' },
+        { name: 'Name', type: 'string' },
+        { name: 'Email', type: 'string' },
+        { name: 'DeptFullName', type: 'string' },
+        { name: 'DeptId', type: 'string' },
+        { name: 'CostCenter', type: 'string' }
+    ];
+    var paraEmployeeInfor = { selectType: 1, deptCode: $("#hdfEmpInforDept").val(), userId: $("#txtEmpInforName").val(), userName: $("#txtEmpInforName").val(), status: "" };
+
+    var columunsEmployeeInfor = [
+        { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex },
+        { text: 'EmpId', dataField: 'LoginID', width: 75 },
+        { text: 'Name', dataField: 'Name', width: 180 },
+        { text: 'Email', dataField: 'Email', width: 120 },
+        { text: 'Organization', filterable: false, dataField: 'OrganizeName', width: 150, sortable: false, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+        { text: 'Plant', dataField: 'PlantName', width: 130, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+        { text: 'Department', dataField: 'DeptName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false },
+        { text: 'Section', dataField: 'SectionName', width: 150, cellsalign: "left", renderer: colHeaderLeft, editable: false }
+    ];
+
+    $(document).ready(function () {
+        $("#mdEmployeeInfor .modal-body").height($("#mdEmployeeInfor").height() - 125);
+
+        fnEmpInforPlantTree();
+        var source = fnInitialDataSource(dataFieldsEmployeeInfor, '/User/User_Read', paraEmployeeInfor);
+        fnInitialGrid($("#gridEmpInfor"), source, columunsEmployeeInfor, $("#hdfEmpInforSelectMode").val(), false, "98%");
+
+    });
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //load dữ liệu cho cây phòng ban
+    function fnEmpInforPlantTree() {
+        var api = 'http://' + hostAddress + '//User/GetListTreeView';
+        $.ajax({
+            type: "GET",
+            url: api,
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            cache: true,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' }
+                    ],
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ name: 'Name', map: 'label' }]);
+                $('#jqxEmpInforPlant').jqxTree({ source: records, width: '100%', height: '100%' });
+                var items = $('#jqxEmpInforPlant').jqxTree('getItems');
+                $('#jqxEmpInforPlant').jqxTree('selectItem', items[0]);
+                $('#jqxEmpInforPlant').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxEmpInforPlant').jqxTree('getItem', args.element);
+
+                    $("#hdfEmpInforDept").val(item.id);
+                    paraEmployeeInfor.deptCode = $("#hdfEmpInforDept").val();
+                    var source = fnInitialDataSource(dataFieldsEmployeeInfor, '/User/User_Read', paraEmployeeInfor);
+                    $('#gridEmpInfor').jqxGrid('updatebounddata');
+                    $("#gridEmpInfor").jqxGrid('clearselection');
+                });
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    $("#btnEmpInforSearch").on("click", function () {
+        paraEmployeeInfor = { selectType: 1, deptCode: $("#hdfEmpInforDept").val(), userId: $("#txtEmpInforName").val(), userName: $("#txtEmpInforName").val(), status: "" };
+        var source = fnInitialDataSource(dataFieldsEmployeeInfor, '/User/User_Read', paraEmployeeInfor);
+        $('#gridAppEmpInfor').jqxGrid('updatebounddata');
+        $("#gridAppEmpInfor").jqxGrid('clearselection');
+    });
+
+    $("#txtEmpInforName").keyup(function (e) {
+        if (e.keyCode == 13) {
+            paraEmployeeInfor = { selectType: 1, deptCode: $("#hdfEmpInforDept").val(), userId: $("#txtEmpInforName").val(), userName: $("#txtEmpInforName").val(), status: "" };
+            var source = fnInitialDataSource(dataFieldsEmployeeInfor, '/User/User_Read', paraEmployeeInfor);
+            $('#gridAppEmpInfor').jqxGrid('updatebounddata');
+            $("#gridAppEmpInfor").jqxGrid('clearselection');
+        }
+    });
+
+    $("#btnMdEmployeeConfirm").on("click", function () {
+
+        var selectionMode = $("#gridEmpInfor").jqxGrid("selectionmode");
+        //alert(selectionMode);
+        var getselectedrowindexes = $('#gridEmpInfor').jqxGrid('getselectedrowindexes');
+        if (getselectedrowindexes.length > 0) {
+            if (selectionMode === "singlerow") {
+                var selectedRowData = $('#gridEmpInfor').jqxGrid('getrowdata', getselectedrowindexes[0]);
+                if ($("#hdfEmpInforAddition").val() === "") {
+                    $("#txtEmpId").val(selectedRowData.LoginID);
+                    $("#txtEmpName").val(selectedRowData.Name);
+                    $("#txtCostCenter").val(selectedRowData.CostCenter);
+                    $("#hdfDeptId").val(selectedRowData.DeptId);
+                    $("#txtDeptName").val(selectedRowData.DeptFullName);
+                } else if ($("#hdfEmpInforAddition").val() === "samerole") {
+                    fnUpdateSameRole(selectedRowData);
+                }
+            }
+            else if (selectionMode === "checkbox") {
+                var dataResult = [];
+                for (var i = 0; i < getselectedrowindexes.length; i++) {
+                    var selectedRowData = $('#gridEmpInfor').jqxGrid('getrowdata', getselectedrowindexes[i]);
+                    dataResult.push(selectedRowData);
+                }
+                fnAddToGridDetail(dataResult);
+            }
+        }
+        $("#mdEmployeeInfor").modal("hide");
+    })
+
+
+</script>

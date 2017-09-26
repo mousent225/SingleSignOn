@@ -1,0 +1,90 @@
+INFO  2017-08-30 15:21:18,481  2280ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-08-30 15:23:34,618 138417ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-08-31 08:35:50,000 59118444ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-08-31 15:44:19,238 2525620ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-08-31 16:04:46,869 3753251ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-08-31 16:13:55,635 4302017ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-01 08:03:07,064  3175ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-01 08:07:12,855   575ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-01 15:01:50,062 22410672ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-01 15:41:12,864 684984ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-05 08:14:12,131   721ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-06 10:21:08,126  4394ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-07 08:45:12,186  7326ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-07 16:28:37,325  3335ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-08 07:43:53,307 35118768ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-08 07:43:57,479 35122941ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-08 08:08:30,259 36595720ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-08 08:40:39,101 38524562ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-08 08:41:49,687 38595148ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-08 15:44:08,191 63933652ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-10 11:50:49,643 222735105ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-11 14:34:45,326  1532ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-11 14:36:34,649 110856ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-11 16:17:22,362 1287691ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-11 16:23:08,683  2150ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-11 16:51:36,873 1011889ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-12 09:32:02,382 58211328ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-12 09:32:13,742 58222687ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-12 09:36:21,218 58470164ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-12 09:36:57,556 58506502ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-12 09:44:15,202 58944147ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-13 15:41:44,112 12973ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-13 15:59:33,432  1105ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: True
+INFO  2017-09-13 19:48:33,188  2439ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-13 20:15:42,575   897ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+ERROR 2017-09-13 20:45:17,801 124653ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:45:19,096 125949ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:45:20,759 127611ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:45:21,495 128348ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:45:21,717 128570ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:45:21,942 128795ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:45:22,159 129012ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:52:32,952 559805ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:59:12,908 149926ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:59:14,379 151397ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:59:14,578 151597ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 20:59:23,349 160368ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+ERROR 2017-09-13 21:02:18,270 335289ms Portal - Hyosung       Error              - ApplicationMasterRepository NetClientPolicy Update: An error occurred while updating the entries. See the inner exception for details. Inner exception: An error occurred while updating the entries. See the inner exception for details.
+INFO  2017-09-14 08:28:28,601  1021ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 08:28:32,048  4468ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 09:51:47,736 151399ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:18:59,680 1783343ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:19:01,967 1785630ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:19:03,619 1787283ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:19:03,870 1787533ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:19:04,165 1787829ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:19:19,235   784ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:28:28,269 438558ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:28:30,468 440757ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:30:22,837 41864ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:39:15,239 30679ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:44:18,249 25153ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:44:28,223 35126ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 10:44:46,616 53520ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 11:10:44,039   905ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 11:37:45,766   890ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 13:20:18,234  1127ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 13:29:16,552 160626ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 13:37:01,102 26050ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-14 13:41:29,833 294781ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 15:52:24,616  2468ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 16:11:06,456  1938ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 16:35:41,995  1631ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 16:59:55,525  1537ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 17:12:40,280   846ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 17:18:32,590   951ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 17:21:51,773   789ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-15 17:24:13,340   833ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-18 08:06:54,175  6113ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-18 08:11:13,431 265370ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-18 08:16:15,270  1359ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-18 08:20:35,744  1153ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-19 09:45:07,380 92058ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-20 10:32:20,496 89325174ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-20 13:25:15,378 7678526ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-20 15:13:37,146 14180295ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-20 16:24:42,891 18446040ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-20 16:42:48,814 656361ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-20 16:53:11,067 1278613ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False
+INFO  2017-09-21 09:40:26,811 61714357ms Portal - Hyosung       Info               - Begin login: User.Identity.IsAuthenticated: False

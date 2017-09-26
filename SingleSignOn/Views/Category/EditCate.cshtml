@@ -1,0 +1,394 @@
+﻿@model SingleSignOn.ViewModels.CategoryModel
+@{
+    ViewBag.Title = "Edit Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<style>
+    .treeview-custom {
+        background-color: #fff !important;
+        z-index: 999 !important;
+        border-radius: 6px !important;
+        border: 1px solid #cccccc !important;
+        height: 100px;
+    }
+
+    .k-dropdown span span.k-input {
+        font-size: 12px;
+        color: black;
+    }
+
+    .k-dropdown span span.k-select span.k-icon {
+        position: absolute;
+        top: 5px;
+        right: 4px;
+    }
+
+    .k-dropdown-wrap {
+        height: 25px;
+        border: 1px solid #808080;
+    }
+
+    ul.k-group span.k-in {
+        font-size: 12px;
+        color: black;
+    }
+
+    span.k-widget {
+        width: 100%;
+        border: 1px solid #808080;
+    }
+</style>
+@using (Html.BeginForm("EditCate", "Category", FormMethod.Post, new { @id = "frmEditCate", @class = "overflow", enctype = "multipart/form-data" }))
+{
+
+    <div class="divWrapper" style="padding: 0 10px">
+
+        @Html.HiddenFor(m => m.ID)
+
+        <div id=LblockPageHeader>
+            <div id=LblockPageTitle>
+                <h1>Edit Category</h1>
+            </div>
+            <!-- end LblockPageTitle -->
+        </div>
+
+        <div id="LblockButton">
+            @*<div style="float: left">
+                    <a class=Lbtn href="#">
+                        <input type="reset" value="Reset">
+                    </a>
+                </div>*@
+            <div class="" style="float: right">
+                <a class=Lbtn href="#">
+                    <input type="reset" value="Reset" onclick="fnRefresh();">
+                </a>
+                <a class=Lbtn href="#">
+                    <input type="button" value=Save id="btnSave">
+                </a>
+                @*<a class=Lbtn href="#">
+                    <input type=button id="btnSaveContinue" value="Save And Continue">
+                    @Html.HiddenFor(m => m.ISCONTINUE)
+                </a>*@
+                <a class=Lbtn href="@Url.Action("Index","Category")">
+                    <input type=button value="List">
+                </a>
+            </div>
+        </div>
+        <div class="tb-table" style="overflow: hidden">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-2">@Html.LabelFor(m => m.Name, new { @class = "label input-require" })</th>
+                    <td class="tb-col-10">
+                        @Html.HiddenFor(m => m.ID, new { @id = "hdfCateId" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "input" })
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(m => m.Remark, new { @class = "label" })</th>
+                    <td>
+                        @Html.TextAreaFor(m => m.Remark, new { @class = "input", @row = 4 })
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @*Search Condition-----------------------------------------------------------------------*@
+        <br />
+        <div id=LblockSearch>
+            <table>
+                <tr>
+                    <th class="LtextRight tb-col-1">Name</th>
+                    <td class="LtextRight tb-col-2">
+                        @*<input name=cust_name class=Ltext id=cust_name style="WIDTH: 100%" onchange="$('#p_customer_code').val('');" type=text size=5 maxlength=20 jquery1452828581338="5">*@
+                        <input type="text" id="txtName" class="Ltext" style="WIDTH: 100%" />
+                    </td>
+                    <th class="tb-col-1"><label class="label">Status</label></th>
+                    <td class="tb-col-1">
+                        <select id="drStatus" class="input">
+                            <option value="" selected="selected">All</option>
+                            <option value="1">Enable</option>
+                            <option value="2">Disable</option>
+                        </select>
+                    </td>
+                    <td class="tools">
+                        <a class="Lbtn" href="javascript:;"> <input onclick="fnRefreshGrid();" type="button" value="Search"></a>
+                        <a class="Lbtn" href="#"> <input onclick="fnShowModalInsert()" type="button" value="New"></a>
+                        <a class="Lbtn" href="#"> <input onclick="fnEditCateValue();" type="button" value="Edit"></a>
+                        <a class="Lbtn" href="javascript:;"> <input onclick="fnDeleteCateValue()" type="button" value="Delete"></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="CategoryValueGrid"></div>
+
+    </div>
+}
+
+@*-----------------------Modal create new category value*@
+<div id="modalCategoryValue" class="modal fade" tabindex="-1" data-width="480" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4>
+            <label>Insert New Category Value</label>
+        </h4>
+    </div>
+    <div class="modal-body" style="height: 235px">
+    </div>
+    <div class="modal-footer">
+        <a class="Lbtn" href="javascript:;"> <input onclick="fnInsertCateValue(false)" type="button" value="Save"></a>
+        <a class="Lbtn" href="javascript:;"> <input data-dismiss="modal" type="button" value="Cancel"></a>
+    </div>
+</div>
+@*-----------------------Modal edit category value*@
+<div id="modalEditCategoryValue" class="modal fade" tabindex="-1" data-width="480" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4>
+            <label>Update Category Value</label>
+        </h4>
+    </div>
+    <div class="modal-body" style="height: 235px">
+    </div>
+    <div class="modal-footer">
+        <a class="Lbtn" href="javascript:;"> <input onclick="fnUpdateCateValue(false)" type="button" value="Save"></a>
+        <a class="Lbtn" href="javascript:;"> <input data-dismiss="modal" type="button" value="Cancel"></a>
+    </div>
+</div>
+
+<script>
+    var CateModel = {
+        ID: "", Name: "", Remark: ""
+    }
+
+    var CateValueModel = {
+        ID: '', Name: '', Sequence: 0, Actived: true, Category: '', ParentID: '', RemarkValue: '', SubCode: ''
+    }
+
+    $(document).ready(function () {
+        fnSetDataSource();                
+    });
+    var  source,  cateValueId = "";
+    function fnSetDataSource() {
+        
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'ID', type: 'string' },
+                { name: 'Name', type: 'string' },
+                { name: 'Sequence', type: 'int' },
+                { name: 'Actived', type: 'bool' },
+                { name: 'CategoryName', type: 'string' },
+                { name: 'ParentName', type: 'string' },
+                { name: 'SubCode', type: 'string' },
+                { name: 'ModifyUser', type: 'string' },
+                { name: 'ModifyDate', type: 'date' }
+            ],
+            url: '/Category/GetListCategoryValue',
+            data: {
+                category: $("#hdfCateId").val(),
+                name: $("#txtName").val(),
+                status: $("#drStatus").val()
+            }
+        };
+        $("#CategoryValueGrid").jqxGrid(
+        {
+            width: "100%",
+            height: 270,
+            source: new $.jqx.dataAdapter(source),
+            sortable: true,
+            pageable: true,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'Name', dataField: 'Name' },
+                { text: 'Parent', dataField: 'ParentName', width: 120 },
+                { text: 'Subcode', dataField: 'SubCode', width: 70 },
+                { text: 'Status', dataField: 'Actived', cellsalign: 'center', width: 50, renderer: colHeaderCenter, cellsrenderer: rowStatus},
+                { text: 'Sequence', dataField: 'Sequence', width: 80, renderer: colHeaderCenter, cellsalign: 'center' },
+                { text: 'Modify User', dataField: 'ModifyUser', width: 130, renderer: colHeaderCenter, cellsalign: 'center' },
+                { text: 'Modify Date', dataField: 'ModifyDate', cellsformat: 'yyyy.MM.dd', width: 90, renderer: colHeaderCenter, cellsalign: 'center' }
+                //{ text: 'Delete', dataField: 'Delete', width: 43, cellsrenderer: deleteColumn }
+            ]
+        });
+    }
+
+    function fnEditCateValue() {
+        if (cateValueId === "") {
+            showNotification("Hyosung Portal", "Please select row first", "gray error");
+            return false;
+        }
+        var link = '@Url.Action("ShowModalEditCategoryValue", "Category", new {id = "idValue"})';
+        $("#modalEditCategoryValue").modal("show");
+        $.get(link.replace('idValue', cateValueId), function (data) {
+            
+            $("#modalEditCategoryValue .modal-body").html(data);
+        });
+    }    
+
+    function fnShowModalInsert() {
+        $("#modalCategoryValue").modal("show");
+        var link = '@Url.Action("ShowModalCreateCategoryValue", "Category", new {id = @Model.ID.ToString()})';
+        $.get(link, function (data) {
+            
+            $("#modalCategoryValue .modal-body").html(data);
+        });
+    }    
+
+    //function fnShowModalInsert() {
+    //    $("#modalCategoryValue").modal("show");
+    //}
+
+    function getData() {
+        //ID: '', Name: '', Sequence: 0, Actived: true, Category: '', ParentID: '', RemarkValue: '', SubCode: ''
+        CateValueModel.ID = $("#CategoryValueID").val();
+        CateValueModel.Name = $("#CategoryValueName").val();
+        CateValueModel.RemarkValue = $("#RemarkValue").val();
+        CateValueModel.Sequence = $("#Sequence").val();
+        CateValueModel.SubCode = $("#SubCode").val();
+        CateValueModel.ParentID = $("#hdParentID").val();
+        CateValueModel.Actived = $("#slStatus").val();
+        CateValueModel.Category = $("#Category").val();
+        if (CateValueModel.Name === "") {
+            $("#CategoryValueName").focus();
+            showNotification("Hyosung Portal", "Please enter in field: Name", "gray error");
+            return false;
+        }
+        return true;
+    }
+
+    function fnRefresh() {
+        window.location.href = "/Category/EditCate/" + $("#hdfCateId").val();
+    }
+
+    function fnRefreshGrid() {
+        fnSetDataSource();
+    }
+
+    function fnInsertCate(isContinue) {
+        if (!getData()) return;
+        var api = "../Category/InsertCate";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(CateModel),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.result === "Exist") {
+                    showNotification("Hyosung Portal", "The Category Name already exists", "gray error");
+                }
+                else if (data.result !== "ERROR") {
+                    showNotification("Hyosung Portal", "Insert new Category success", "gray success");
+                    fnSetDataSource();
+                    if (!isContinue) $("#mdNewCategory").modal("hide");
+                }
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    $('#CategoryValueGrid').on('rowclick', function (event) {
+        var args = event.args;
+        cateValueId = args.row.bounddata.ID;
+    });
+
+    function fnInsertCateValue() {
+        if (!getData()) return false;
+        var api = "../InsertCategoryValue";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(CateValueModel),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.result === "OK") {
+                    showNotification("Hyosung Portal", "Insert success", "gray success");
+                    $("#CategoryValueGrid").jqxGrid('updatebounddata');
+                    $("#modalEditCategoryValue").modal("hide");
+                }
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+    function fnUpdateCateValue() {
+        if (!getData()) return false;
+        var api = "../UpdateCategoryValue";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(CateValueModel),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.result === "OK") {
+                    showNotification("Hyosung Portal", "Update success", "gray success");
+                    $("#CategoryValueGrid").jqxGrid('updatebounddata');
+                    $("#modalEditCategoryValue").modal("hide");
+                }
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+    function fnDeleteCateValue() {
+        if (fnDeleteCateValue === "") {
+            showNotification("Hyosung Portal", "Please select row to delete", "gray error");
+            return false;
+        }
+        var result = confirm('Do you really want to delete this row?');
+        if (result) {
+            var api = "../DeleteCategoryValue/" + cateValueId;
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete row success", "gray success");
+                        $("#CategoryValueGrid").jqxGrid('updatebounddata');
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    function checkData() {
+        var cateName = $("#Name");
+        if (cateName.val() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Name", "gray error");
+            cateName.focus();
+            return false;
+        }
+        return true;
+    }
+
+    $("#btnSaveContinue").on("click", function () {
+        if (!checkData()) return;
+        $("#ISCONTINUE").val(true);
+        $("#frmEditCate").submit();
+    });
+    $("#btnSave").on("click", function () {
+        if (!checkData()) return;
+        $("#ISCONTINUE").val(false);
+        $("#frmEditCate").submit();
+    });
+
+</script>

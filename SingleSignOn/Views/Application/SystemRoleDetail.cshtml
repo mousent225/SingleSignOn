@@ -1,0 +1,310 @@
+﻿
+<input type="hidden" id="hdfApplicationMasterName" value="@ViewBag.ApplicationMasterName" />
+<div class="tb-table" style="float: right">
+    <table>
+        <tr>
+            <th class="tb-col-1">
+                @Html.Label("Detail", new { @class = "label", @style = "color: red;" })
+            </th>
+            <th class="input-require tb-col-1">
+                @Html.Label("System", new { @class = "label" })
+                <input type="hidden" id="hdfSystemId" value="0" />
+            </th>
+            <td class="tb-col-5">
+                <div id="cbSystem" style="text-align:center">
+                </div>
+            </td>
+            <th class="input-require tb-col-1">
+                @Html.Label("Module", new { @class = "label" })
+                <input type="hidden" id="hdfModuleId" value="0" />
+            </th>
+            <td class="tb-col-2">
+                <div class="col-10" style="padding-right:3px; padding-left:0">
+                    <div id="cbModule" style="float:left"></div>
+                </div>
+                <div class="col-2">
+                    <a class=Lbtn href="javascript:;" id="btnApplyModule" style="float:right"  name="btnGroupSystemRole">
+                        <i class="fa fa-check" title="Apply module" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                </div>
+            </td>
+            <td class="tb-col-2">
+                <div style="float:right">
+                    <a class=Lbtn href="javascript:;" id="btnPerson" name="btnGroupSystemRole">
+                        <i class="fa fa-user" title="Person" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                    <a class=Lbtn href="javascript:;" id="btnGroup" name="btnGroupSystemRole">
+                        <i class="fa fa-group" title="Group" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                    <a class=Lbtn href="javascript:;" id="btnSameRole" name="btnGroupSystemRole">
+                        <i class="fa fa-copy" title="Employee Same Role" style="color:#343434; padding-top:5px"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <div id="gridSystemRole">
+                </div>
+
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+<script type="text/javascript">
+
+    var dataSystemRole = [];
+    var repeatIndex = 0;
+    var dataSystemRoleEntities = {};
+    $(document).ready(function () {
+        fnInitCheckboxSystem();
+
+        //fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbSystem"), $("#hdfSystemId"), 'f13323ec-ead6-42b0-89bc-eac0589983fc', "100%");
+        fnSetDataDropdown('/Category/GetListValueViaCate', $("#cbModule"), $("#hdfModuleId"), '0ab7cf6d-56a4-4cf1-bd9e-1d5fbc1c0ff0', "90%");
+
+        fnLoadDataForSystemRole();
+        //fnSystemRole();
+
+        //set height modal
+        $("#mdApprovalLine").height($('footer').position().top - 29);
+        fnResize();
+    });
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    function fnLoadDataForSystemRole() {
+        $.ajax({
+            type: "POST",
+            url: "/Application/SystemRoleDetail",
+            data: JSON.stringify({ masterId: $("#hdfMasterId").val() }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                dataSystemRole = result
+                fnSystemRole();
+                var system = $("#hdfSystem").val();
+                $.each($("input[name='system']"), function (index, item) {
+                    $(item).prop("checked", system.indexOf($(item).val()) !== -1);
+                })
+            },
+            error: function (mess) {
+                console.log(mess);
+            }
+        });
+    }
+
+    function fnSystemRole() {
+
+        var deleteColumnHeader = function (value) {
+            return '<div style="text-align: center; position:absolute; left: 6px; z-index:999; font-weight:bold"><a href="javascript:;" onclick="fnDeleteRow(&#39;&#39;);"><i class="fa fa-trash" style="color:red"></i></a></div>';
+            //return "<a href='javascript:;' onclick='fnDeleteRow(&#39;&#39;);'><i class='fa fa-trash' style='padding-left:8px; color:red'></i></a>";
+        }
+
+        var deleteColumn = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return "<a href='javascript:;' onclick='fnDeleteRow(&#39;" + row + "&#39;);'><i class='fa fa-trash' style='padding:6px 0 0 11px; color:red'></i></a>";
+        }
+
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Id', type: 'int' },
+                { name: 'EmpId', type: 'string' },
+                { name: 'MasterId', type: 'int' },
+                { name: 'EmpName', type: 'string' },
+                { name: 'DeptId', type: 'int' },
+                { name: 'DeptName', type: 'string' },
+                { name: 'Module', type: 'string' },
+                { name: 'ModuleName', type: 'string' },
+                { name: 'EmpIdSameRole', type: 'string' },
+                { name: 'EmpNameSameRole', type: 'string' },
+                { name: 'Remark', type: 'string' }
+            ],
+            localdata: dataSystemRole
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridSystemRole").jqxGrid(
+            {
+                width: "100%",
+                source: dataAdapter,
+                selectionmode: 'multiplerowsextended',
+                columnsresize: true,
+                editable: false,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex, editable: false },
+                    { text: 'EmpId', dataField: 'EmpId', width: 100, renderer: colHeaderLeft, editable: false },
+                    { text: 'Name', dataField: 'EmpName', width: 200, renderer: colHeaderLeft, editable: false },
+                    { text: 'Department', dataField: 'DeptName', width: 350, renderer: colHeaderLeft, editable: false },
+                    { text: 'Module', dataField: 'ModuleName', width: 150, renderer: colHeaderLeft, editable: false },
+                    { text: 'EmpId Same Role', dataField: 'EmpIdSameRole', width: 120, renderer: colHeaderLeft, editable: false },
+                    { text: 'Emp Name Same Role', dataField: 'EmpNameSameRole', width: 150, renderer: colHeaderLeft, editable: false },
+                    { text: 'Remark', dataField: 'Remark', renderer: colHeaderLeft, editable: true },
+                    { text: '', dataField: 'Delete', width: 30, renderer: deleteColumnHeader, cellsrenderer: deleteColumn, editable: false, hidden: true }
+                ]
+            });
+        $("#gridSystemRole").on('cellendedit', function (event) {
+            // event arguments.
+            var args = event.args;
+            // column data field.
+            var dataField = event.args.datafield;
+            // row's bound index.
+            var rowBoundIndex = event.args.rowindex;
+            // cell value
+            var value = args.value;
+            // cell old value.
+            var oldvalue = args.oldvalue;
+            // row's data.
+            var rowData = args.row;
+            dataSystemRole[rowBoundIndex].Remark = value;
+        });
+    }
+
+    function fnDeleteRow(index) {
+        if (index === "") {
+            if (confirmDeleteAll()) {
+                dataSystemRole = [];
+                fnSystemRole();
+            }
+        } else {
+            if (confirmDelete()) {
+                dataSystemRole.splice(index, 1);
+                fnSystemRole();
+            }
+        }
+
+    }
+
+    function fnAddToGridDetail(data) {
+        $.each(data, function (index, item) {
+            if (item !== undefined) {
+                var dataItem = { EmpId: item.LoginID, MasterId:0, EmpName: item.Name, DeptId: item.DeptId, DeptName: item.DeptFullName, Module: null, ModuleName: "", EmpIdSameRole: "", EmpNameSameRole: "", Remark: "" };
+                //if (dataSystemRole.map(function (d) { return d["EmpId"] }).indexOf(dataItem.EmpId) === -1)
+                 dataSystemRole.push(dataItem);
+            }
+        })
+        fnSystemRole();
+    }
+
+    function fnUpdateSameRole(data) {
+        var getselectedrowindexes = $('#gridSystemRole').jqxGrid('getselectedrowindexes');
+        //console.log(getselectedrowindexes);
+        for (var i = 0; i < getselectedrowindexes.length; i++) {
+            dataSystemRole[getselectedrowindexes[i]].EmpIdSameRole = data.LoginID;
+            dataSystemRole[getselectedrowindexes[i]].EmpNameSameRole = data.Name;
+        }
+        fnSystemRole();
+    }
+
+    function fnResize() {
+        $("#gridSystemRole").jqxGrid({ height: $("#divApplicationDetail").height() - 42 });
+    }
+
+    function fnInitCheckboxSystem() {
+        $.ajax({
+            type: "GET",
+            url: "/Category/GetListValueViaCate",
+            data: {
+                category: "f13323ec-ead6-42b0-89bc-eac0589983fc",
+                isFilter: false
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                //console.log(response);
+                $.each(response, function (index, item) {
+                    var cbTemplate = '<label class="label" for="' + item.ID + '">' + item.Name + '<input type="checkbox" id="' + item.ID + '" name="system" value= "' + item.ID + '"/></label>&nbsp;&nbsp;';//
+                    $("#cbSystem").append(cbTemplate);
+                })
+
+                return true;
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    function fnGetDataApplicationDetail() {
+        return dataSystemRole;
+    }
+
+    function fnSetupStatusForSystemRole(status) {        
+        $("input[name='system']").prop("disabled", !status);
+        $('#gridSystemRole').jqxGrid({ editable: !status });
+        if (!status) {
+            $("a[name='btnGroupSystemRole']").hide();
+            $("#gridSystemRole").jqxGrid({ editable: false });
+            $("#gridSystemRole").jqxGrid("hidecolumn", "Delete");
+        } else {
+            $("a[name='btnGroupSystemRole']").show();
+            $("#gridSystemRole").jqxGrid({ editable: true });
+            $("#gridSystemRole").jqxGrid("showcolumn", "Delete")
+        }
+        
+    }
+
+    $("#btnPerson").on("click", function () {
+        var empId = $("#hdfUserId").val();
+        $.ajax({
+            type: "POST",
+            url: "/User/User_Read",
+            data: JSON.stringify({
+                filterscount: 0, groupscount: 0, pagenum: 0, pagesize: 20, recordstartindex: 0, recordendindex: 20,
+                selectType: 1, deptCode: 0, userId: empId, userName: empId, status: ""
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                var resultData = result.Rows;
+                var dataItem = { EmpId: resultData[0].LoginID, Name: resultData[0].Name, DeptId: resultData[0].DeptId, DeptName: resultData[0].DeptFullName, EmpIdSameRole: "", EmpNameSameRole: "", }
+                dataSystemRole.push(dataItem);
+                fnSystemRole();
+            },
+            error: function () {
+                return [];
+            }
+        });
+    })
+
+    $("#btnGroup").on("click", function () {
+        var empId = "_checkbox";
+        var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+        $("#mdEmployeeInfor").modal("show");
+        $.get(link.replace('empId', empId), function (data) {
+            $("#mdEmployeeInfor .popup").html(data);
+        });
+    })
+
+    $("#btnSameRole").on("click", function () {
+        var getselectedrowindexes = $('#gridSystemRole').jqxGrid('getselectedrowindexes');
+        if (getselectedrowindexes.length === 0) {
+            showNotification("Hyosung Portal", "Please select row first", "gray warning");
+            return;
+        }
+        var empId = "_singlerow_samerole";
+        var link = '@Url.Action("ShowModalEmployeeInfor", "User", new { id = "empId" })';
+        $("#mdEmployeeInfor").modal("show");
+        $.get(link.replace('empId', empId), function (data) {
+            $("#mdEmployeeInfor .popup").html(data);
+        });
+    })
+
+    $("#btnApplyModule").on("click", function () {
+        var getselectedrowindexes = $('#gridSystemRole').jqxGrid('getselectedrowindexes');
+        if (getselectedrowindexes.length === 0) {
+            showNotification("Hyosung Portal", "Please select row first", "gray warning");
+            return;
+        }
+        var module = $("#cbModule").jqxComboBox("getSelectedItem");
+        for (var i = 0; i < getselectedrowindexes.length; i++) {
+            dataSystemRole[getselectedrowindexes[i]].Module = module.value;
+            dataSystemRole[getselectedrowindexes[i]].ModuleName = module.label;
+        }
+        fnSystemRole();
+    })
+
+</script>

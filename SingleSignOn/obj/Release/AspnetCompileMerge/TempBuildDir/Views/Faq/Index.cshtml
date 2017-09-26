@@ -1,0 +1,373 @@
+﻿@using System.Web.UI.WebControls
+@using SingleSignOn.Utilities
+@using System.Security.Claims
+@{
+    ViewBag.Title = "FAQ";
+    Layout = "~/Views/Shared/_LayoutItem.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+<link href="~/Content/jqwidgets/custom/jqx-portal-custom.css" rel="stylesheet" />
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxsplitter")
+@Scripts.Render("~/bundles/jqxtree")
+@Scripts.Render("~/bundles/jqwidgetsCombobox")
+
+<script type="text/javascript">
+    var dateFrom, dateTo;
+
+    $(document).ready(function () {
+        fnGetDataSourceTreeView();
+        fnSetValue();
+
+        //SetHeight($("#jqxWidget-portal"), $('footer').position().top - 130);
+
+        fnSetDataDropDown();
+        $("#cbKind").jqxComboBox('insertAt', 'All', 0);
+
+        dateFrom = new dhtmlXCalendarObject({ input: "dateFrom", button: "iconDateFrom" });
+        dateFrom.setDateFormat("%Y.%m.%d");
+
+        dateTo = new dhtmlXCalendarObject({ input: "dateTo", button: "iconDateTo" });
+        dateTo.setDateFormat("%Y.%m.%d");
+
+        $("#txtQuestion").jqxInput({ placeHolder: "Enter the question", height: 21, width: "97%", minLength: 1, maxLength: 500 });
+
+        var kindId = $("#hdfKindId").val() === "All" ? "" : $("#hdfKindId").val();
+        fnPosts($("#txtQuestion").val(), categoryId, kindId, 0, $("#dateFrom").val(), $("#dateTo").val())
+
+        $('#jqxTree').on('select', function (event) {
+            var item = $('#jqxTree').jqxTree('getItem', event.args.element);
+            categoryId = item.id;
+            var kindId = $("#hdfKindId").val() === "All" ? "" : $("#hdfKindId").val();
+            fnPosts($("#txtQuestion").val(), categoryId, kindId, 0, $("#dateFrom").val(), $("#dateTo").val())
+
+        });
+    });
+</script>
+
+@section PanelLeft{
+    <input type="hidden" id="hdfUerId" value="@User.GetClaimValue(ClaimTypes.PrimarySid)" />
+    <input type="hidden" id="hdfRole" value="@User.GetClaimValue(ClaimTypes.Role)" />
+    <div class="jqx-hideborder text-intro">
+        System
+    </div>
+    <div class="jqx-hideborder jqx-hidescrollbars">
+        <div class="jqx-hideborder" id='jqxTree'>
+        </div>
+    </div>
+}
+
+<div id='jqxWidget-portal' style="margin: 10px;width:100%; height:96%">
+    <div id=LblockSearch>
+        <table>
+            <tbody>
+                <tr>
+                    <th class="LtextRight" style="width:35px">Question</th>
+                    <td>
+                        <input type="text" id="txtQuestion" class="Ltext input" style="WIDTH: 99%" />
+                    </td>
+                    <th class="LtextRight" style="width:30px">Module</th>
+                    <td style="width:160px">
+                        <div id="cbKind"></div>
+                    </td>
+                    <th class="LtextRight" style="width:35px">Create Date</th>
+                    <td style="width:228px">
+                        <input type="text" id="dateFrom" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateFrom" src="/Content/img/icon_cal.gif" border="0"></span>
+                        ~
+                        <input type="text" id="dateTo" class="Ltext" style="width: 70px">
+                        <span><img id="iconDateTo" src="/Content/img/icon_cal.gif" border="0"></span>
+                    </td>
+                    <td class="tools" style="width:137px">
+                        <a class="Lbtn" href="javascript:;"> <input id="btnSearch" type="button" value="Search"></a>
+                        @if (ViewBag.Rights.Contains("Insert"))
+                        {
+                            <a class="Lbtn" href="@Url.Action("Insert", "Faq")"> <input type="button" value="New"></a>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div id="gridPosts"></div>
+    <input type="hidden" id="hdfKindId" />
+</div>
+
+<script type="text/javascript">
+
+    var displayColumn = [], attachFile, rowApprove, rowSubject, rowIndex, cellbeginedit, dataAdapterForm, categoryId;
+
+    function fnGetDataSourceTreeView() {
+        var api = "../Category/GetListTreeView";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify({ category: '7ee83563-73bf-4562-b91b-29ff46071775' }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var source = {
+                    datatype: "json",
+                    datafields: [
+                        { name: 'id' },
+                        { name: 'parentid' },
+                        { name: 'Name' },
+                        { name: 'SubCode' }
+                    ],
+                    id: 'ID',
+                    localdata: data
+                };
+                // create data adapter.
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // perform Data Binding.
+                dataAdapter.dataBind();
+                // get the tree items. The first parameter is the item's id. The second parameter is the parent item's id. The 'items' parameter represents
+                // the sub items collection name. Each jqxTree item has a 'label' property, but in the JSON data, we have a 'text' field. The last parameter
+                // specifies the mapping between the 'text' and 'label' fields.
+                var records = dataAdapter.getRecordsHierarchy('id', 'parentid', 'items', [{ icon: 'SubCode', name: 'Name', map: 'label' }]);
+                $('#jqxTree').jqxTree({ source: records, height: $('footer').position().top - 210, width: '99%' });
+                var items = $('#jqxTree').jqxTree('getItems');
+                $('#jqxTree').jqxTree('selectItem', items[0]);
+                //console.log(records);
+                $('#jqxTree').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxTree').jqxTree('getItem', args.element);
+
+                    createCookie("SSO_CMS_FAQ_ID", item.id, 1);
+                    createCookie("SSO_CMS_FAQ_NAME", item.label, 1);//parentId
+                    createCookie("SSO_CMS_FAQ_PARENT", item.parentId, 1)
+
+                    var id = args.element.ID;
+                    console.log(args.element);
+                    var ip;
+                    var recursion = function (object) {
+                        for (var i = 0; i < object.length; i++) {
+
+                            if (id == object[i].id) {
+                                ip = object[i].SubCode;
+                                break;
+                            } else if (object[i].items) {
+                                recursion(object[i].items);
+                            };
+                        };
+                    };
+
+                    recursion(records);
+                    //console.log("Id: " + args.element.id + ", Text: " + item.label + ", IP: " + ip);
+                    //console.log(item);
+                    //console.log(args.element.id);
+                });
+
+            },
+            error: function () {
+                return false;
+            }
+        });
+    }
+
+    function fnSetValue() {
+        if (readCookie("SSO_CMS_FAQ_PARENT") !== "0")
+            $("#jqxTree").jqxTree('expandItem', $("#" + readCookie("SSO_CMS_FAQ_PARENT") + "")[0]);
+        $("#jqxTree").jqxTree('selectItem', $("#" + readCookie("SSO_CMS_FAQ_ID") + "")[0]);//SSO_CMS_CATE_PARENT
+    }
+
+    function fnSetDataDropDown() {
+        var source =
+            {
+                datatype: "json",
+                datafields: [
+                    { name: 'ID', type: 'string' },
+                    { name: 'Name', type: 'string' }
+                ],
+                async: false,
+                url: '/Category/GetListValueViaCate',
+                data: {
+                    category: '0ab7cf6d-56a4-4cf1-bd9e-1d5fbc1c0ff0',
+                    isFilter: false
+                }
+            };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#cbKind").jqxComboBox(
+        {
+            source: dataAdapter,
+            width: 160,
+            height: 21,
+            displayMember: 'Name',
+            valueMember: 'ID'
+        });
+
+        $('#cbKind').on('select', function (event) {
+            var args = event.args;
+            if (args != undefined) {
+                var item = event.args.item;
+                if (item != null) {
+                    $("#hdfKindId").val(item.value);
+                }
+            }
+        });
+    }
+
+    // -------> grid form template ----------------------------------------------------------------------------
+    function fnPosts(subject, category, kindId, id, dateFrom, dateTo) {
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'PostId', type: 'int' },
+                { name: 'Subject', type: 'string' },
+                { name: 'Content', type: 'string' },
+                { name: 'Category', type: 'string' },
+                { name: 'CategoryName', type: 'string' },
+                { name: 'CreateDate', type: 'date' },
+                { name: 'CreateUid', type: 'string' },
+                { name: 'CreateName', type: 'string' },
+                { name: 'ApplyToPlant', type: 'string' },
+                { name: 'IsActive', type: 'bool' },
+                { name: 'AttachFile', type: 'bool' },
+                { name: 'NumRead', type: 'int' }
+            ],
+            url: '/Faq/GetAll',//string subject, string category, string kind, string creator, int id
+            data: {
+                subject: subject,
+                category: category,
+                kind: kindId,
+                id: id,
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            },
+            beforeprocessing: function (data) {
+                if (data != null) {
+                    source.totalrecords = data.TotalRows;
+                }
+            },
+            //string subject, string category, string userId, int id
+        };
+
+        var initrowdetails = function (index, parentElement, gridElement, datarecord) {
+            var container = $($(parentElement).children()[0]);
+
+            var api = "../Faq/GetContent";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: JSON.stringify({ postId: datarecord.PostId }),
+                contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                async: false,
+                success: function (data) {
+                    container.html(data);
+                    container.css({ height: $("#gridPosts").height() - 100 });
+                    $(parentElement).css({ overflow: "auto" });
+
+                },
+                error: function (result) {
+                    alert('Oh no: ' + result.responseText);
+                    return false;
+                }
+            });
+        }
+
+        dataAdapter = new $.jqx.dataAdapter(source);
+        // create Tree Grid
+        fnSetAuthorize(dataAdapter);
+        $("#gridPosts").jqxGrid(
+        {
+            width: "100%",
+            height: $('footer').position().top - 195,
+            rowdetails: true,
+            rowdetailstemplate: { rowdetails: "<div class='rowdetailstemplate' style='margin: 10px; overflow: auto'></div>", rowdetailsheight: 400 },
+            initrowdetails: initrowdetails,
+            source: dataAdapter,
+            columnsresize: true,
+            rendergridrows: function () {
+                return dataAdapter.records;
+            },
+            virtualmode: true,
+            pageable: true,
+            pagesize: 20,
+            pagesizeoptions: ['20', '50', '100'],
+            sortable: true,
+            enabletooltips: true,
+            showheader: true,
+            columns: displayColumn,
+            rowsheight: 22,
+            altrows: true
+        });
+
+        $('#gridPosts').on('bindingcomplete', function (event) {
+
+            var rows = $('#gridPosts').jqxGrid('getrows');
+
+            for (var i = 0; i < rows.length; i++) {
+                $('#gridPosts').jqxGrid('hiderowdetails', i);
+            }
+        });
+
+        $('#gridPosts').on('rowselect', function (event) {
+            var args = event.args;
+        });
+
+        $('#gridPosts').on('rowexpand', function (event) {
+            // GET ALL SELECTE ROW INDEX (RETURNS ARRAY)
+            var prev_row = $('#gridPosts').jqxGrid('selectedrowindexes');
+            // IF PREV ROW NOT NOT BLANK LOOP THROUGH ARRAY HIDING selectedrowindexes
+            if (prev_row != '') {
+                for (var i = 0; i < prev_row.length; i++) {
+                    $('#gridPosts').jqxGrid('hiderowdetails', prev_row[i]);
+                }
+            };
+            // GET INDEX
+            var index = $('#gridPosts').jqxGrid('getrowboundindex', event.args.rowindex);
+            // SET CURRENT ROW AS SELECTED
+            $('#gridPosts').jqxGrid({ selectedrowindexes: [index] });
+            setTimeout(function () {
+                $(".rowdetailstemplate").css({ width: $("#gridPosts").width() - 87, "max-width": $("#gridPosts").width() - 87, overflow: "auto" });
+            }, 1000);
+
+        });
+
+        $('#gridPosts').on('rowcollapse', function (event) {
+            //CLEAR SELECTION TO REOPEN AGAIN
+            $('#gridPosts').jqxGrid('clearselection');
+        });
+    }
+
+    function showDetail(id) {
+        window.location.href = "/Faq/ViewDetail/" + id;
+        return true;
+    }
+
+    function fnSetAuthorize(dataSource) {
+        //console.log(dataSource);
+        rowIndex = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="text-align: center; margin-top: 5px;">' + (row + 1).toString() + '</div>';
+        }
+
+        rowSubject = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return '<div style="margin:5px"><a style="color:#343434;" href="#" onclick="showDetail(&#39;' + rowData.PostId + '&#39;)">' + value + '</a></div>';
+        }
+
+        displayColumn = [
+            { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+            { text: 'Title', dataField: 'Subject', cellsrenderer: rowSubject, renderer: colHeaderLeft },
+            { text: 'Create Date', dataField: 'CreateDate', width: 90, renderer: colHeaderCenter, cellsalign: 'center', cellsformat: 'yyyy.MM.dd' }
+        ]
+    };
+
+    $("#btnSearch").on("click", function () {
+        var kindId = $("#hdfKindId").val() === "All" ? "" : $("#hdfKindId").val();
+        fnPosts($("#txtQuestion").val(), categoryId, kindId, 0, $("#dateFrom").val(), $("#dateTo").val())
+
+    });
+
+    $("#txtQuestion").keyup(function (e) {
+        if (e.keyCode === 13) {
+            var kindId = $("#hdfKindId").val() === "All" ? "" : $("#hdfKindId").val();
+            fnPosts($("#txtQuestion").val(), categoryId, kindId, 0, $("#dateFrom").val(), $("#dateTo").val())
+        }
+
+    });
+</script>

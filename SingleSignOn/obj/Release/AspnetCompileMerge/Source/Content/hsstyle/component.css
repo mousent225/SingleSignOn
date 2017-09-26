@@ -1,0 +1,557 @@
+﻿@charset "utf-8";
+/* CSS Document */
+ 
+table {width:100%; float:left; border:0}
+table th {background:#448ccb; padding:10px 5px}
+table td{border:0; margin:0; padding:4px 5px;border-bottom:1px solid #D8D8D8; /*text-align:center;*/}
+/*table tr:nth-child(even) {background: #F2F2F2; }
+table tr:nth-child(odd) {background: #FFF}*/
+
+table td.title a {color:#343434;}
+table td.title a:hover {color:#12208B;}
+table .title {text-align:left}
+
+
+
+/*---------TAB---------*/
+.tabs-menu {height: 24px; float: left; clear: both;}
+.tabs-menu li { height: 24px;line-height: 24px; float: left;  background-color: #A5A5A5; border: 1px solid #999; border-bottom:0;}
+.tabs-menu li.current { position: relative;  background-color: #fff;  border-bottom: 1px solid #fff; z-index: 5;}
+.tabs-menu li a {   padding: 10px;    color: #fff;text-decoration: none; font-weight:bold  }
+.tabs-menu .current a { color: #343434; border:0}
+
+/*style tab old : margin-top:1px; background-color: #fff; float: left;  width: 100%; border-top: 1px solid #CCC*/
+.tab { background-color: #fff;float: left;margin-bottom: 20px;width: 100%;}
+.tab-content { width: 100%; display: none;}
+#tab-1 {display: block; }
+
+
+
+
+/*---------MENU-LEFT---------*/
+.pageContent {margin: 0; width: 100%;float: left;}
+
+.accordion { list-style-type: none; padding: 0; margin: 0 0 30px; border-bottom: 1px solid #333; border-top: none; border-left: none; }
+.accordion ul { padding: 0; margin: 0; float: left; display: block; width: 100%; }
+.accordion li { background: #D8D8D8; cursor: pointer; list-style-type: none; padding: 0; margin: 0; float: left; display: block; width: 100%; border-bottom:1px solid #FFF}
+.accordion li li {border:none}
+
+.accordion li.active>a { background:#D8D8D8   /*url(../img/close.gif) no-repeat center right */; color:#343434;}
+.accordion li ul li.active>a {/*background:#EEE url(../img/close_b.gif) no-repeat center right;*/ /*border-bottom:1px solid #EEE */  }
+.accordion li ul li li.active>a { background:none; background-color:#F2F2F2; color:#343434 }
+.accordion a { text-decoration: none; /*border-bottom: 1px solid #74b6ea*/ ; color: #343434; padding: 7px 10px; display: block; cursor: pointer;/* background: url(../img/open.gif) no-repeat center right */; font-weight:bold  }	
+.accordion li ul li a{ padding-left:20px }
+.accordion li ul li a:before {content:'\f0da'; margin-right:5px; font-size:12px;font-family: 'FontAwesome'; color:#900 }
+.accordion a.active,.accordion a:hover {color:#900}
+.accordion li ul li li a{background:none; padding-left:30px; font-size:12px}
+.accordion li ul li li a:before {content:'\f105';  margin-right:5px ;font-family: 'FontAwesome';}
+.accordion a:hover { background-color:#D8D8D8} 
+ 	
+.accordion li ul li {background:#EEE; /*border-bottom:1px solid #FFF*/  }
+.accordion li ul li li {background:#FFF  }
+.accordion li ul li.last,.accordion li ul li li li.last {border-bottom:none}
+.accordion li ul li a {color:#343434; font-weight:normal}
+.accordion li li a { /*background: url(../img/open_b.gif) no-repeat center right;*/ }
+.accordion li li a:hover { background-color:#CCC}
+
+
+
+/*-----------BUTTON--------------------*/
+.button-1, .button-2,.button-3 {margin-bottom:40px;width:100%; float:left; text-align:left;}
+.button-1 h2,.button-2 h2,.button-3 h2 {border-bottom:2px solid #F2F2F2; color:#A5A5A5; font-size:18px}
+
+.button-1 button {border:none; font-size:12px; margin: 2px; padding:3px 15px; color:#FFF; white-space:nowrap;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#006fb5+0,258dc8+100 */
+background: rgb(0,111,181); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(0,111,181,1) 0%, rgba(37,141,200,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(0,111,181,1) 0%,rgba(37,141,200,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(0,111,181,1) 0%,rgba(37,141,200,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#006fb5', endColorstr='#258dc8',GradientType=0 ); /* IE6-9 */
+
+
+}
+.button-1 button i {color:#FFF; margin-right:5px; font-size:13px!important}
+.button-1 button:hover {background:#07669c}
+
+ .custom-btn * {padding:0 14px 0 11px; background-position:right top; left:4px; cursor:pointer;  }
+.custom-btn .custom-btn * {height:22px; /*line-height:24px;*/ position:relative; margin:0; padding:0; display:inline-block; text-decoration:none !important; border:0; /*font-family:Gulim; */font-size:12px; white-space:nowrap; background:url(/Content/img/btn_bg1.gif) no-repeat; vertical-align:middle; overflow:visible; /*color:#323232;*/ margin-right:2px;}
+
+button i {color:#666; margin-right:5px ;font-size:13px!important }
+button:hover {background:#ccc}
+
+
+.button-3 button {border:#BBB 1px solid ; font-size:12px;font-weight:bold;  margin: 2px  ;   padding:2px 12px; color:#666;white-space:nowrap;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f3f3f3+50,ededed+51,ffffff+100;White+Gloss+%232 */
+background: rgb(255,255,255); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(243,243,243,1) 50%, rgba(237,237,237,1) 51%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+
+.button-3 button i {color:#00629f; margin-right:5px; font-size:13px!important}
+.button-3 button:hover {background:#ccc} 
+
+
+.box{ display:inline-block; vertical-align:top; font-size:0; width:100%; float:left; position:relative }
+.box .disableInputField{ display:inline-block; width:98%; float:left; margin: 0;font-size:12px; padding:2px 0}
+.box .fileUpload { background:#CCC;	position: absolute; right:0; overflow: hidden;  display:inline-block; vertical-align:top;}
+.box .uploadBtn{display:inline-block; vertical-align:top; font-size:12px; padding:3px 10px!important;  color: #2f3743;border :#BBB 1px solid ;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+ /*Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#feffff+0,f4f4f4+35,d3d3d3+100 */
+background: rgb(254,255,255); /* Old browsers */ 
+background: -moz-linear-gradient(top,  rgba(254,255,255,1) 0%, rgba(244,244,244,1) 35%, rgba(211,211,211,1) 100%); /* FF3.6-15 */ 
+background: -webkit-linear-gradient(top,  rgba(254,255,255,1) 0%,rgba(244,244,244,1) 35%,rgba(211,211,211,1) 100%); /* Chrome10-25,Safari5.1-6 */ 
+background: linear-gradient(to bottom,  rgba(254,255,255,1) 0%,rgba(244,244,244,1) 35%,rgba(211,211,211,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#d3d3d3',GradientType=0 ); /* IE6-9 */ 
+ 
+}
+
+.fileUpload input.upload {display:none}
+
+
+/*---------MENU---------*/
+.nav {width:100%; float:left;margin-top: -10px;}
+.nav h6 {width:20%; float:left; color:#FFF; text-align:center; font-size:11px; line-height:30px; font-weight:normal}
+.nav ul {width:80%; float:left}
+.nav ul > li {float:left;   display:block; border-right:1px solid #FFF ; position:relative}
+.nav ul li a {color:#FFF; font-weight:bold; display:block; padding:8px 20px; text-transform:capitalize} 
+.nav ul li a:hover,.nav ul li a.active {color:#FFF; background:#84b522}
+.nav ul li.active {color:#FFF; background:#84b522}
+.nav li li a {text-transform:capitalize; padding:8px 10px; width:180px} 
+.nav ul li.last {border:none}
+ul.submenu {  width:auto}
+.nav ul li li {border:none; border-bottom:1px solid #A0CAFC}
+.submenu li {width:100%;  background:#448CCB;}
+
+ 
+/*=======================*/
+#nav {position:relative;  z-index:500;}
+#nav .select {list-style:none; white-space:nowrap;}
+#nav li { float:left; }
+#nav .select a { display:block; float:left; text-decoration:none; white-space:nowrap; color:#FFF;}
+#nav .select a b { display:block;}
+#nav .select li:hover a { cursor:pointer; color:#fff;}
+#nav .select li:hover a b {display:block; cursor:pointer;}
+#nav .sub { display:none; margin:0; padding:0 ;list-style:none; top:30px; }
+#nav .sub li {background:#448CCB; color:#FFF; border-top:1px solid #0071BC}
+#nav .select li:hover .sub { display:block; position:absolute; float:left; width:750px; left:0; text-align:center;}
+#nav .select li:hover .sub li a { display:block;  float:left;   white-space:nowrap;   color:#FFF;font-size:12px; font-weight:normal; padding:7px 10px}
+#nav .select li:hover .sub li a:hover { color:#FFF; background:#84b522  ; line-height:15px;} 
+/*====================*/
+ 
+
+.menu, .menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu ul {
+  margin: 0;
+}
+
+.menu > li {
+  position: relative;
+  display: inline-block;
+  outline: 0;
+}
+
+.submenu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 0;
+  overflow: hidden;
+  max-height: 0;
+  /* The transition-delay prevents the menu to disappear before the transition is run backward
+   * It's ~= length of the animation (.6s) + highest item transition delay (466ms) */
+  -webkit-transition: max-height 1ms linear 1s;
+     -moz-transition: max-height 1ms linear 1s;
+  /* A .submenu should be only revealed when hovering the .menu */
+  pointer-events: none;
+}
+
+.menu > li:hover .submenu, .menu > li:focus .submenu {
+  pointer-events: auto;
+  z-index: 10;
+  max-height: 2000px;
+  -webkit-transition: none;
+     -moz-transition: none;
+}
+
+h1, h2 {
+    font-family: "trebuchet ms",verdana,arial;
+}
+
+.menu > li:hover .submenu li:nth-child(1) {
+  -webkit-transition-delay: 0s;
+     -moz-transition-delay: 0s;
+      -ms-transition-delay: 0s;
+       -o-transition-delay: 0s;
+          transition-delay: 0s;
+}
+
+.menu > li:hover .submenu li:nth-child(2) {
+  -webkit-transition-delay: 66ms;
+     -moz-transition-delay: 66ms;
+      -ms-transition-delay: 66ms;
+       -o-transition-delay: 66ms;
+          transition-delay: 66ms;
+}
+
+.menu > li:hover .submenu li:nth-child(3) {
+  -webkit-transition-delay: 133ms;
+     -moz-transition-delay: 133ms;
+      -ms-transition-delay: 133ms;
+       -o-transition-delay: 133ms;
+          transition-delay: 133ms;
+}
+
+.menu > li:hover .submenu li:nth-child(4) {
+  -webkit-transition-delay: 200ms;
+     -moz-transition-delay: 200ms;
+      -ms-transition-delay: 200ms;
+       -o-transition-delay: 200ms;
+          transition-delay: 200ms;
+}
+
+.menu > li:hover .submenu li:nth-child(5) {
+  -webkit-transition-delay: 266ms;
+     -moz-transition-delay: 266ms;
+      -ms-transition-delay: 266ms;
+       -o-transition-delay: 266ms;
+          transition-delay: 266ms;
+}
+
+.menu > li:hover .submenu li:nth-child(6) {
+  -webkit-transition-delay: 333ms;
+     -moz-transition-delay: 333ms;
+      -ms-transition-delay: 333ms;
+       -o-transition-delay: 333ms;
+          transition-delay: 333ms;
+}
+
+.menu > li:hover .submenu li:nth-child(7) {
+  -webkit-transition-delay: 400ms;
+     -moz-transition-delay: 400ms;
+      -ms-transition-delay: 400ms;
+       -o-transition-delay: 400ms;
+          transition-delay: 400ms;
+}
+
+.menu > li:hover .submenu li:nth-child(8) {
+  -webkit-transition-delay: 466ms;
+     -moz-transition-delay: 466ms;
+      -ms-transition-delay: 466ms;
+       -o-transition-delay: 466ms;
+          transition-delay: 466ms;
+}
+
+/* backward */
+.submenu li:nth-child(1) {
+  -webkit-transition-delay: 466ms;
+     -moz-transition-delay: 466ms;
+      -ms-transition-delay: 466ms;
+       -o-transition-delay: 466ms;
+          transition-delay: 466ms;
+}
+
+.submenu li:nth-child(2) {
+  -webkit-transition-delay: 400ms;
+     -moz-transition-delay: 400ms;
+      -ms-transition-delay: 400ms;
+       -o-transition-delay: 400ms;
+          transition-delay: 400ms;
+}
+
+.submenu li:nth-child(3) {
+  -webkit-transition-delay: 333ms;
+     -moz-transition-delay: 333ms;
+      -ms-transition-delay: 333ms;
+       -o-transition-delay: 333ms;
+          transition-delay: 333ms;
+}
+
+.submenu li:nth-child(4) {
+  -webkit-transition-delay: 266ms;
+     -moz-transition-delay: 266ms;
+      -ms-transition-delay: 266ms;
+       -o-transition-delay: 266ms;
+          transition-delay: 266ms;
+}
+
+.submenu li:nth-child(5) {
+  -webkit-transition-delay: 200ms;
+     -moz-transition-delay: 200ms;
+      -ms-transition-delay: 200ms;
+       -o-transition-delay: 200ms;
+          transition-delay: 200ms;
+}
+
+.submenu li:nth-child(6) {
+  -webkit-transition-delay: 133ms;
+     -moz-transition-delay: 133ms;
+      -ms-transition-delay: 133ms;
+       -o-transition-delay: 133ms;
+          transition-delay: 133ms;
+}
+
+.submenu li:nth-child(7) {
+  -webkit-transition-delay: 66ms;
+     -moz-transition-delay: 66ms;
+      -ms-transition-delay: 66ms;
+       -o-transition-delay: 66ms;
+          transition-delay: 66ms;
+}
+
+.submenu li:nth-child(8) {
+  -webkit-transition-delay: 0s;
+     -moz-transition-delay: 0s;
+      -ms-transition-delay: 0s;
+       -o-transition-delay: 0s;
+          transition-delay: 0s;
+}
+
+/* Default
+ ================================================================= */
+.submenu li {
+  opacity: 0;
+
+  -webkit-transition: opacity .4s, -webkit-transform .6s, max-height .6s;
+     -moz-transition: opacity .4s,    -moz-transform .6s, max-height .6s;
+      -ms-transition: opacity .4s,     -ms-transform .6s, max-height .6s;
+       -o-transition: opacity .4s,      -o-transform .6s, max-height .6s;
+          transition: opacity .4s,         transform .6s, max-height .6s;
+}
+
+.menu > li:hover .submenu li, .menu > li:focus .submenu li {
+  opacity: 1;
+
+  -webkit-transform: none;
+     -moz-transform: none;
+      -ms-transform: none;
+       -o-transform: none;
+          transform: none;
+}
+
+/* Helix
+ ================================================================= */
+.helix {
+  -webkit-perspective: 400px;
+     -moz-perspective: 400px;
+      -ms-perspective: 400px;
+       -o-perspective: 400px;
+          perspective: 400px;
+}
+
+.helix li {
+  -webkit-transform: rotateY(90deg);
+     -moz-transform: rotateY(90deg);
+      -ms-transform: rotateY(90deg);
+       -o-transform: rotateY(90deg);
+          transform: rotateY(90deg);
+}
+
+/* Wave
+ ================================================================= */
+.wave li {
+  -webkit-transform-origin: 0% 0%;
+     -moz-transform-origin: 0% 0%;
+      -ms-transform-origin: 0% 0%;
+       -o-transform-origin: 0% 0%;
+          transform-origin: 0% 0%;
+
+  -webkit-transform: skewY(-90deg);
+     -moz-transform: skewY(-90deg);
+      -ms-transform: skewY(-90deg);
+       -o-transform: skewY(-90deg);
+          transform: skewY(-90deg);
+}
+
+/* Fan
+ ================================================================= */
+.fan li {
+  -webkit-transform-origin: 0% 0%;
+     -moz-transform-origin: 0% 0%;
+      -ms-transform-origin: 0% 0%;
+       -o-transform-origin: 0% 0%;
+          transform-origin: 0% 0%;
+
+  -webkit-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+       -o-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+
+/* Papercut
+ ================================================================= */
+.papercut {
+  -webkit-perspective: 600px;
+     -moz-perspective: 600px;
+      -ms-perspective: 600px;
+       -o-perspective: 600px;
+          perspective: 600px;
+
+  -webkit-perspective-origin: 0% 0%;
+     -moz-perspective-origin: 0% 0%;
+      -ms-perspective-origin: 0% 0%;
+       -o-perspective-origin: 0% 0%;
+          perspective-origin: 0% 0%;
+}
+
+.papercut li {
+  -webkit-transform-origin: 0% 0%;
+     -moz-transform-origin: 0% 0%;
+      -ms-transform-origin: 0% 0%;
+       -o-transform-origin: 0% 0%;
+          transform-origin: 0% 0%;
+
+  -webkit-transform: skewY(30deg);
+     -moz-transform: skewY(30deg);
+      -ms-transform: skewY(30deg);
+       -o-transform: skewY(30deg);
+          transform: skewY(30deg);
+}
+
+/* Fly
+ ================================================================= */
+.fly {
+  -webkit-perspective: 400px;
+     -moz-perspective: 400px;
+      -ms-perspective: 400px;
+       -o-perspective: 400px;
+          perspective: 400px;
+}
+
+.fly li {
+  -webkit-transform-origin: 50% 50% -50px;
+     -moz-transform-origin: 50% 50% -50px;
+      -ms-transform-origin: 50% 50% -50px;
+       -o-transform-origin: 50% 50% -50px;
+          transform-origin: 50% 50% -50px;
+
+  -webkit-transform: rotateX( -180deg );
+     -moz-transform: rotateX( -180deg );
+      -ms-transform: rotateX( -180deg );
+       -o-transform: rotateX( -180deg );
+          transform: rotateX( -180deg );
+}
+
+/* Blind
+ ================================================================= */
+.blind li {
+  max-height: 0;
+}
+
+.menu > li:hover .blind li, .menu > li:focus .blind li {
+  /* This should be changed to the normal height of list-items */
+  max-height: 30px;
+}
+
+/* Venitian
+ ================================================================= */
+.venitian li {
+  -webkit-transform-origin: 50% 0;
+     -moz-transform-origin: 50% 0;
+      -ms-transform-origin: 50% 0;
+       -o-transform-origin: 50% 0;
+          transform-origin: 50% 0;
+
+  -webkit-transform: scale(1,0);
+     -moz-transform: scale(1,0);
+      -ms-transform: scale(1,0);
+       -o-transform: scale(1,0);
+          transform: scale(1,0);
+}
+
+/* Jaws
+ ================================================================= */
+.jaws li {
+  -webkit-transform-origin: 50% -100px;
+     -moz-transform-origin: 50% -100px;
+      -ms-transform-origin: 50% -100px;
+       -o-transform-origin: 50% -100px;
+          transform-origin: 50% -100px;
+}
+
+.jaws li:nth-child(odd) {
+  -webkit-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+       -o-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+
+.jaws li:nth-child(even) {
+  -webkit-transform: rotate(-90deg);
+     -moz-transform: rotate(-90deg);
+      -ms-transform: rotate(-90deg);
+       -o-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+}
+
+/* Fence
+ ================================================================= */
+.fence {
+  -webkit-perspective: 600px;
+     -moz-perspective: 600px;
+      -ms-perspective: 600px;
+       -o-perspective: 600px;
+          perspective: 600px;
+}
+
+.fence li:nth-child(odd) {
+  -webkit-transform-origin: 0 50%;
+     -moz-transform-origin: 0 50%;
+      -ms-transform-origin: 0 50%;
+       -o-transform-origin: 0 50%;
+          transform-origin: 0 50%;
+
+  -webkit-transform: rotateY(90deg);
+     -moz-transform: rotateY(90deg);
+      -ms-transform: rotateY(90deg);
+       -o-transform: rotateY(90deg);
+          transform: rotateY(90deg);
+}
+
+.fence li:nth-child(even) {
+  -webkit-transform-origin: 100% 50%;
+     -moz-transform-origin: 100% 50%;
+      -ms-transform-origin: 100% 50%;
+       -o-transform-origin: 100% 50%;
+          transform-origin: 100% 50%;
+
+  -webkit-transform: rotateY(-90deg);
+     -moz-transform: rotateY(-90deg);
+      -ms-transform: rotateY(-90deg);
+       -o-transform: rotateY(-90deg);
+          transform: rotateY(-90deg);
+}
+
+/* Zipper
+ ================================================================= */
+.zipper li:nth-child(odd) {
+  -webkit-transform: translateX(-100%);
+     -moz-transform: translateX(-100%);
+      -ms-transform: translateX(-100%);
+       -o-transform: translateX(-100%);
+          transform: translateX(-100%);
+}
+
+.zipper li:nth-child(even) {
+  -webkit-transform: translateX(100%);
+     -moz-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+       -o-transform: translateX(100%);
+          transform: translateX(100%);
+}

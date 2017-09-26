@@ -1,0 +1,439 @@
+﻿@using SingleSignOn.Utilities
+@using System.Security.Claims
+
+@model SingleSignOn.ViewModels.FormTemplateModel
+@{
+    ViewBag.Title = "Insert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+@Scripts.Render("~/bundles/jqwidgetsGrid")
+@Scripts.Render("~/bundles/jqxfileupload")
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/adapters/jquery.js"></script>
+
+
+<div id='jqxWidget-portal' style="margin: 10px; width: 99%; height:100%">
+    <div id=LblockPageHeader>
+        <div id=LblockPageTitle>
+            <div class="" style="float: left">
+                <label class="label" style="color:#448CCB">New Category</label>
+            </div>
+            <div class="" style="float: right">
+                <a class=Lbtn href="@Url.Action("Insert","FormTemplate")">
+                    <input type="reset" value="Reset">
+                </a>
+                <a class=Lbtn href="javascript:;">
+                    <input type="button" value=Save id="btnSave">
+                </a>
+
+                <a class=Lbtn href="@Url.Action("Index","FormTemplate")">
+                    <input type=button value="List">
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <!-- end LblockPageTitle -->
+    </div>
+
+    <div id=LblockButton>
+
+
+    </div>
+    <div style="clear: both"></div>
+    <div class="divContent">
+        <div class="tb-table" style="float: right">
+            <table>
+                <tr>
+                    <th class="input-require tb-col-1">
+                        @Html.LabelFor(m => m.CategoryName, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-4">
+                        @Html.ValidationMessageFor(m => m.CategoryName)
+                        <div id="treeviewDrop" class="treeview-custom"></div>
+                        <input id="dropdown" class="" style="display: none" />
+                        @Html.HiddenFor(m => m.Category)
+                        @Html.HiddenFor(m => m.CategoryName, new { @id = "hdfCateNm" })
+                        <input type="hidden" id="hdfCateId" />
+                    </td>
+                    <th class="tb-col-1">
+                        @Html.LabelFor(m => m.Active, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-2" style="text-align: left">
+                        @Html.CheckBoxFor(m => m.Active, new { @class = "input", @style = "width: 30px" })
+                    </td>
+                    <td class="tb-col-4" style="text-align: left; vertical-align: top" rowspan="3">
+                        <table>
+                            <tr>
+                                <th>
+                                    <label class="label">Writer</label>
+                                </th>
+                                <td>
+                                    <label class="label">@User.GetClaimValue(ClaimTypes.Name)</label>
+                                </td>
+                                <th>
+                                    <label class="label">Create Date</label>
+                                </th>
+                                <td>
+                                    <label class="label">@String.Format("{0:yyyy.MM.dd}", DateTime.Now)</label>
+                                </td>
+                            </tr>
+                        </table>
+                        <label class="label">A filename contain any of the following characters will be replace with blank: &#92; &#47; &#58; &#42; &#63; &quot; &lt; &gt; &#124;</label>
+                        <div id="jqxFileUpload">
+                        </div>
+                        <div id="gridAttachment" style="float: right">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="input-require tb-col-1">
+                        @Html.LabelFor(m => m.Subject, new { @class = "label" })
+                    </th>
+                    <td class="tb-col-6" colspan="3">
+                        @Html.ValidationMessageFor(m => m.Subject)
+                        @Html.TextBoxFor(m => m.Subject, new { @class = "input", @id = "txtSubject" })
+                    </td>
+                </tr>
+                <tr>
+                    <th class="">
+                        @Html.LabelFor(m => m.Descript, new { @class = "label" })
+                    </th>
+                    <td colspan="3">
+                        @Html.ValidationMessageFor(m => m.Descript)
+                        @Html.TextAreaFor(m => m.Descript, new { @class = "input", @rows = "10", @id = "txtDesc" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var dataAttachment = [];
+
+    var formTemplateModel = {
+        Subject: "",
+        Descript: "",
+        Category: "",
+        AttachFile: false,
+        Active: false,
+        FileName: "",
+        FilePath: "",
+        CategoryName: ""
+    };
+
+    //$(window).resize(function () {
+    //    SetHeight($("#jqxWidget-portal"), $('footer').position().top - 135);
+    //});
+
+    $(document).ready(function () {
+        //alert($(window).height());
+        CreateMenuTreeForDrop();
+        CreateDropdown();
+
+        if (readCookie("SSO_CMS_CATE_ID") === "EAF964F0-F557-40C7-AD06-F0B4A6571A4F" || readCookie("SSO_CMS_CATE_ID") === "4BA7FBD4-276D-437B-861E-DA64D3722F3F" || readCookie("SSO_CMS_CATE_PARENT") === "EAF964F0-F557-40C7-AD06-F0B4A6571A4F")
+            setValueTreeView("", "");
+        else
+            setValueTreeView(readCookie("SSO_CMS_CATE_NAME"), readCookie("SSO_CMS_CATE_ID"));
+
+       // SetHeight($("#jqxWidget-portal"), $('footer').position().top - 135);
+
+        $("#txtSubject").jqxInput({ placeHolder: "Enter Title", height: 25, width: "100%", minLength: 1, maxLength: 200 });
+
+        //$("#txtDesc").jqxTextArea({ placeHolder: 'Enter Description', height: 280,  width: "100%", minLength: 1, maxLength: 4000 });
+        $('#txtDesc').ckeditor({
+            height: $("#jqxWidget-portal").height() - 399,
+            language: "en"
+        });
+        setTimeout(function () {
+            $("#cke_1_contents").css({ height: $("#cke_1_contents").height() - 28 });
+        }, 1200);
+
+        $('#jqxFileUpload').jqxFileUpload({
+            autoUpload: true,
+            width: '100%',
+            accept: ".gif,.jpg,jpeg,.png,.bmp,.doc,.docx,.xlsx,.xls,.pdf,.ppt,.pptx",
+            uploadUrl: "@Url.Content("~/FormTemplate/UploadFile")",
+            fileInputName: 'fileToUpload',
+            localization: {
+                browseButton: 'Select File ...'
+            }
+        });
+        $('#jqxFileUpload').on('select', function (event) {
+            var SIZE_ALLOW = $("#hdfMaxFileSize");
+            var args = event.args;
+            var fileName = args.file;
+            var fileSize = args.size;
+            if (fileSize > SIZE_ALLOW) {
+                showNotification("Hyosung Portal", "Check again: No support file size over: " + SIZE_ALLOW, "gray error");
+                $('#jqxFileUpload').jqxFileUpload('cancelFile', 0);
+            }
+        });
+
+        $('#jqxFileUpload').on('uploadEnd', function (event) {
+            var args = event.args;
+            var fileName = args.file;
+            var serverResponce = args.response;
+            if (args.response.indexOf("Check again") !== -1) {
+                showNotification("Hyosung Portal", args.response, "gray error");
+                return;
+            }
+            result = JSON.parse(serverResponce);
+            //console.log(result);
+            var item = { FileName: result[0].FileName, FilePath: result[0].FilePath };
+            dataAttachment.push(item);
+            fnAttachment(dataAttachment);
+
+        });
+
+    });
+
+    function CreateMenuTreeForDrop() {
+        var data = new kendo.data.HierarchicalDataSource({
+            transport: {
+                read: {
+                    url: "../../Category/GetListViaParent/" + "054E0F62-4EFE-41E1-A18D-5C28A6531539",
+                    contentType: "application/json"
+                }
+            },
+            schema: {
+                model: {
+                    id: "Id",
+                    children: "Children",
+                    hasChildren: "HasChildren"
+                }
+            }
+        });
+        function treeviewDropSelect(e) {
+            var data = this.dataItem(e.node);
+            //if (data.HasChildren) {
+            //    showNotification("Hyosung Portal", "Please select the last branch", "gray error");
+            //    $("#CATEGORY").val("");
+            //    $(".k-dropdown-wrap .k-input").text("");
+            //} else {
+            //    $("#CATEGORY").val(data.Id);
+            //    $(".k-dropdown-wrap .k-input").text(data.Name);
+            //}
+            $("#hdfCateId").val(data.Id);
+
+            $(".k-dropdown-wrap .k-input").text(data.Name);
+            $("#hdfCateNm").val(data.Name);
+        }
+        $("#treeviewDrop").kendoTreeView({
+            Name: "MenuTreeDrop",
+            dataSource: data,
+            loadOnDemand: true,
+            dataTextField: "Name",
+            select: treeviewDropSelect
+        });
+
+    }
+
+    function CreateDropdown() {
+        var dropdown = $("#dropdown").kendoDropDownList({
+            dataSource: [{ text: "", value: "" }],
+            dataTextField: "text",
+            dataValueField: "value",
+            open: function (e) {
+                // If the treeview is not visible, then make it visible.
+                if (!$treeviewRootElem.hasClass("k-custom-visible")) {
+                    $treeviewRootElem.slideToggle('fast', function () {
+                        dropdown.close();
+                        $treeviewRootElem.addClass("k-custom-visible");
+                    });
+                }
+            }
+        }).data("kendoDropDownList");
+        var $dropdownRootElem = $(dropdown.element).closest("span.k-dropdown");
+
+        var treeview = $("#treeviewDrop").kendoTreeView({
+            select: function (e) {
+                // When a node is selected, display the text for the node in the dropdown and hide the treeview.
+                var $treeviewRootElem = $(treeview.element).closest("div.k-treeview");
+
+                //$dropdownRootElem.find("span.k-input").text($(e.node).children("div").text());
+                $treeviewRootElem.slideToggle('fast', function () {
+                    $treeviewRootElem.removeClass("k-custom-visible");
+                });
+            }
+        }).data("kendoTreeView");
+        var $treeviewRootElem = $(treeview.element).closest("div.k-treeview");
+
+        // Hide the treeview.
+        $treeviewRootElem
+            .width($dropdownRootElem.width())
+            .css({ "border": "1px solid grey", "display": "none", "position": "absolute" });
+
+        // Position the treeview so that it is below the dropdown.
+        $treeviewRootElem
+            .css({ "top": $dropdownRootElem.position().top + $dropdownRootElem.height(), "left": $dropdownRootElem.position().left });
+
+        $(document).click(function (e) {
+            // Ignore clicks on the treetriew.
+            if ($(e.target).closest("div.k-treeview").length == 0) {
+                // If visible, then close the treeview.
+                if ($treeviewRootElem.hasClass("k-custom-visible")) {
+                    $treeviewRootElem.slideToggle('fast', function () {
+                        $treeviewRootElem.removeClass("k-custom-visible");
+                    });
+                }
+            }
+        });
+    }
+
+    function setValueTreeView(text, value) {
+        $(".k-dropdown-wrap .k-input").text(text);
+        $("#CATEGORY").val(value);
+        $("#hdfCateId").val(value);
+        $("#hdfCateNm").val(text);
+    }
+
+    function fnAttachment(dataSource) {
+        var attachFile = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            //<a href='../Data/FormTemplate/QUYTRINHQUANLYNHANVIEN/1. DONDENGHITUYENDUNG (worker-đã chỉnh sửa 20 07 2014).doc'><img src='../Content/img/icon-paperclip.gif'></a>
+            return value ? "<a target='_blank' href='" + rowData.FilePath + "' style='padding:10px' ><i class='fa fa-paperclip' aria-hidden='true' style='padding-top:4px; color:#606060'></i></a>"
+                : ""; //onclick = 'showModalAttachment(&#39;" + rowData.ID + "&#39;);'
+        }
+
+        var attachFileName = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return value ? "<div style='text-align: left; margin-top: 5px;'><a style='color:#343434; cursor:pointer' target='_blank' href='" + rowData.FilePath + "' >" + rowData.FileName + "</a></div>"
+                : "";
+        }
+
+        var sourceAttachment = {
+            datatype: "json",
+            datafields: [
+                { name: 'FileName', type: 'string' },
+                { name: 'FilePath', type: 'string' }
+            ],
+            localdata: dataSource
+        };
+        var dataAdapter = new $.jqx.dataAdapter(sourceAttachment);
+
+        $("#gridAttachment").jqxGrid(
+        {
+            width: "100%",
+            height: "77%",
+            source: dataAdapter,
+            pageable: true,
+            columns: [
+                { text: 'No', dataField: 'RowIndex', width: 30, cellsrenderer: rowIndex, renderer: colHeaderCenter },
+                { text: 'File', dataField: 'FilePath', width: 30, sortable: false, cellsrenderer: attachFile, renderer: colHeaderLeft },
+                { text: 'File Name', dataField: 'FileName', cellsrenderer: attachFileName, renderer: colHeaderLeft },
+                { text: 'Delete', dataField: 'Delete', width: 43, cellsrenderer: deleteColumn, renderer: colHeaderCenter }
+            ]
+        });
+    }
+
+    function deleteFile(model) {
+        var result = confirm('Do you really want to delete that row?');
+        if (result) {
+            var api = "../FormTemplate/DeleteFile";
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.result === "OK") {
+                        showNotification("Hyosung Portal", "Delete file success", "gray success");
+                        var filePath = JSON.parse(model).FilePath;
+                        dataAttachment.forEach(function (item) {
+                            if (item.FilePath === filePath) {
+                                dataAttachment.splice(dataAttachment.indexOf(item), 1);
+                            }
+                        });
+                        fnAttachment(dataAttachment);
+                    }
+                },
+                error: function () {
+                    return false;
+                }
+            });
+        }
+    }
+
+    //$("#btnSaveContinue").on("click", function () {
+    //    if (!checkData()) return;
+    //    $("#ISCONTINUE").val(true);
+    //    $("#frmInsertFormtemplate").submit();
+    //});
+    $("#btnSave").on("click", function () {
+        if (!getData()) return;
+        //console.log(formTemplateModel);
+        //return;
+        fnInsertCate();
+        return;
+    });
+
+    function getData() {
+        var cateNm = $("#hdfCateId");
+        if (cateNm.val() === "") {
+            showNotification("Hyosung Portal", "Please select category of form template", "gray error");
+            return false;
+        }
+        var subject = $("#txtSubject");
+        if (subject.val() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Title", "gray error");
+            subject.focus();
+            return false;
+        }
+
+        var descript = $("#txtDesc");
+        if (removeTags(descript.val()).replace(/&nbsp;/g, "").trim() === "") {
+            showNotification("Hyosung Portal", "Please enter in field: Descript", "gray error");
+            descript.focus();
+            return false;
+        }
+
+        formTemplateModel.Subject = subject.val();
+        formTemplateModel.Category = $("#hdfCateId").val();
+        formTemplateModel.CategoryName = $("#hdfCateNm").val();
+        formTemplateModel.Descript = $("#txtDesc").val();
+        formTemplateModel.Active = $("#Active").prop("checked");
+
+        formTemplateModel.FileName = "";
+        formTemplateModel.FilePath = "";
+
+        if (dataAttachment.length >= 1) {
+            dataAttachment.forEach(function (item) {
+                formTemplateModel.FileName = (formTemplateModel.FileName === "" ? item.FileName : (formTemplateModel.FileName + "|" + item.FileName));
+                formTemplateModel.FilePath = (formTemplateModel.FilePath === "" ? item.FilePath : (formTemplateModel.FilePath + "|" + item.FilePath));
+            })
+        }
+
+        return true;
+    }
+
+    function fnInsertCate() {
+        var api = "../FormTemplate/Insert";
+        $.ajax({
+            type: "POST",
+            url: api,
+            data: JSON.stringify(formTemplateModel),
+            contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            async: false,
+            success: function (data) {
+                showNotification("Hyosung Portal", "Insert success", "gray success");
+                setTimeout(function () {
+                    window.location = "../FormTemplate/Index";
+                }, 1000);
+
+            },
+            error: function (result) {
+                alert('Oh no: ' + result.responseText);
+                return false;
+            }
+        });
+    }
+
+
+</script>
+
+

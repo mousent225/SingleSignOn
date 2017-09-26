@@ -1,0 +1,92 @@
+﻿@model SingleSignOn.ViewModels.UserModel
+@{
+    ViewBag.Title = "Create User";
+}
+<style>
+    .pass {
+        border: 1px solid #d8d8d8;
+        float: left;
+        padding: 4px 0 4px 4px;
+        width: 100%;
+    }
+</style>
+<div class="main-2">
+    @using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.ValidationMessage("InsertError")
+        <input type="hidden" id="flag" value="A" />
+        <div class="wrap-table">
+        <div class="button-setting">
+          <!--<h1>Setup</h1>-->
+          <button type="submit" class="btn" onclick="return onclick_submit();"> <i class="fa fa-floppy-o"></i> Save </button>
+          @*<button type="button" class="btn"> <i class="fa fa-plus"></i> Add </button>
+          <button type="button" class="btn"> <i class="fa fa-angle-double-left"></i> Previous List </button>*@
+        </div>
+        <div class="popup content-popup">
+          <table cellspacing="0" cellpadding="0">
+            <colgroup>
+            <col width="20%">
+            <col width="60%">
+            <col width="20%">
+            </colgroup>
+            <tbody>
+              <tr> 
+              	<td></td>
+                <td><img id="avata" class="" src="~/Resources/user/avata.png" alt="avata" width="120" height="120"></td> 
+                <td></td>
+              </tr>   
+              <tr> 
+              	<td></td>
+                <td style="text-align:left"><input type="file" name="file" value="" accept='image/*' onchange="showAvata(this);" /></td> 
+                <td></td>
+              </tr> 
+              <tr>
+                <th><u>*</u>Login ID @Html.ValidationMessageFor(model => model.LoginID)</th>
+                <td>
+                    @Html.TextBoxFor(model => model.LoginID, new { @class = "" })</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th><u>*</u>Password @Html.ValidationMessageFor(model => model.Password)</th>
+                <td>
+                    @Html.PasswordFor(model => model.Password, new { @class = "pass" })</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th>Name</th>
+                <td>@Html.TextBoxFor(model => model.Name, new { @class = "" })</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th>Email @Html.ValidationMessageFor(model => model.Email)</th>
+                <td>
+                    @Html.TextBoxFor(model => model.Email, new { @class = "" })</td>
+                <td></td>
+              </tr>
+              @*<tr>
+              <th>Mobile</th>
+              <td>@Html.ValidationMessageFor(model => model.Mobile)
+                          @Html.TextBoxFor(model => model.Mobile, new { @class = "form-control input-sm" })</td>
+              <td></td>
+            </tr>*@
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+</div>
+<script src="~/Scripts/Module/user.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //bindSystemRole();
+    });
+    function onclick_submit() {
+        if ($("#LoginID").val() == "" || $("#Password").val() == "") {
+            showNotification("Hyosung Meal System", "Input LoginID and Pass!", "gray error");
+            return false;
+        }
+    }
+</script>
+
+

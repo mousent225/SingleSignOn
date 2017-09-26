@@ -1,0 +1,168 @@
+﻿
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+<input type="hidden" id="hdfApplicationMasterName" value="@ViewBag.ApplicationMasterName" />
+<div class="tb-table" style="float: right">
+    <table>
+        <tr>
+            <th>
+                @Html.Label("Detail", new { @class = "label", @style = "color: red;" })
+            </th>
+            </tr>
+        <tr>
+            <td>
+                <div id="gridNetClientPolicy">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+
+<script type="text/javascript">
+
+    var dataNetClientPolicy = [];
+    $(document).ready(function () {
+        //set height modal
+        $("#mdApprovalLine").height($('footer').position().top - 29);
+        
+        var item = { IpAddress: "", AssetNo: "", IsAllowance: true, FromDate: "", ToDate: "", Reason:"" };
+        dataNetClientPolicy.push(item);
+
+        fnNetClientPolicy();
+        fnResize();
+    });
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Load data function-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    function fnNetClientPolicy() {
+
+        var deleteColumnHeader = function (value) {
+            return '<div style="text-align: center; position:absolute; left: 6px; z-index:999; font-weight:bold"><a href="javascript:;" onclick="fnDeleteRow(&#39;&#39;);"><i class="fa fa-trash" style="color:red"></i></a></div>';
+            //return "<a href='javascript:;' onclick='fnDeleteRow(&#39;&#39;);'><i class='fa fa-trash' style='padding-left:8px; color:red'></i></a>";
+        }
+
+        var deleteColumn = function (row, column, value, defaultHtml, columnSettings, rowData) {
+            return "<a href='javascript:;' onclick='fnDeleteRow(&#39;" + row + "&#39;);'><i class='fa fa-trash' style='padding:6px 0 0 11px; color:red'></i></a>";
+        }
+
+        source = {
+            datatype: "json",
+            datafields: [
+                { name: 'IpAddress', type: 'string' },
+                { name: 'AssetNo', type: 'string' },
+                { name: 'IsAllowance', type: 'bool' },
+                { name: 'FromDate', type: 'date' },
+                { name: 'ToDate', type: 'date' },
+                { name: 'Reason', type: 'string' }
+            ],
+            localdata: dataNetClientPolicy
+        };
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#gridNetClientPolicy").jqxGrid(
+            {
+                width: "100%",
+                source: dataAdapter,
+                selectionmode: 'multiplerowsextended',
+                columnsresize: true,
+                editable: true,
+                columns: [
+                    { text: 'No', dataField: 'RowIndex', width: 30, renderer: colHeaderCenter, cellsrenderer: rowIndex, editable: false },
+                    { text: 'Allowance', dataField: 'IsAllowance', columntype: 'checkbox', width: 100, renderer: colHeaderCenter, editable: true },
+                    {
+                        text: 'Ip Address', dataField: 'IpAddress', width: 100, renderer: colHeaderLeft, editable: true,
+                        validation: function (cell, value) {
+                            if (value === "")
+                                return true;
+                            if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value)) {
+                                return (true)
+                            } else {
+                                return { result: false, message: "You have entered an invalid IP address!" };
+                            }
+                        }
+                    },
+                    { text: 'Asset No', dataField: 'AssetNo', width: 100, renderer: colHeaderLeft, editable: true },
+                    { text: 'From Date', dataField: 'FromDate', renderer: colHeaderCenter, columntype: 'datetimeinput', width: 110, align: 'center', cellsalign: 'center', cellsformat: 'yyyy.MM.dd', editable: true },
+                    { text: 'To Date', dataField: 'ToDate', renderer: colHeaderCenter, columntype: 'datetimeinput', width: 110, align: 'center', cellsalign: 'center', cellsformat: 'yyyy.MM.dd', editable: true },
+                    { text: 'Remark', dataField: 'Reason', renderer: colHeaderLeft, editable: true },
+                    { text: '', dataField: 'Delete', width: 30, renderer: deleteColumnHeader, cellsrenderer: deleteColumn, editable: false }
+                ]
+            });
+        $("#gridNetClientPolicy").on('cellendedit', function (event) {
+            // event arguments.
+            var args = event.args;
+            // column data field.
+            var dataField = event.args.datafield;
+            // row's bound index.
+            var rowBoundIndex = event.args.rowindex;
+            // cell value
+            var value = args.value;
+            // cell old value.
+            var oldvalue = args.oldvalue;
+            // row's data.
+            var rowData = args.row;
+            //dataNetClientPolicy[rowBoundIndex].Remark = value;
+            //console.log(dataNetClientPolicy);
+            switch (dataField) {
+                case "IpAddress":
+                    dataNetClientPolicy[rowBoundIndex].IpAddress = value;
+                    if (value !== "" && rowBoundIndex === dataNetClientPolicy.length - 1 && dataNetClientPolicy[rowBoundIndex].AssetNo !== "") {
+                        var item = { IpAddress: "", AssetNo: "", IsAllowance: true, FromDate: "", ToDate: "", Reason: "" };
+                        dataNetClientPolicy.push(item);
+                        fnNetClientPolicy();
+                    }
+                    break;
+                case "AssetNo":
+                    dataNetClientPolicy[rowBoundIndex].AssetNo = value;
+                    if (value !== "" && rowBoundIndex === dataNetClientPolicy.length - 1 && dataNetClientPolicy[rowBoundIndex].IpAddress !== "") {
+                        var item = { IpAddress: "", AssetNo: "", IsAllowance: true, FromDate: "", ToDate: "", Reason: "" };
+                        dataNetClientPolicy.push(item);
+                        fnNetClientPolicy();
+                    }
+                    break;
+                case "FromDate":
+                    dataNetClientPolicy[rowBoundIndex].FromDate = value;
+                    break;
+                case "ToDate":
+                    dataNetClientPolicy[rowBoundIndex].ToDate = value;
+                    break;
+                case "Reason":
+                    dataNetClientPolicy[rowBoundIndex].Reason = value;
+                    break;
+                default:
+            }   
+        });
+    }
+
+    function fnDeleteRow(index) {
+        if (index === "") {
+            if (confirmDeleteAll()) {
+                dataNetClientPolicy = [];
+                fnNetClientPolicy();
+            }
+        } else {
+            if (confirmDelete()) {
+                dataNetClientPolicy.splice(index, 1);
+                fnNetClientPolicy();
+            }
+        }
+        if (dataNetClientPolicy.length === 0) {
+            var item = { IpAddress: "", AssetNo: "", IsAllowance: true, FromDate: "", ToDate: "", Reason: "" };
+            dataNetClientPolicy.push(item);
+            fnNetClientPolicy();
+        }
+    }
+
+    function fnResize() {
+        $("#gridNetClientPolicy").jqxGrid({ height: $("#divApplicationDetail").height() - 42 });
+    }
+
+    function fnGetDataApplicationDetail() {
+        console.log(dataNetClientPolicy);
+        return dataNetClientPolicy;
+    }
+
+</script>

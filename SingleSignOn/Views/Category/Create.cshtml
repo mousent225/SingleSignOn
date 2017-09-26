@@ -1,0 +1,31 @@
+﻿@model SingleSignOn.ViewModels.CategoryModel
+@{
+    ViewBag.Title = "Create Category";
+}
+
+@using (Html.BeginForm("InsertCate", "Category", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    @Html.ValidationMessage("InsertError")
+
+    <div class="row">
+        <div class="col-md-12">
+            @Html.LabelFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name)
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-sm" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.LabelFor(m => m.Remark)
+            @Html.TextAreaFor(m => m.Remark, new { @class = "form-control input-sm", @row = 4 })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <input type="submit" class="btn btn-send btn-sm" value=" Submit" />&nbsp;
+            <a href="@Url.Action("Index", "Category")" class="btn btn-sm btn-default"> List</a>
+        </div>
+    </div>
+}

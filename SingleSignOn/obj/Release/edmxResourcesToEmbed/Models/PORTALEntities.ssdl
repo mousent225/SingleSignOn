@@ -1,0 +1,1466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PORTALModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Attachment">
+    <Key>
+      <PropertyRef Name="AttachId" />
+    </Key>
+    <Property Name="AttachId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ModuleId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="FilePath" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="CmsFormTemplate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Subject" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Descript" Type="ntext" />
+    <Property Name="Category" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Writer" Type="varchar" MaxLength="20" />
+    <Property Name="WriteDate" Type="datetime" />
+    <Property Name="IsSubmit" Type="bit" />
+    <Property Name="ConfirmDate" Type="datetime" />
+    <Property Name="IsApprove" Type="bit" />
+    <Property Name="ApproveUid" Type="varchar" MaxLength="20" />
+    <Property Name="ApproveDate" Type="datetime" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsAcive" Type="bit" Nullable="false" />
+    <Property Name="IsAttachFile" Type="bit" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="20" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+    <Property Name="IsDelete" Type="bit" />
+    <Property Name="Pin" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CmsPostAction">
+    <Key>
+      <PropertyRef Name="ActionId" />
+    </Key>
+    <Property Name="ActionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ModuleId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="CategoryId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ActionDate" Type="datetime" Nullable="false" />
+    <Property Name="IsAttachFile" Type="bit" />
+  </EntityType>
+  <EntityType Name="CmsPosts">
+    <Key>
+      <PropertyRef Name="PostId" />
+    </Key>
+    <Property Name="PostId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Subject" Type="nvarchar" MaxLength="1000" Nullable="false" />
+    <Property Name="Category" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ApplyToPlant" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsActive" Type="bit" />
+    <Property Name="Content" Type="ntext" />
+    <Property Name="Kind" Type="uniqueidentifier" />
+    <Property Name="ReplyToId" Type="int" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="20" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="IsDelete" Type="bit" Nullable="false" />
+    <Property Name="IsAttachFile" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="HrDeptMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="10" />
+    <Property Name="EnName" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="KoName" Type="nvarchar" MaxLength="255" />
+    <Property Name="IsDelete" Type="bit" Nullable="false" />
+    <Property Name="Parent" Type="int" />
+    <Property Name="ParentCode" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="HrDeptMasterFull">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="10" />
+    <Property Name="EnName" Type="nvarchar" MaxLength="200" />
+    <Property Name="KoName" Type="nvarchar" MaxLength="200" />
+    <Property Name="Organization" Type="int" />
+    <Property Name="Plant" Type="int" />
+    <Property Name="Dept" Type="int" />
+    <Property Name="Sect" Type="int" />
+    <Property Name="OrganizationName" Type="nvarchar" MaxLength="200" />
+    <Property Name="PlantName" Type="nvarchar" MaxLength="200" />
+    <Property Name="DeptName" Type="nvarchar" MaxLength="200" />
+    <Property Name="SectName" Type="nvarchar" MaxLength="200" />
+    <Property Name="Level" Type="int" />
+    <Property Name="CostCenter" Type="nchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="HrEmpMaster">
+    <Key>
+      <PropertyRef Name="EmpId" />
+    </Key>
+    <Property Name="EmpId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="LocalName" Type="nvarchar" MaxLength="255" />
+    <Property Name="KoName" Type="nvarchar" MaxLength="255" />
+    <Property Name="EnName" Type="nvarchar" MaxLength="255" />
+    <Property Name="Email" Type="varchar" MaxLength="255" />
+    <Property Name="Sex" Type="varchar" MaxLength="1" />
+    <Property Name="Nation" Type="varchar" MaxLength="2" />
+    <Property Name="PositionId" Type="varchar" MaxLength="5" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="DeptCode" Type="int" Nullable="false" />
+    <Property Name="Img" Type="image" />
+    <Property Name="WorkGroup" Type="nvarchar" MaxLength="50" />
+    <Property Name="Temp" Type="varchar" MaxLength="10" />
+    <Property Name="FactoryId" Type="int" />
+    <Property Name="Password" Type="nvarchar" MaxLength="500" />
+    <Property Name="uStatus" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="InterfaceDate" Type="datetime" />
+    <Property Name="ActiveDate" Type="datetime" />
+    <Property Name="Costcenter" Type="varchar" MaxLength="9" />
+  </EntityType>
+  <EntityType Name="SubSystem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Url" Type="nvarchar" MaxLength="250" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="CreateUid" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="50" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="50" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="IsDelete" Type="bit" />
+  </EntityType>
+  <EntityType Name="SysAuthorization">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Action" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="Controller" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="IsAllowed" Type="bit" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ModifyDate" Type="datetime" />
+    <Property Name="ModifyUid" Type="varchar" MaxLength="20" />
+    <Property Name="Owner" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysCategory">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="1000" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="20" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="Deleted" Type="bit" Nullable="false" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="SysCategoryValue">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Dictionary" Type="uniqueidentifier" />
+    <Property Name="Sequence" Type="tinyint" />
+    <Property Name="Actived" Type="bit" Nullable="false" />
+    <Property Name="Category" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="1000" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="20" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+    <Property Name="IsDelete" Type="bit" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="SubCode" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="SysDocument">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Path" Type="nvarchar" MaxLength="1000" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Sequence" Type="tinyint" Nullable="false" />
+    <Property Name="DocNo" Type="varchar" MaxLength="100" />
+    <Property Name="Actived" Type="bit" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="CreateUID" Type="uniqueidentifier" />
+    <Property Name="ModifyDate" Type="datetime" />
+    <Property Name="ModifyUID" Type="uniqueidentifier" />
+    <Property Name="Deleted" Type="bit" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="DeleteUID" Type="uniqueidentifier" />
+    <Property Name="Authorized" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="SysLogHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="IpAddress" Type="int" />
+    <Property Name="LogTime" Type="datetime" />
+    <Property Name="OperatingSystem" Type="nvarchar" MaxLength="255" />
+    <Property Name="PcName" Type="nvarchar" MaxLength="255" />
+    <Property Name="PcBrowser" Type="nvarchar" MaxLength="255" />
+    <Property Name="ControllerName" Type="nvarchar" MaxLength="255" />
+    <Property Name="ActionName" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="SysMenu">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Sequence" Type="tinyint" />
+    <Property Name="Actived" Type="bit" Nullable="false" />
+    <Property Name="Controller" Type="varchar" MaxLength="255" />
+    <Property Name="Action" Type="varchar" MaxLength="255" />
+    <Property Name="Param" Type="nvarchar" MaxLength="500" />
+    <Property Name="MasterMenu" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="CreateUID" Type="uniqueidentifier" />
+    <Property Name="ModifyDate" Type="datetime" />
+    <Property Name="ModifyUID" Type="uniqueidentifier" />
+    <Property Name="Icon" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="SysNotices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Subject" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Descript" Type="ntext" />
+    <Property Name="Writer" Type="varchar" MaxLength="20" />
+    <Property Name="WriteDate" Type="datetime" />
+    <Property Name="IsSubmit" Type="bit" />
+    <Property Name="ConfirmDate" Type="datetime" />
+    <Property Name="IsApprove" Type="bit" />
+    <Property Name="ApproveUid" Type="varchar" MaxLength="20" />
+    <Property Name="ApproveDate" Type="datetime" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsAcive" Type="bit" Nullable="false" />
+    <Property Name="IsAttachFile" Type="bit" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="20" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+    <Property Name="IsDelete" Type="bit" />
+  </EntityType>
+  <EntityType Name="SysRole">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="RoleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="SystemId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="CreateDate" Type="date" Nullable="false" />
+    <Property Name="CreateUser" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="UpdateDate" Type="date" />
+    <Property Name="UpdateUser" Type="nvarchar" MaxLength="20" />
+    <Property Name="DeleteDate" Type="date" />
+    <Property Name="DeleteUser" Type="nvarchar" MaxLength="20" />
+    <Property Name="IsDelete" Type="bit" />
+  </EntityType>
+  <EntityType Name="SysRoleMapping">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleId" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="ControllerId" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="ActionId" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="ActionName" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="IsAllow" Type="bit" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysUser">
+    <Key>
+      <PropertyRef Name="LoginID" />
+    </Key>
+    <Property Name="LoginID" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Email" Type="varchar" MaxLength="500" />
+    <Property Name="Mobile" Type="varchar" MaxLength="20" />
+    <Property Name="Password" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="IMG" Type="nvarchar" MaxLength="500" />
+    <Property Name="Actived" Type="bit" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateUid" Type="varchar" MaxLength="20" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+    <Property Name="Deleted" Type="bit" />
+    <Property Name="DeleteDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="SysUserMapping">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="RoleId" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ApplicationConfig">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+    <Property Name="DeptId" Type="int" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+    <Property Name="ApprovalKind" Type="uniqueidentifier" />
+    <Property Name="ApprovalLineDefault" Type="nvarchar" MaxLength="2000" />
+    <Property Name="ApprovalLineJson" Type="nvarchar" MaxLength="4000" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="UpdateUId" Type="varchar" MaxLength="20" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="ApplicationMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ApplicationId" Type="int" Nullable="false" />
+    <Property Name="Subject" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Code" Type="varchar" MaxLength="40" Nullable="false" />
+    <Property Name="Applicant" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="RequestDate" Type="datetime" Nullable="false" />
+    <Property Name="CostCenter" Type="varchar" MaxLength="20" />
+    <Property Name="DeptId" Type="int" Nullable="false" />
+    <Property Name="System" Type="varchar" MaxLength="200" />
+    <Property Name="ApprovalKind" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ApprovalLine" Type="nvarchar" MaxLength="2000" Nullable="false" />
+    <Property Name="ApprovalLineJson" Type="nvarchar" MaxLength="4000" Nullable="false" />
+    <Property Name="ApprovalStatus" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="NextApprover" Type="varchar" MaxLength="20" />
+    <Property Name="ConfirmDate" Type="datetime" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+    <Property Name="Opinion" Type="nvarchar" MaxLength="500" />
+    <Property Name="ContactPerson" Type="nvarchar" MaxLength="200" />
+    <Property Name="Content" Type="ntext" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" />
+    <Property Name="UpdateUId" Type="varchar" MaxLength="20" />
+    <Property Name="DeleteDate" Type="datetime" />
+    <Property Name="DeleteUid" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Approval">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ApplicationId" Type="int" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="EmpId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ApproverType" Type="uniqueidentifier" />
+    <Property Name="IsView" Type="bit" />
+    <Property Name="IsApprove" Type="bit" />
+    <Property Name="DateApprove" Type="datetime" />
+    <Property Name="Seq" Type="tinyint" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="ApprovalHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ApprovalLine" Type="nvarchar" MaxLength="2000" Nullable="false" />
+    <Property Name="ApprovalLineJson" Type="nvarchar" MaxLength="4000" Nullable="false" />
+    <Property Name="ApplicationId" Type="int" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="CreateUid" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CCTVPolicy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="EmpId" Type="varchar" MaxLength="20" />
+    <Property Name="Ip" Type="int" />
+    <Property Name="AssetNo" Type="varchar" MaxLength="10" />
+    <Property Name="Policy" Type="int" />
+  </EntityType>
+  <EntityType Name="EmailAddress">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="EmpId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="DeptId" Type="int" Nullable="false" />
+    <Property Name="Request" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="500" />
+    <Property Name="TimesPerMonth" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InformationSystem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="System" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Seriousness" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Explanation" Type="ntext" />
+    <Property Name="EmpId" Type="varchar" MaxLength="20" />
+    <Property Name="NumDays" Type="int" />
+    <Property Name="Solution" Type="ntext" />
+  </EntityType>
+  <EntityType Name="InstallNetwork">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="ItemName" Type="nvarchar" MaxLength="200" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="Desciption" Type="nvarchar" MaxLength="300" />
+    <Property Name="SurveyDate" Type="datetime" />
+    <Property Name="RequestToVendorDate" Type="datetime" />
+    <Property Name="ReceivedQuotationDate" Type="datetime" />
+    <Property Name="RequestToDeptDate" Type="datetime" />
+    <Property Name="ApprDate" Type="datetime" />
+    <Property Name="ApprEmpId" Type="varchar" MaxLength="20" />
+    <Property Name="PartnerSurveyDate" Type="datetime" />
+    <Property Name="PartnerSendQuotationDate" Type="datetime" />
+    <Property Name="StartedDate" Type="datetime" />
+    <Property Name="FinishedDate" Type="datetime" />
+    <Property Name="Amount" Type="float" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="ItEquipment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="ItemName" Type="varchar" MaxLength="100" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="OS" Type="varchar" MaxLength="100" />
+    <Property Name="Version" Type="nvarchar" MaxLength="200" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="NetClientPolicy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="IsAllowance" Type="bit" Nullable="false" />
+    <Property Name="FromDate" Type="datetime" Nullable="false" />
+    <Property Name="ToDate" Type="datetime" />
+    <Property Name="Ip" Type="int" />
+    <Property Name="AssetNo" Type="varchar" MaxLength="10" />
+    <Property Name="Reason" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="PhoneService">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="ItemName" Type="nvarchar" MaxLength="200" />
+    <Property Name="EmpId" Type="varchar" MaxLength="20" />
+    <Property Name="IntNo" Type="varchar" MaxLength="1" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="SystemRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MasterId" Type="int" Nullable="false" />
+    <Property Name="EmpId" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="DeptId" Type="int" Nullable="false" />
+    <Property Name="Module" Type="uniqueidentifier" />
+    <Property Name="EmpIdSameRole" Type="varchar" MaxLength="20" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <Association Name="FK_ApplicationConfig_HrDeptMaster">
+    <End Role="HrDeptMaster" Type="Self.HrDeptMaster" Multiplicity="0..1" />
+    <End Role="ApplicationConfig" Type="Self.ApplicationConfig" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrDeptMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApplicationConfig">
+        <PropertyRef Name="DeptId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApplicationConfig_HrEmpMaster">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="ApplicationConfig" Type="Self.ApplicationConfig" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="ApplicationConfig">
+        <PropertyRef Name="CreateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApplicationConfig_HrEmpMaster1">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="ApplicationConfig" Type="Self.ApplicationConfig" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="ApplicationConfig">
+        <PropertyRef Name="UpdateUId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApplicationMaster_ApplicationConfig">
+    <End Role="ApplicationConfig" Type="Self.ApplicationConfig" Multiplicity="1" />
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationConfig">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApplicationMaster">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApplicationMaster_HrDeptMaster">
+    <End Role="HrDeptMaster" Type="Self.HrDeptMaster" Multiplicity="1" />
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrDeptMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApplicationMaster">
+        <PropertyRef Name="DeptId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApprovalHistory_ApplicationConfig">
+    <End Role="ApplicationConfig" Type="Self.ApplicationConfig" Multiplicity="1" />
+    <End Role="ApprovalHistory" Type="Self.ApprovalHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationConfig">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApprovalHistory">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApprovalHistory_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="ApprovalHistory" Type="Self.ApprovalHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApprovalHistory">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Approve_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="Approval" Type="Self.Approval" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Approval">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Approve_ApplicationMaster1">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="Approval" Type="Self.Approval" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Approval">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApproveUid_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="CmsFormTemplate" Type="Self.CmsFormTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsFormTemplate">
+        <PropertyRef Name="ApproveUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Category_SysCategory_ID">
+    <End Role="SysCategory" Type="Self.SysCategory" Multiplicity="1" />
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysCategory">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SysCategoryValue">
+        <PropertyRef Name="Category" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CategoryId_ID">
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="1" />
+    <End Role="CmsPostAction" Type="Self.CmsPostAction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysCategoryValue">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CmsPostAction">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CmsPostAction_HrEmpMaster">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="CmsPostAction" Type="Self.CmsPostAction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsPostAction">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CmsPosts_HrEmpMaster">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="CmsPosts" Type="Self.CmsPosts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsPosts">
+        <PropertyRef Name="DeleteUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CmsPosts_HrEmpMaster1">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="CmsPosts" Type="Self.CmsPosts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsPosts">
+        <PropertyRef Name="CreateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CmsPosts_HrEmpMaster2">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="CmsPosts" Type="Self.CmsPosts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsPosts">
+        <PropertyRef Name="UpdateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ComputerPolicy_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="CCTVPolicy" Type="Self.CCTVPolicy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CCTVPolicy">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreateUid_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="CmsFormTemplate" Type="Self.CmsFormTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsFormTemplate">
+        <PropertyRef Name="CreateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreateUid_HrEmpMaster">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="SysCategory" Type="Self.SysCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysCategory">
+        <PropertyRef Name="CreateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreateUid_HrEmpMaster_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysCategoryValue">
+        <PropertyRef Name="CreateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DeleteUid_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="CmsFormTemplate" Type="Self.CmsFormTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsFormTemplate">
+        <PropertyRef Name="DeleteUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DeleteUid_HrEmpMaster_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysCategoryValue">
+        <PropertyRef Name="DeleteUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmailAddress_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="EmailAddress" Type="Self.EmailAddress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EmailAddress">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_HrDeptMaster_HrDeptMaster">
+    <End Role="HrDeptMaster" Type="Self.HrDeptMaster" Multiplicity="0..1" />
+    <End Role="HrDeptMaster1" Type="Self.HrDeptMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrDeptMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="HrDeptMaster1">
+        <PropertyRef Name="Parent" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_HrEmpMaster_HrDeptMaster">
+    <End Role="HrDeptMaster" Type="Self.HrDeptMaster" Multiplicity="1" />
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrDeptMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="HrEmpMaster">
+        <PropertyRef Name="DeptCode" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InformationSystem_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="InformationSystem" Type="Self.InformationSystem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InformationSystem">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstallNetwork_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="InstallNetwork" Type="Self.InstallNetwork" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InstallNetwork">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItEquipment_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="ItEquipment" Type="Self.ItEquipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItEquipment">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ModuleId_ID">
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="1" />
+    <End Role="CmsPostAction" Type="Self.CmsPostAction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysCategoryValue">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CmsPostAction">
+        <PropertyRef Name="ModuleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ModuleId_SysCategoryValue_ID">
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="1" />
+    <End Role="Attachment" Type="Self.Attachment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysCategoryValue">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Attachment">
+        <PropertyRef Name="ModuleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NetClientPolicy_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="NetClientPolicy" Type="Self.NetClientPolicy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NetClientPolicy">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ParentID_ID">
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="0..1" />
+    <End Role="SysCategoryValue1" Type="Self.SysCategoryValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysCategoryValue">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SysCategoryValue1">
+        <PropertyRef Name="ParentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PhoneService_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="PhoneService" Type="Self.PhoneService" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PhoneService">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReplyToId_PostId">
+    <End Role="CmsPosts" Type="Self.CmsPosts" Multiplicity="0..1" />
+    <End Role="CmsPosts1" Type="Self.CmsPosts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CmsPosts">
+        <PropertyRef Name="PostId" />
+      </Principal>
+      <Dependent Role="CmsPosts1">
+        <PropertyRef Name="ReplyToId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysCategory_DeleteUid_HrEmpMaster_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="SysCategory" Type="Self.SysCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysCategory">
+        <PropertyRef Name="DeleteUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysCategory_UpdateUid_HrEmpMaster_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="SysCategory" Type="Self.SysCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysCategory">
+        <PropertyRef Name="UpdateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysRoleMapping_SysRole">
+    <End Role="SysRole" Type="Self.SysRole" Multiplicity="1" />
+    <End Role="SysRoleMapping" Type="Self.SysRoleMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysRole">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="SysRoleMapping">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SystemRole_ApplicationMaster">
+    <End Role="ApplicationMaster" Type="Self.ApplicationMaster" Multiplicity="1" />
+    <End Role="SystemRole" Type="Self.SystemRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApplicationMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SystemRole">
+        <PropertyRef Name="MasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysUserMapping_HrEmpMaster">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="1" />
+    <End Role="SysUserMapping" Type="Self.SysUserMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysUserMapping">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysUserMapping_SysRole">
+    <End Role="SysRole" Type="Self.SysRole" Multiplicity="1" />
+    <End Role="SysUserMapping" Type="Self.SysUserMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysRole">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="SysUserMapping">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UpdateUid_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="CmsFormTemplate" Type="Self.CmsFormTemplate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="CmsFormTemplate">
+        <PropertyRef Name="UpdateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UpdateUid_HrEmpMaster_EmpId">
+    <End Role="HrEmpMaster" Type="Self.HrEmpMaster" Multiplicity="0..1" />
+    <End Role="SysCategoryValue" Type="Self.SysCategoryValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HrEmpMaster">
+        <PropertyRef Name="EmpId" />
+      </Principal>
+      <Dependent Role="SysCategoryValue">
+        <PropertyRef Name="UpdateUid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="POST_HISTORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_FORMTEMPLATE_GET" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+    <Parameter Name="CREATOR" Type="varchar" Mode="In" />
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="DATEFROM" Type="date" Mode="In" />
+    <Parameter Name="DATETO" Type="date" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_FORMTEMPLATE_INSERT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="DESCRIPTION" Type="ntext" Mode="In" />
+    <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="FILEPATH" Type="nvarchar" Mode="In" />
+    <Parameter Name="FILENAME" Type="nvarchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_FORMTEMPLATE_UPDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="DESCRIPTION" Type="ntext" Mode="In" />
+    <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="FILEPATH" Type="nvarchar" Mode="In" />
+    <Parameter Name="FILENAME" Type="nvarchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_GET_TREEVIEW_VIA_CATEGORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="ROLE" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_POSTS_GET" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="CREATOR" Type="varchar" Mode="In" />
+    <Parameter Name="KIND" Type="varchar" Mode="In" />
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="DATEFROM" Type="date" Mode="In" />
+    <Parameter Name="DATETO" Type="date" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_POSTS_GET_PLANT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_CMS_POSTS_GET_TOP10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_CMS_POSTS_INSERT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="CONTENT" Type="ntext" Mode="In" />
+    <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="KIND" Type="varchar" Mode="In" />
+    <Parameter Name="APPLYFORPLANT" Type="varchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_CMS_POSTS_UPDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="CONTENT" Type="ntext" Mode="In" />
+    <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+    <Parameter Name="CATEGORY" Type="varchar" Mode="In" />
+    <Parameter Name="KIND" Type="varchar" Mode="In" />
+    <Parameter Name="APPLYFORPLANT" Type="varchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_GetMenu_Via_MasterMenu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="MasterMenu" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_GetMenu_Via_MasterMenu_User" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="MasterMenu" Type="varchar" Mode="In" />
+    <Parameter Name="User" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_DEPT_GET_TREE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_GET_LOG_BY_DEPTID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_GET_MAIL_GROUP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+    <Parameter Name="DEPTNAME" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_LOG_HISTORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+    <Parameter Name="DATEFROM" Type="date" Mode="In" />
+    <Parameter Name="DATETO" Type="date" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_LOG_HISTORY_DIAGRAM_SITE_ACTIVITY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_SYS_MAIL_LIST" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SEARCHTYPE" Type="int" Mode="In" />
+    <Parameter Name="EMPID" Type="varchar(max)" Mode="In" />
+    <Parameter Name="EMPNAME" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="SEX" Type="varchar" Mode="In" />
+    <Parameter Name="NATION" Type="varchar" Mode="In" />
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+    <Parameter Name="HASEMAIL" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_NOTICES_GET" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+    <Parameter Name="CREATOR" Type="varchar" Mode="In" />
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="DATEFROM" Type="date" Mode="In" />
+    <Parameter Name="DATETO" Type="date" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_NOTICES_GET_TOP_10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_SYS_NOTICES_INSERT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="DESCRIPTION" Type="ntext" Mode="In" />
+    <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+    <Parameter Name="FILEPATH" Type="nvarchar" Mode="In" />
+    <Parameter Name="FILENAME" Type="nvarchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_NOTICES_UPDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="SUBJECT" Type="nvarchar" Mode="In" />
+    <Parameter Name="DESCRIPTION" Type="ntext" Mode="In" />
+    <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+    <Parameter Name="FILEPATH" Type="nvarchar" Mode="In" />
+    <Parameter Name="FILENAME" Type="nvarchar" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_ROLE_GETUSER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ROLEID" Type="varchar" Mode="In" />
+    <Parameter Name="SYSTEMID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="SP_SYS_USER_LIST" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SEARCHTYPE" Type="int" Mode="In" />
+    <Parameter Name="EMPID" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="EMPNAME" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="DEPTID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_SYSTEM_INTERFACE_DEPARTMENT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_SYSTEM_INTERFACE_EMPLOYEE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_SYSTEM_INTERFACE_EMPLOYEE_VIA_HR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_APPLICATION_APPROVAL_GETLIST" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MasterId" Type="int" Mode="In" />
+    <Parameter Name="ApplicationId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_CONFIG_GETALL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="Name" Type="nvarchar" Mode="In" />
+    <Parameter Name="DeptId" Type="int" Mode="In" />
+    <Parameter Name="Kind" Type="varchar" Mode="In" />
+    <Parameter Name="FromDate" Type="date" Mode="In" />
+    <Parameter Name="ToDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_CONFIG_GETLIST" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval" />
+  <Function Name="SP_APPLICATION_EMAILREQUEST_GETDETAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MASTERID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_INFORMATIONSYSTEM_GETDETAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MASTERID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_ITEQUIPMENT_GETDETAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MASTERID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_APPROVE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MasterId" Type="int" Mode="In" />
+    <Parameter Name="ApplicationId" Type="int" Mode="In" />
+    <Parameter Name="IsApprove" Type="bit" Mode="In" />
+    <Parameter Name="Comment" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserId" Type="varchar" Mode="In" />
+    <Parameter Name="LinkApplication" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_CONFIRM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MasterId" Type="int" Mode="In" />
+    <Parameter Name="Status" Type="bit" Mode="In" />
+    <Parameter Name="LinkApplication" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_GETALL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="Name" Type="nvarchar" Mode="In" />
+    <Parameter Name="DeptId" Type="int" Mode="In" />
+    <Parameter Name="Kind" Type="varchar" Mode="In" />
+    <Parameter Name="FromDate" Type="date" Mode="In" />
+    <Parameter Name="ToDate" Type="date" Mode="In" />
+    <Parameter Name="UserId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_GETDETAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_INSERT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="ApplicationId" Type="int" Mode="In" />
+    <Parameter Name="Subject" Type="nvarchar" Mode="In" />
+    <Parameter Name="Applicant" Type="varchar" Mode="In" />
+    <Parameter Name="RequestDate" Type="varchar" Mode="In" />
+    <Parameter Name="CostCenter" Type="varchar" Mode="In" />
+    <Parameter Name="DeptId" Type="int" Mode="In" />
+    <Parameter Name="System" Type="varchar" Mode="In" />
+    <Parameter Name="ApprovalKind" Type="varchar" Mode="In" />
+    <Parameter Name="ApprovalLine" Type="nvarchar" Mode="In" />
+    <Parameter Name="ApprovalLineJson" Type="nvarchar" Mode="In" />
+    <Parameter Name="ApprovalStatus" Type="varchar" Mode="In" />
+    <Parameter Name="NextApprover" Type="varchar" Mode="In" />
+    <Parameter Name="ConfirmDate" Type="datetime" Mode="In" />
+    <Parameter Name="Description" Type="nvarchar" Mode="In" />
+    <Parameter Name="Opinion" Type="nvarchar" Mode="In" />
+    <Parameter Name="ContactPerson" Type="nvarchar" Mode="In" />
+    <Parameter Name="Content" Type="ntext" Mode="In" />
+    <Parameter Name="CreateDate" Type="datetime" Mode="In" />
+    <Parameter Name="CreateUid" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_RECALL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MasterId" Type="int" Mode="In" />
+    <Parameter Name="ApplicationId" Type="int" Mode="In" />
+    <Parameter Name="UserId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_MASTER_UPDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="ApplicationId" Type="int" Mode="In" />
+    <Parameter Name="Subject" Type="nvarchar" Mode="In" />
+    <Parameter Name="Applicant" Type="varchar" Mode="In" />
+    <Parameter Name="RequestDate" Type="varchar" Mode="In" />
+    <Parameter Name="CostCenter" Type="varchar" Mode="In" />
+    <Parameter Name="DeptId" Type="int" Mode="In" />
+    <Parameter Name="System" Type="varchar" Mode="In" />
+    <Parameter Name="ApprovalKind" Type="varchar" Mode="In" />
+    <Parameter Name="ApprovalLine" Type="nvarchar" Mode="In" />
+    <Parameter Name="ApprovalLineJson" Type="nvarchar" Mode="In" />
+    <Parameter Name="ApprovalStatus" Type="varchar" Mode="In" />
+    <Parameter Name="NextApprover" Type="varchar" Mode="In" />
+    <Parameter Name="ConfirmDate" Type="datetime" Mode="In" />
+    <Parameter Name="Description" Type="nvarchar" Mode="In" />
+    <Parameter Name="Opinion" Type="nvarchar" Mode="In" />
+    <Parameter Name="ContactPerson" Type="nvarchar" Mode="In" />
+    <Parameter Name="Content" Type="ntext" Mode="In" />
+    <Parameter Name="UpdateDate" Type="datetime" Mode="In" />
+    <Parameter Name="UpdateUid" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_NETCLIENTPOLICY_GETDETAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MASTERID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_APPLICATION_SYSTEMROLE_GETDETAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="MASTERID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_APPROVAL_HISTORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="USERID" Type="varchar" Mode="In" />
+    <Parameter Name="APPLICATIONID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_EMPLOYEE_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="EApproval">
+    <Parameter Name="Name" Type="nvarchar" Mode="In" />
+    <Parameter Name="EMPID" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="PORTALModelStoreContainer">
+    <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CmsFormTemplate" EntityType="Self.CmsFormTemplate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CmsPostAction" EntityType="Self.CmsPostAction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CmsPosts" EntityType="Self.CmsPosts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="HrDeptMaster" EntityType="Self.HrDeptMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="HrDeptMasterFull" EntityType="Self.HrDeptMasterFull" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="HrEmpMaster" EntityType="Self.HrEmpMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SubSystem" EntityType="Self.SubSystem" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysAuthorization" EntityType="Self.SysAuthorization" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysCategory" EntityType="Self.SysCategory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysCategoryValue" EntityType="Self.SysCategoryValue" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysDocument" EntityType="Self.SysDocument" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysLogHistory" EntityType="Self.SysLogHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysMenu" EntityType="Self.SysMenu" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysNotices" EntityType="Self.SysNotices" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRole" EntityType="Self.SysRole" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRoleMapping" EntityType="Self.SysRoleMapping" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysUser" EntityType="Self.SysUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysUserMapping" EntityType="Self.SysUserMapping" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ApplicationConfig" EntityType="Self.ApplicationConfig" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="ApplicationMaster" EntityType="Self.ApplicationMaster" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="Approval" EntityType="Self.Approval" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="ApprovalHistory" EntityType="Self.ApprovalHistory" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="CCTVPolicy" EntityType="Self.CCTVPolicy" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="EmailAddress" EntityType="Self.EmailAddress" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="InformationSystem" EntityType="Self.InformationSystem" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="InstallNetwork" EntityType="Self.InstallNetwork" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="ItEquipment" EntityType="Self.ItEquipment" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="NetClientPolicy" EntityType="Self.NetClientPolicy" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="PhoneService" EntityType="Self.PhoneService" Schema="EApproval" store:Type="Tables" />
+    <EntitySet Name="SystemRole" EntityType="Self.SystemRole" Schema="EApproval" store:Type="Tables" />
+    <AssociationSet Name="FK_ApplicationConfig_HrDeptMaster" Association="Self.FK_ApplicationConfig_HrDeptMaster">
+      <End Role="HrDeptMaster" EntitySet="HrDeptMaster" />
+      <End Role="ApplicationConfig" EntitySet="ApplicationConfig" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApplicationConfig_HrEmpMaster" Association="Self.FK_ApplicationConfig_HrEmpMaster">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="ApplicationConfig" EntitySet="ApplicationConfig" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApplicationConfig_HrEmpMaster1" Association="Self.FK_ApplicationConfig_HrEmpMaster1">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="ApplicationConfig" EntitySet="ApplicationConfig" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApplicationMaster_ApplicationConfig" Association="Self.FK_ApplicationMaster_ApplicationConfig">
+      <End Role="ApplicationConfig" EntitySet="ApplicationConfig" />
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApplicationMaster_HrDeptMaster" Association="Self.FK_ApplicationMaster_HrDeptMaster">
+      <End Role="HrDeptMaster" EntitySet="HrDeptMaster" />
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApprovalHistory_ApplicationConfig" Association="Self.FK_ApprovalHistory_ApplicationConfig">
+      <End Role="ApplicationConfig" EntitySet="ApplicationConfig" />
+      <End Role="ApprovalHistory" EntitySet="ApprovalHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApprovalHistory_ApplicationMaster" Association="Self.FK_ApprovalHistory_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="ApprovalHistory" EntitySet="ApprovalHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Approve_ApplicationMaster" Association="Self.FK_Approve_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="Approval" EntitySet="Approval" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Approve_ApplicationMaster1" Association="Self.FK_Approve_ApplicationMaster1">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="Approval" EntitySet="Approval" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApproveUid_EmpId" Association="Self.FK_ApproveUid_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsFormTemplate" EntitySet="CmsFormTemplate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Category_SysCategory_ID" Association="Self.FK_Category_SysCategory_ID">
+      <End Role="SysCategory" EntitySet="SysCategory" />
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CategoryId_ID" Association="Self.FK_CategoryId_ID">
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+      <End Role="CmsPostAction" EntitySet="CmsPostAction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CmsPostAction_HrEmpMaster" Association="Self.FK_CmsPostAction_HrEmpMaster">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsPostAction" EntitySet="CmsPostAction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CmsPosts_HrEmpMaster" Association="Self.FK_CmsPosts_HrEmpMaster">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsPosts" EntitySet="CmsPosts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CmsPosts_HrEmpMaster1" Association="Self.FK_CmsPosts_HrEmpMaster1">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsPosts" EntitySet="CmsPosts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CmsPosts_HrEmpMaster2" Association="Self.FK_CmsPosts_HrEmpMaster2">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsPosts" EntitySet="CmsPosts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ComputerPolicy_ApplicationMaster" Association="Self.FK_ComputerPolicy_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="CCTVPolicy" EntitySet="CCTVPolicy" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreateUid_EmpId" Association="Self.FK_CreateUid_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsFormTemplate" EntitySet="CmsFormTemplate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreateUid_HrEmpMaster" Association="Self.FK_CreateUid_HrEmpMaster">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysCategory" EntitySet="SysCategory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreateUid_HrEmpMaster_EmpId" Association="Self.FK_CreateUid_HrEmpMaster_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DeleteUid_EmpId" Association="Self.FK_DeleteUid_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsFormTemplate" EntitySet="CmsFormTemplate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DeleteUid_HrEmpMaster_EmpId" Association="Self.FK_DeleteUid_HrEmpMaster_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmailAddress_ApplicationMaster" Association="Self.FK_EmailAddress_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="EmailAddress" EntitySet="EmailAddress" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HrDeptMaster_HrDeptMaster" Association="Self.FK_HrDeptMaster_HrDeptMaster">
+      <End Role="HrDeptMaster" EntitySet="HrDeptMaster" />
+      <End Role="HrDeptMaster1" EntitySet="HrDeptMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HrEmpMaster_HrDeptMaster" Association="Self.FK_HrEmpMaster_HrDeptMaster">
+      <End Role="HrDeptMaster" EntitySet="HrDeptMaster" />
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InformationSystem_ApplicationMaster" Association="Self.FK_InformationSystem_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="InformationSystem" EntitySet="InformationSystem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstallNetwork_ApplicationMaster" Association="Self.FK_InstallNetwork_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="InstallNetwork" EntitySet="InstallNetwork" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItEquipment_ApplicationMaster" Association="Self.FK_ItEquipment_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="ItEquipment" EntitySet="ItEquipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ModuleId_ID" Association="Self.FK_ModuleId_ID">
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+      <End Role="CmsPostAction" EntitySet="CmsPostAction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ModuleId_SysCategoryValue_ID" Association="Self.FK_ModuleId_SysCategoryValue_ID">
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+      <End Role="Attachment" EntitySet="Attachment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NetClientPolicy_ApplicationMaster" Association="Self.FK_NetClientPolicy_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="NetClientPolicy" EntitySet="NetClientPolicy" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ParentID_ID" Association="Self.FK_ParentID_ID">
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+      <End Role="SysCategoryValue1" EntitySet="SysCategoryValue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PhoneService_ApplicationMaster" Association="Self.FK_PhoneService_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="PhoneService" EntitySet="PhoneService" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReplyToId_PostId" Association="Self.FK_ReplyToId_PostId">
+      <End Role="CmsPosts" EntitySet="CmsPosts" />
+      <End Role="CmsPosts1" EntitySet="CmsPosts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysCategory_DeleteUid_HrEmpMaster_EmpId" Association="Self.FK_SysCategory_DeleteUid_HrEmpMaster_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysCategory" EntitySet="SysCategory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysCategory_UpdateUid_HrEmpMaster_EmpId" Association="Self.FK_SysCategory_UpdateUid_HrEmpMaster_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysCategory" EntitySet="SysCategory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysRoleMapping_SysRole" Association="Self.FK_SysRoleMapping_SysRole">
+      <End Role="SysRole" EntitySet="SysRole" />
+      <End Role="SysRoleMapping" EntitySet="SysRoleMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SystemRole_ApplicationMaster" Association="Self.FK_SystemRole_ApplicationMaster">
+      <End Role="ApplicationMaster" EntitySet="ApplicationMaster" />
+      <End Role="SystemRole" EntitySet="SystemRole" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysUserMapping_HrEmpMaster" Association="Self.FK_SysUserMapping_HrEmpMaster">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysUserMapping" EntitySet="SysUserMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysUserMapping_SysRole" Association="Self.FK_SysUserMapping_SysRole">
+      <End Role="SysRole" EntitySet="SysRole" />
+      <End Role="SysUserMapping" EntitySet="SysUserMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UpdateUid_EmpId" Association="Self.FK_UpdateUid_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="CmsFormTemplate" EntitySet="CmsFormTemplate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UpdateUid_HrEmpMaster_EmpId" Association="Self.FK_UpdateUid_HrEmpMaster_EmpId">
+      <End Role="HrEmpMaster" EntitySet="HrEmpMaster" />
+      <End Role="SysCategoryValue" EntitySet="SysCategoryValue" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

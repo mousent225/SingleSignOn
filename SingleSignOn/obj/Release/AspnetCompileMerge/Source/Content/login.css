@@ -1,0 +1,168 @@
+﻿/*
+Template Name: Flat Lab Dashboard build with Bootstrap v3.2.0
+Template Version: 2.0
+Author: Mosaddek Hossain
+Website: http://thevectorlab.net/
+*/
+/* Import fonts */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,vietnamese);
+
+body {
+    color: #797979;
+    background: #f1f2f7;
+    font-family: 'Open Sans', sans-serif;
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size:13px;
+    text-rendering:optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+}
+
+ul li {
+    list-style: none;
+}
+
+a, a:hover, a:focus {
+    text-decoration: none;
+    outline: none;
+}
+::selection {
+
+    background: #FF6C60;
+    color: #fff;
+}
+::-moz-selection {
+    background: #FF6C60;
+    color: #fff;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+}
+
+/*login page*/
+.logo{text-align:center;}
+.logo img{margin:10px 0 10px 0;max-width:280px;}
+.login-body {
+    background:url(../Resources/layout/blurred-bg-3.png) fixed no-repeat;
+}
+
+.form-signin {
+    max-width: 330px;
+    margin: 120px auto 0;
+    background: #fff;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+	box-shadow:0px 5px 8px rgba(0,0,0,0.3)
+}
+
+.form-signin h2.form-signin-heading {
+    margin: 0;
+    padding:6px 15px;
+    text-align: center;
+    background: #f67a6e;
+    border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    color: #fff;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.form-signin .checkbox {
+    margin-bottom: 14px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+    color: #b6b6b6;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+}
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"], .form-signin input[type="password"],.form-signin select {
+    margin-bottom: 15px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+	
+    border: 1px solid #eaeaea;
+    box-shadow: none;
+    font-size: 12px;
+	width:100%;
+	height:39px;
+	padding:7px;
+}
+@-moz-document url-prefix() { 
+ .form-signin select {
+     -moz-border-radius: 5px 0 0 5px !important;
+	 border-radius: 5px 0 0 5px !important;
+  }
+}
+
+.form-signin .btn-login {
+    background: #904d9f;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 10px;
+}
+
+.form-signin p {
+    text-align: center;
+    color: #b6b6b6;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.form-signin a {
+    color: #904d9f;
+}
+
+.form-signin a:hover {
+    color: #b6b6b6;
+}
+
+.login-wrap {
+    padding: 20px;
+}
+
+.label-top{
+	background:#904d9f;
+	color:#fff;
+	font-weight:bold;
+	transform:rotate(45deg);
+	position:fixed;
+	top:-25px;
+	right:-110px;
+	text-align:center;
+	padding:55px 90px 20px 90px;
+	font-size:16px;
+	box-shadow:0px 1px 6px rgba(0,0,0,0.5);
+	}
+.user-blk{position:relative;}
+.load-role{position:absolute;right:0px;top:0;width:100px;height:39px;background:#904d9f;color:#fff !important;border-radius: 0 5px 5px 0;z-index:999;cursor:pointer;text-align:center;line-height:39px;}
+.field-validation-error {
+    color:#FF0000;
+    font-size: 12px;
+}
+.errorPlace {
+    background-color: #FAE5E3;
+    padding: 5px;
+    border: 1px solid #FAE5E3;
+    border-radius: 3px;
+    display: none;
+}
